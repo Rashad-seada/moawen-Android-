@@ -1,4 +1,4 @@
-package com.example.marketapp.ui.theme
+package com.example.marketapp.core.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -16,15 +16,15 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Primary900,
+    secondary = Primary500,
+    tertiary = Neutral900
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Primary900,
+    secondary = Primary500,
+    tertiary = Neutral100
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

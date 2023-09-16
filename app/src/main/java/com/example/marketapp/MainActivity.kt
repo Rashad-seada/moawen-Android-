@@ -10,7 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.marketapp.ui.theme.MarketAppTheme
+import com.example.marketapp.core.ui.theme.MarketAppTheme
+import com.example.marketapp.core.views.CustomTextField
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,9 +19,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             MarketAppTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
-                }
+//                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+//                    Greeting("Android")
+//                }
+
+                CustomTextField(
+                    label = "Email",
+                    placeHolder = "Please enter your email",
+                    value = "rashadatef2@gmail.com",
+                    isError = false,
+                    errorMessage = "Invalid input"
+                )
             }
         }
     }
