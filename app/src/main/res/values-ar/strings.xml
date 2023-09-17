@@ -11,4 +11,13 @@
     <string name="password">الرقم السري</string>
     <string name="password_hint">من فضلك ادخل الرقم السري</string>
 
+    <string name="remember_me">تذكرني</string>
+    <string name="forgot_password">نسيت كلمه المرور</string>
+
+    <string name="dont_have_account">ليس لديك حساب؟</string>
+    <string name="register">تسجل حساب</string>
+
+    <string name="or_login_with">او قم بالتسجيل عبر</string>
+    <string name="google">جوجل</string>
+
 </resources>
