@@ -1,7 +1,6 @@
 package com.example.marketapp.core.ui.theme
 
 import android.app.Activity
-import android.graphics.Color
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -18,16 +18,14 @@ import androidx.core.view.WindowCompat
 private val DarkColorScheme = darkColorScheme(
     primary = Primary900,
     secondary = Primary500,
-    tertiary = Neutral900
-)
+    tertiary = Neutral900,
+    )
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary900,
     secondary = Primary500,
-    tertiary = Neutral100
-
+    tertiary = Neutral100,
     /* Other default colors to override
-    background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
@@ -57,8 +55,18 @@ fun MarketAppTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val activity  = view.context as Activity
-            activity.window.navigationBarColor = Color.WHITE
-            activity.window.statusBarColor = Color.WHITE
+
+            when {
+                darkTheme -> {
+                    activity.window.navigationBarColor = Neutral900.toArgb()
+                    activity.window.statusBarColor = Neutral900.toArgb()
+                }
+                else -> {
+                    activity.window.navigationBarColor = Neutral100.toArgb()
+                    activity.window.statusBarColor = Neutral100.toArgb()
+                }
+            }
+
             WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars = !darkTheme
             WindowCompat.getInsetsController(activity.window, view).isAppearanceLightNavigationBars = !darkTheme
         }

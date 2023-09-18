@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,12 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
+import com.example.marketapp.core.ui.theme.Cairo
 import com.example.marketapp.core.ui.theme.MarketAppTheme
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral300
 import com.example.marketapp.core.ui.theme.Neutral400
 import com.example.marketapp.core.ui.theme.Neutral500
-import com.example.marketapp.core.ui.theme.Neutral800
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.views.CustomCheckBox
 import com.example.marketapp.core.views.CustomTextField
@@ -45,7 +47,9 @@ import com.example.marketapp.core.views.MainButton
 fun LoginScreen(
     context: Context = LocalContext.current,
 ) {
-    Scaffold {
+    Scaffold(
+        containerColor = if( isSystemInDarkTheme()) Neutral900 else Neutral100
+    ) {
         it
 
         Column (modifier = Modifier.fillMaxSize()){
@@ -62,24 +66,24 @@ fun LoginScreen(
                     .align(alignment = Alignment.CenterHorizontally)
             )
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 text = context.getString(R.string.login),
                 style = TextStyle(
-                    //fontFamily = Cairo,
-                    color = Neutral900,
+                    fontFamily = Cairo,
+                    color = if( isSystemInDarkTheme()) Neutral100 else Neutral900,
                     fontSize = 28.sp
                 )
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 text = context.getString(R.string.login_sub_text),
                 style = TextStyle(
-                    //fontFamily = Cairo,
+                    fontFamily = Cairo,
                     color = Neutral500,
                     fontSize = 16.sp,
 
@@ -130,6 +134,7 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
 
             ){
                 CustomCheckBox(
@@ -138,10 +143,10 @@ fun LoginScreen(
 
                 Text(
 
-                    modifier = Modifier.wrapContentSize(),
+                    modifier = Modifier.wrapContentHeight(),
                     text = context.getString(R.string.forgot_password),
                     style = TextStyle(
-                        //fontFamily = Cairo,
+                        fontFamily = Cairo,
                         color = Color(0xff87C159),
                         fontSize = 16.sp,
 
@@ -150,7 +155,7 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(70.dp))
 
 
             Row(
@@ -165,7 +170,7 @@ fun LoginScreen(
                     modifier = Modifier.wrapContentSize(),
                     text = context.getString(R.string.dont_have_account),
                     style = TextStyle(
-                        //fontFamily = Cairo,
+                        fontFamily = Cairo,
                         color = Neutral400,
                         fontSize = 16.sp,
 
@@ -180,7 +185,7 @@ fun LoginScreen(
                     modifier = Modifier.wrapContentSize(),
                     text = context.getString(R.string.register),
                     style = TextStyle(
-                        //fontFamily = Cairo,
+                        fontFamily = Cairo,
                         color = Color(0xff87C159),
                         fontSize = 16.sp,
 
@@ -204,14 +209,14 @@ fun LoginScreen(
                     modifier = Modifier.padding(horizontal = 20.dp),
                     text = context.getString(R.string.login),
                     style = TextStyle(
-                        //fontFamily = Cairo,
+                        fontFamily = Cairo,
                         color = Neutral100,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     )
                 )
             }
 
-            Spacer(modifier = Modifier.height(27.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
 
             Row (
@@ -233,7 +238,7 @@ fun LoginScreen(
                         .padding(horizontal = 10.dp),
                     text = context.getString(R.string.or_login_with),
                     style = TextStyle(
-                        //fontFamily = Cairo,
+                        fontFamily = Cairo,
                         color = Neutral400,
                         fontSize = 16.sp,
                         ),
@@ -248,7 +253,7 @@ fun LoginScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(27.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
 
             MainButton(
@@ -270,8 +275,8 @@ fun LoginScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.google),
                         style = TextStyle(
-                            //fontFamily = Cairo,
-                            color = Neutral800,
+                            fontFamily = Cairo,
+                            color = if( isSystemInDarkTheme()) Neutral100 else Neutral900,
                             fontSize = 16.sp
                         )
                     )

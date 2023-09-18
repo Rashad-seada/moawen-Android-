@@ -3,6 +3,7 @@ package com.example.marketapp.core.views
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Neutral200
 import com.example.marketapp.core.ui.theme.Neutral400
 import com.example.marketapp.core.ui.theme.Neutral800
 import com.example.marketapp.core.ui.theme.Neutral900
@@ -44,7 +47,7 @@ fun CustomCheckBox(
 
         Spacer(modifier = modifier)
         Card(
-            modifier = Modifier.background(Color.White),
+            modifier = Modifier.background(Color.White,shape = RoundedCornerShape(6.dp)),
             shape = RoundedCornerShape(6.dp),
             border = BorderStroke(1.5.dp, color = titleColor)
         ) {
@@ -66,7 +69,10 @@ fun CustomCheckBox(
                 .align(CenterVertically)
                 .padding(start = 10.dp),
             text = title,
-        )
+            color = if( isSystemInDarkTheme()) Neutral200 else Neutral800,
+            fontFamily = Cairo,
+
+            )
     }
 }
 
