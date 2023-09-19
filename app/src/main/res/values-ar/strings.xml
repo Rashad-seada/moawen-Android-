@@ -20,4 +20,16 @@
     <string name="or_login_with">او قم بالتسجيل عبر</string>
     <string name="google">جوجل</string>
 
+    <string name="on_boarding_title_1">اكتشف إمكانياتك</string>
+    <string name="on_boarding_sub_text_1">اكتشف قوة التعلم الذاتي مع تطبيقنا. تحكم في تعليمك بنفسك، واضبط أهدافك الخاصة، واستكشف عالم المعرفة عن كثب على متن الجهاز الذي بين يديك.</string>
+
+    <string name="on_boarding_title_2">تعلم على طريقتك</string>
+    <string name="on_boarding_sub_text_2">الحياة مزدحمة، وجدولك أيضًا. مع تطبيقنا، يمكنك الدراسة في أي وقت وأي مكان يناسبك. قم بتخصيص رحلتك التعليمية لتناسب نمط حياتك.</string>
+
+    <string name="on_boarding_title_3">إمكانيات لا حصر لها</string>
+    <string name="on_boarding_sub_text_3">انغمس في عالم مليء بفرص التعلم. من دورات تغطي مجموعة متنوعة من المواضيع إلى مدرسين محترفين، تطبيقنا هو بوابتك إلى عالم المعرفة اللامتناهية.</string>
+    <string name="skip">تخطي</string>
+    <string name="next">التالي</string>
+
+
 </resources>

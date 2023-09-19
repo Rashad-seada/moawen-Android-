@@ -20,4 +20,16 @@
     <string name="or_login_with">Or Login With Account</string>
     <string name="google">Google</string>
 
+    <string name="on_boarding_title_1">Unlock Your Potential</string>
+    <string name="on_boarding_sub_text_1">Discover the power of self-directed learning with our app. Take control of your education, set your own goals, and explore a world of knowledge at your fingertips.</string>
+
+    <string name="on_boarding_title_2">Learn on Your Terms</string>
+    <string name="on_boarding_sub_text_2">Life is busy, and so is your schedule. With our app, you can study whenever and wherever it suits you. Customize your learning journey to fit your lifestyle.</string>
+
+    <string name="on_boarding_title_3">Endless Possibilities</string>
+    <string name="on_boarding_sub_text_3">Immerse yourself in a universe of learning opportunities. From courses on diverse subjects to expert instructors, our app is your gateway to boundless knowledge.</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+
+
 </resources>

@@ -1,4 +1,4 @@
-package com.example.marketapp.core.views
+package com.example.marketapp.core.views.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

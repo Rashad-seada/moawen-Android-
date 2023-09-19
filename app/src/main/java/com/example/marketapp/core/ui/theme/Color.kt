@@ -12,7 +12,7 @@ val Neutral300 = Color(0xffD1D5DB)
 val Neutral200 = Color(0xffE5E7EB)
 val Neutral100 = Color(0xffF4F4F5)
 
-val Primary900 = Color(0xffC70000)
+val Primary900 = Color(0xff87C159)
 val Primary800 = Color(0xffE61E29)
 val Primary700 = Color(0xffE93842)
 val Primary600 = Color(0xffEB5058)
