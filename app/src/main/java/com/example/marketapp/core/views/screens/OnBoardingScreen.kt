@@ -1,6 +1,7 @@
 package com.example.marketapp.core.views.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,20 +12,24 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.Cairo
 import com.example.marketapp.core.ui.theme.MarketAppTheme
@@ -32,18 +37,23 @@ import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.core.views.components.CustomPageIndicator
 import com.example.marketapp.core.views.components.MainButton
 import com.example.marketapp.core.views.pages.OnBoardingPage
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Destination
 @Composable
 fun OnBoardingScreen(
-    context: Context = LocalContext.current,
+    viewModel: CoreViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator?
+
     ) {
+    val context: Context = LocalContext.current
 
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
@@ -55,20 +65,10 @@ fun OnBoardingScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Transparent),
+                .background(Color.Transparent)
+            ,
         ) {
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 20.dp, vertical = 20.dp)
-                    .align(Alignment.TopEnd),
-                text = context.getString(R.string.skip),
-                style = TextStyle(
-                    fontFamily = Cairo,
-                    color = Neutral500,
-                    fontSize = 18.sp,
 
-                    )
-            )
 
             HorizontalPager(
                 state = pagerState,
@@ -118,11 +118,18 @@ fun OnBoardingScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .height(55.dp)
+                    .clip(RoundedCornerShape(100.dp))
                     .clickable {
 
-                        scope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        if(pagerState.currentPage != 2){
+                            scope.launch {
+                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            }
+                        }else {
+                            viewModel.onOnBoardingScreenNextClick(navigator)
                         }
+
+
 
                     }
                     ,
@@ -145,6 +152,27 @@ fun OnBoardingScreen(
                     )
                 }
             }
+
+
+            Text(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .clickable {
+                        Log.v("Products Res","skippp in")
+
+                        viewModel.onOnBoardingScreenSkipClick(navigator)
+                    }
+                    .padding(horizontal = 20.dp, vertical = 20.dp)
+                    .align(Alignment.TopEnd),
+
+                text = context.getString(R.string.skip),
+                style = TextStyle(
+                    fontFamily = Cairo,
+                    color = Neutral500,
+                    fontSize = 18.sp,
+
+                    )
+            )
         }
 
 
@@ -156,7 +184,9 @@ fun OnBoardingScreen(
 @Composable
 fun OnBoardingScreenPreview() {
     MarketAppTheme {
-        OnBoardingScreen()
+        OnBoardingScreen(
+            navigator = null
+        )
 
     }
 }

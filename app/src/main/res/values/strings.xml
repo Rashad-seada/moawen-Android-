@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Market app</string>
+    <string name="app_name">Market App</string>
 
     <string name="login">Login</string>
     <string name="login_sub_text">please login to enjoy our special services</string>
@@ -30,6 +30,10 @@
     <string name="on_boarding_sub_text_3">Immerse yourself in a universe of learning opportunities. From courses on diverse subjects to expert instructors, our app is your gateway to boundless knowledge.</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
+    <string name="welocme">Welcome</string>
+    <string name="welocme_sub_text">please chose the way you want to login with into the app!</string>
+    <string name="reset_password">Reset password</string>
+    <string name="reset_password_sub_text">Please Chose the preferred method to reset your password</string>
 
 
 </resources>

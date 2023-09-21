@@ -30,6 +30,10 @@
     <string name="on_boarding_sub_text_3">انغمس في عالم مليء بفرص التعلم. من دورات تغطي مجموعة متنوعة من المواضيع إلى مدرسين محترفين، تطبيقنا هو بوابتك إلى عالم المعرفة اللامتناهية.</string>
     <string name="skip">تخطي</string>
     <string name="next">التالي</string>
+    <string name="welocme">مرحبا</string>
+    <string name="welocme_sub_text">من فضلك اختر الطريقه اللتي تود الدخول بيها الى التطبيق</string>
+    <string name="reset_password">اعاده تعيين كلمه المرور</string>
+    <string name="reset_password_sub_text">من فضلك قم بختيار الطريقه المفضله لاعاده تعيين كلمه المرور</string>
 
 
 </resources>

@@ -26,27 +26,31 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.MarketAppTheme
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral900
+import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.delay
 
 @Destination(start = true)
 @Composable
 fun SplashScreen(
-    visible : Boolean = false
+    viewModel: CoreViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator?
 ) {
 
-    var visible by remember { mutableStateOf(visible) }
+    var visible by remember { mutableStateOf(false) }
 
     val density = LocalDensity.current
 
     LaunchedEffect(key1 =  true){
         delay(500)
         visible = true
-
+        viewModel.onSplashScreenLaunch(navigator)
     }
 
     Scaffold(
@@ -95,7 +99,7 @@ fun DefoultSplashScreenPreview() {
 
     MarketAppTheme {
         SplashScreen(
-            visible = false
+            navigator = null
         )
     }
 }
