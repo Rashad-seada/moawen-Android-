@@ -1,9 +1,10 @@
-package com.example.marketapp.features.auth.view.screens.password
+package com.example.marketapp.features.auth.view.screens.reset_password
 
 
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,14 +26,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.Cairo
 import com.example.marketapp.core.ui.theme.MarketAppTheme
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.viewmodel.CoreViewModel
+import com.example.marketapp.features.auth.view.components.reset_password.ResetPasswordMethodCard
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -41,7 +41,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun ResetPasswordMethodsScreen(
     navigator: DestinationsNavigator?,
-    viewModel: CoreViewModel = hiltViewModel(),
+    onBackArrowClick : (DestinationsNavigator)-> Unit = {},
+    onResetByEmailClick : (DestinationsNavigator)-> Unit = {},
+    onResetByPhoneClick : (DestinationsNavigator)-> Unit = {} ,
 
     ) {
 
@@ -60,11 +62,16 @@ fun ResetPasswordMethodsScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Icon(
-                modifier = Modifier.padding(start = 20.dp),
-
+                modifier = Modifier.padding(start = 20.dp).clickable {
+                    navigator?.let {
+                        onBackArrowClick(navigator)
+                    }
+                },
                 painter = painterResource(
                     id = R.drawable.arrow_left
-                ), contentDescription = null
+                ),
+                contentDescription = null,
+                tint = if (isSystemInDarkTheme()) Neutral100 else Neutral900
             )
 
 
@@ -83,7 +90,7 @@ fun ResetPasswordMethodsScreen(
             Text(
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
-                    .padding(start = 10.dp),
+                    .padding(start = 0.dp),
                 text = context.getString(R.string.reset_password),
                 style = TextStyle(
                     fontFamily = Cairo,
@@ -91,12 +98,11 @@ fun ResetPasswordMethodsScreen(
                     fontSize = 32.sp
                 )
             )
-            //Spacer(modifier = Modifier.height(5.dp))
 
             Text(
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
-                    .padding(end = 50.dp, start = 10.dp),
+                    .padding(end = 50.dp, start = 0.dp),
                 text = context.getString(R.string.reset_password_sub_text),
                 style = TextStyle(
                     fontFamily = Cairo,
@@ -106,7 +112,28 @@ fun ResetPasswordMethodsScreen(
                     )
             )
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ResetPasswordMethodCard(
+                modifier = Modifier.clickable {
+                    navigator?.let {
+                        onResetByEmailClick(navigator)
+                    }
+                },
+                image = R.drawable.email,
+                label = context.getString(R.string.reset_password_by_email),
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ResetPasswordMethodCard(
+                modifier = Modifier.clickable {
+                    navigator?.let {
+                        onResetByPhoneClick(navigator)
+                    }
+                },
+                image = R.drawable.phone,
+                label = context.getString(R.string.reset_password_by_phone),
+            )
 
 
         }

@@ -34,6 +34,11 @@
     <string name="welocme_sub_text">من فضلك اختر الطريقه اللتي تود الدخول بيها الى التطبيق</string>
     <string name="reset_password">اعاده تعيين كلمه المرور</string>
     <string name="reset_password_sub_text">من فضلك قم بختيار الطريقه المفضله لاعاده تعيين كلمه المرور</string>
+    <string name="reset_password_by_email">اعاده تعيين كلمه المرور عن طريق الايميل</string>
+    <string name="reset_password_by_phone">اعاده تعيين كلمه المرور عن طريق رقم الهاتف</string>
+    <string name="reset_password_by_email_sub_text">من فضلك ادخل الايميل المربوط بحسابك</string>
+    <string name="email">الايميل</string>
+    <string name="email_hint">من فضل ادخل الايميل الخاص بك</string>
 
 
 </resources>

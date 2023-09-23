@@ -8,7 +8,4 @@ sealed class LoginEvent {
     data class ForgotPassword(val navigator: DestinationsNavigator) : LoginEvent()
     object Register : LoginEvent()
     object RememberMe : LoginEvent()
-
-
-
 }
