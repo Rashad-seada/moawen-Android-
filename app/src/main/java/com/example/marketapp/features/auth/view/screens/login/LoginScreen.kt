@@ -23,6 +23,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.Cairo
 import com.example.marketapp.core.ui.theme.MarketAppTheme
@@ -48,30 +49,32 @@ import com.example.marketapp.core.ui.theme.Primary900
 import com.example.marketapp.core.views.components.CustomCheckBox
 import com.example.marketapp.core.views.components.CustomTextField
 import com.example.marketapp.core.views.components.MainButton
-import com.example.marketapp.features.auth.view.viewmodels.login.LoginEvent
-import com.example.marketapp.features.auth.view.viewmodels.login.LoginViewModel
+import com.example.marketapp.features.auth.view.viewmodels.login.LoginState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 
-@SuppressLint("ResourceType")
+@SuppressLint("ResourceType", "UnrememberedMutableState")
 @Destination
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator?
-) {
+    navigator: DestinationsNavigator?,
+    state: LoginState = LoginState(),
+    onChangeUsername : (String) -> Unit = {},
+    onChangePassword : (String) -> Unit = {},
+    onSecurePasswordClick : () -> Unit = {},
+    onLoginClick : (DestinationsNavigator) -> Unit = {},
+    onLoginWithGoogleClick : (DestinationsNavigator) -> Unit = {},
+    onRememberMeClick : () -> Unit = {},
+    onForgotPasswordClick : (DestinationsNavigator) -> Unit = {},
+    onRegisterClick : (DestinationsNavigator) -> Unit = {},
+
+    ) {
 
     val context: Context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-
-
-    val state = viewModel.state
-
-
-
-
+    val state: MutableState<LoginState> = mutableStateOf(state)
 
     Scaffold(
         containerColor = if (isSystemInDarkTheme()) Neutral900 else Neutral100
@@ -122,9 +125,9 @@ fun LoginScreen(
 
 
             CustomTextField(
-                value = viewModel.state.value.username,
+                value = state.value.username,
                 onValueChange = {
-                    viewModel.updateUsername(it)
+                    onChangeUsername(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -143,11 +146,11 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(5.dp))
 
             CustomTextField(
-                isSecure = viewModel.state.value.isPasswordSecure,
-                value = viewModel.state.value.password,
+                isSecure = state.value.isPasswordSecure,
+                value = state.value.password,
                 onValueChange = {
 
-                    viewModel.updatePassword(it)
+                    onChangePassword(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -164,7 +167,7 @@ fun LoginScreen(
                 trailingIcon = {
                     Image(
                         modifier = Modifier.padding(end = 0.dp).clickable {
-                            viewModel .updatePasswordSecureState()
+                            onSecurePasswordClick()
                         },
                         painter = painterResource(id = R.drawable.eye_slash),
                         contentDescription = ""
@@ -185,12 +188,12 @@ fun LoginScreen(
 
             ) {
                 CustomCheckBox(
-                    checked = viewModel.state.value.rememberMe,
+                    checked = state.value.rememberMe,
                     modifier = Modifier
                         .clickable {
 
                             scope.launch {
-                                viewModel.onEvent(LoginEvent.RememberMe)
+                                onRememberMeClick()
                             }
 
                         },
@@ -201,7 +204,7 @@ fun LoginScreen(
 
                     modifier = Modifier.wrapContentHeight().clickable {
                         navigator?.let {navigator->
-                            viewModel.onEvent(LoginEvent.ForgotPassword(navigator))
+                            onForgotPasswordClick(navigator)
                         }
 
                     },
@@ -245,7 +248,9 @@ fun LoginScreen(
 
                     modifier = Modifier.wrapContentSize().clickable {
                         scope.launch {
-                            viewModel.onEvent(LoginEvent.Register)
+                            navigator?.let {
+                                onRegisterClick(navigator)
+                            }
                         }
                     },
                     text = context.getString(R.string.register),
@@ -270,7 +275,9 @@ fun LoginScreen(
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
                         scope.launch {
-                            viewModel.onEvent(LoginEvent.Login)
+                            navigator?.let {
+                                onLoginClick(navigator)
+                            }
                         }
                     },
                 cardColor = Primary900,
@@ -337,7 +344,10 @@ fun LoginScreen(
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
                         scope.launch {
-                            viewModel.onEvent(LoginEvent.LoginWithGoogle)
+                            navigator?.let {
+                                onLoginWithGoogleClick(navigator)
+                            }
+
                         }
                     },
                 cardColor = Color.Transparent,

@@ -1,7 +1,6 @@
 package com.example.marketapp.core.views.screens
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.Cairo
 import com.example.marketapp.core.ui.theme.MarketAppTheme
@@ -37,7 +35,6 @@ import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.ui.theme.Primary900
-import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.core.views.components.CustomPageIndicator
 import com.example.marketapp.core.views.components.MainButton
 import com.example.marketapp.core.views.pages.OnBoardingPage
@@ -49,9 +46,9 @@ import kotlinx.coroutines.launch
 @Destination
 @Composable
 fun OnBoardingScreen(
-    viewModel: CoreViewModel = hiltViewModel(),
+    onSkipClick : (DestinationsNavigator) -> Unit = {},
+    onNextClick : (DestinationsNavigator) -> Unit = {},
     navigator: DestinationsNavigator?
-
     ) {
     val context: Context = LocalContext.current
 
@@ -123,10 +120,13 @@ fun OnBoardingScreen(
 
                         if(pagerState.currentPage != 2){
                             scope.launch {
+
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             }
                         }else {
-                            viewModel.onOnBoardingScreenNextClick(navigator)
+                            navigator?.let {
+                                onNextClick(navigator)
+                            }
                         }
 
 
@@ -158,9 +158,10 @@ fun OnBoardingScreen(
                 modifier = Modifier
                     .wrapContentHeight()
                     .clickable {
-                        Log.v("Products Res","skippp in")
 
-                        viewModel.onOnBoardingScreenSkipClick(navigator)
+                        navigator?.let {
+                            onSkipClick(navigator)
+                        }
                     }
                     .padding(horizontal = 20.dp, vertical = 20.dp)
                     .align(Alignment.TopEnd),

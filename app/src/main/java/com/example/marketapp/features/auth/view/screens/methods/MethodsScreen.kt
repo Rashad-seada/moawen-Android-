@@ -34,7 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.Cairo
 import com.example.marketapp.core.ui.theme.MarketAppTheme
@@ -44,7 +43,6 @@ import com.example.marketapp.core.ui.theme.Neutral400
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.ui.theme.Primary900
-import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.core.views.components.MainButton
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -54,7 +52,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun MethodsScreen(
     navigator: DestinationsNavigator?,
-    viewModel: CoreViewModel = hiltViewModel(),
+    onLoginClick : (DestinationsNavigator) -> Unit = {},
+    onRegisterClick : (DestinationsNavigator) -> Unit = {},
+    onLoginWithGoogleClick : (DestinationsNavigator) -> Unit = {},
 
     ) {
 
@@ -71,9 +71,6 @@ fun MethodsScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            //Spacer(modifier = Modifier.height(80.dp))
-
-
 
             Image(
                 painter = painterResource(id = R.drawable.welcome4), // Provide the resource ID
@@ -96,7 +93,6 @@ fun MethodsScreen(
                     fontSize = 32.sp
                 )
             )
-            //Spacer(modifier = Modifier.height(5.dp))
 
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp).padding(end = 50.dp,start =10.dp),
@@ -111,12 +107,6 @@ fun MethodsScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-
-
-
-
-            //Spacer(modifier = Modifier.height(70.dp))
-
             MainButton(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,7 +114,9 @@ fun MethodsScreen(
                     .height(55.dp)
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
-                        viewModel.onMethodsScreenLoginClick(navigator)
+                        navigator?.let {
+                            onLoginClick(navigator)
+                        }
                     },
                 cardColor = Primary900,
                 borderColor = Color.Transparent
@@ -140,10 +132,7 @@ fun MethodsScreen(
                 )
             }
 
-
-
             Spacer(modifier = Modifier.height(20.dp))
-
 
             MainButton(
                 modifier = Modifier
@@ -152,7 +141,9 @@ fun MethodsScreen(
                     .height(55.dp)
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
-                            viewModel.onMethodsScreenRegisterClick(navigator)
+                        navigator?.let {
+                            onRegisterClick(navigator)
+                        }
                     },
                 cardColor = Primary900,
                 borderColor = Color.Transparent
@@ -217,7 +208,9 @@ fun MethodsScreen(
                     .height(55.dp)
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
-                            viewModel.onMethodsScreenLoginWithGoogleClick(navigator)
+                        navigator?.let {
+                            onLoginWithGoogleClick(navigator)
+                        }
                     },
                 cardColor = Color.Transparent,
                 borderColor = Neutral500
