@@ -39,6 +39,14 @@
     <string name="reset_password_by_email_sub_text">من فضلك ادخل الايميل المربوط بحسابك</string>
     <string name="email">الايميل</string>
     <string name="email_hint">من فضل ادخل الايميل الخاص بك</string>
+    <string name="reset_password_by_phone_sub_text">من فضل ادخل رقم الهاتف المتصل بالحساب الخاص بك</string>
+    <string name="phone">رقم الهاتف</string>
+    <string name="phone_hint">من فضل ادخل رقم الهاتفك</string>
+    <string name="verify_pin_code">تحقق من الكود</string>
+    <string name="verify_pin_code_sub_text">ادخل الكود اللذي تم ارساله اليك للمتابعه</string>
+    <string name="didnt_recive_code">لم يصلك الكود؟</string>
+    <string name="resend_new_code">ارسل كود جديد</string>
+    <string name="validate">تحقق</string>
 
 
 </resources>

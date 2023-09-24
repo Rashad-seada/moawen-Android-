@@ -2,6 +2,8 @@ package com.example.marketapp.features.auth.view.viewmodels.reset_password
 
 
 data class ResetPasswordState (
-    val email : String = "",
-    val phone : String = ""
+    var email : String = "",
+    var phone : String = "",
+    var pinCode : String = "",
+    var isSendingPinCode : Boolean = false,
 )

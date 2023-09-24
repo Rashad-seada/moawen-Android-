@@ -39,6 +39,14 @@
     <string name="reset_password_by_email_sub_text">Please enter the email that is connected to your account</string>
     <string name="email">Email</string>
     <string name="email_hint">please Enter your email</string>
+    <string name="reset_password_by_phone_sub_text">Please enter the phone number that is connected to your account</string>
+    <string name="phone">Phone</string>
+    <string name="phone_hint">Please enter your number</string>
+    <string name="verify_pin_code">Verify your pin code</string>
+    <string name="verify_pin_code_sub_text">Please enter the code that have been sent to you to proceed</string>
+    <string name="didnt_recive_code">did\'t recive code?</string>
+    <string name="resend_new_code">resend new code</string>
+    <string name="validate">Validate</string>
 
 
 </resources>

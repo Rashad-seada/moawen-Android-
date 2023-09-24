@@ -3,6 +3,8 @@ package com.example.marketapp.features.auth.view.viewmodels.reset_password
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.marketapp.destinations.ResetPasswordByEmailScreenDestination
+import com.example.marketapp.destinations.ResetPasswordByPhoneScreenDestination
+import com.example.marketapp.destinations.ResetPasswordPinScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,15 +23,23 @@ class ResetPasswordViewModel @Inject constructor(): ViewModel() {
     }
 
     fun onResetPasswordByPhoneClick(navigator: DestinationsNavigator){
-
+        navigator.navigate(ResetPasswordByPhoneScreenDestination)
     }
 
     fun onSendCodeToEmailClick(navigator: DestinationsNavigator){
-
+        navigator.navigate(ResetPasswordPinScreenDestination)
     }
 
     fun onSendCodeToPhoneClick(navigator: DestinationsNavigator){
 
+        navigator.navigate(ResetPasswordPinScreenDestination)
+    }
+
+    fun onValidateClick(navigator: DestinationsNavigator){
+
+    }
+
+    fun onResendClickClick(){
     }
 
     fun updateEmail(email : String ){
@@ -44,25 +54,39 @@ class ResetPasswordViewModel @Inject constructor(): ViewModel() {
         )
     }
 
+    fun updatePin(pinCode: String) {
+        state.value = state.value.copy(
+            pinCode = pinCode
+        )
+    }
+
     fun onEvent(event : ResetPasswordMethodsEvent){
         when(event) {
             is ResetPasswordMethodsEvent.OnBackButtonClick -> {
-                onResetPasswordMethodsScreenBackClick(event.navigator)
+                event.navigator?.let { onResetPasswordMethodsScreenBackClick(it) }
             }
             is ResetPasswordMethodsEvent.OnResetWithEmailClick -> {
-                onResetPasswordByEmailClick(event.navigator)
+                event.navigator?.let { onResetPasswordByEmailClick(it) }
             }
             is ResetPasswordMethodsEvent.OnResetWithPhoneClick -> {
-                onResetPasswordByPhoneClick(event.navigator)
+                event.navigator?.let { onResetPasswordByPhoneClick(it) }
             }
             is ResetPasswordMethodsEvent.OnSendCodeToEmailClick -> {
-                onSendCodeToEmailClick(event.navigator)
+                event.navigator?.let { onSendCodeToEmailClick(it) }
             }
             is ResetPasswordMethodsEvent.OnSendCodeToPhoneClick -> {
-                onSendCodeToPhoneClick(event.navigator)
+                event.navigator?.let { onSendCodeToPhoneClick(it) }
+            }
+            is ResetPasswordMethodsEvent.OnValidateClick -> {
+                event.navigator?.let { onValidateClick(it) }
+            }
+            is ResetPasswordMethodsEvent.OnResendClickClick -> {
+                onResendClickClick()
             }
         }
 
     }
+
+
 
 }

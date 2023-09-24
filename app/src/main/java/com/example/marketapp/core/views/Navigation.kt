@@ -1,5 +1,6 @@
 package com.example.marketapp.core.views
 
+//import com.example.marketapp.destinations.MethodsScreenDestination
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -8,15 +9,18 @@ import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.core.views.screens.OnBoardingScreen
 import com.example.marketapp.core.views.screens.SplashScreen
 import com.example.marketapp.destinations.LoginScreenDestination
-import com.example.marketapp.destinations.MethodsScreenDestination
 import com.example.marketapp.destinations.OnBoardingScreenDestination
 import com.example.marketapp.destinations.ResetPasswordByEmailScreenDestination
+import com.example.marketapp.destinations.ResetPasswordByPhoneScreenDestination
 import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
+import com.example.marketapp.destinations.ResetPasswordPinScreenDestination
 import com.example.marketapp.destinations.SplashScreenDestination
 import com.example.marketapp.features.auth.view.screens.login.LoginScreen
-import com.example.marketapp.features.auth.view.screens.methods.MethodsScreen
+import com.example.marketapp.features.auth.view.screens.methods.LoginMethodsScreen
 import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordByEmailScreen
+import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordByPhoneScreen
 import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordMethodsScreen
+import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordPinScreen
 import com.example.marketapp.features.auth.view.viewmodels.login.LoginEvent
 import com.example.marketapp.features.auth.view.viewmodels.login.LoginViewModel
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordMethodsEvent
@@ -50,8 +54,8 @@ fun Navigation(
                 onScreenLaunch = { scope.launch { coreViewModel.onSplashScreenLaunch(it) } }
             )
         }
-        composable(MethodsScreenDestination) {
-            MethodsScreen(
+        composable(LoginScreenDestination) {
+            LoginMethodsScreen(
                 navigator = destinationsNavigator,
                 onLoginClick = { coreViewModel.onMethodsScreenLoginClick(it) },
                 onRegisterClick = { coreViewModel.onMethodsScreenRegisterClick(it) },
@@ -88,6 +92,29 @@ fun Navigation(
                 onBackArrowClick = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnBackButtonClick(it))},
                 onEmailChangeClick = { resetPasswordViewModel.updateEmail(it) },
                 onNextClick = { resetPasswordViewModel.onEvent( ResetPasswordMethodsEvent.OnSendCodeToEmailClick(it))},
+            )
+        }
+
+        composable(ResetPasswordByPhoneScreenDestination) {
+            ResetPasswordByPhoneScreen(
+                navigator = destinationsNavigator,
+                state = resetPasswordViewModel.state.value,
+                onBackArrowClick = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnBackButtonClick(it))},
+                onPhoneChangeClick = { resetPasswordViewModel.updatePhoneNumber(it) },
+                onNextClick = { resetPasswordViewModel.onEvent( ResetPasswordMethodsEvent.OnSendCodeToPhoneClick(it))},
+            )
+        }
+
+
+        composable(ResetPasswordPinScreenDestination) {
+            ResetPasswordPinScreen(
+                navigator = destinationsNavigator,
+                state = resetPasswordViewModel.state.value,
+                onBackArrowClick = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnBackButtonClick(it))},
+                onPinChangeClick = { resetPasswordViewModel.updatePin(it) },
+                onValidateClick = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnValidateClick(it)) },
+                onComplete = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnValidateClick(it)) },
+                onResendClick = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnResendClickClick) }
             )
         }
 

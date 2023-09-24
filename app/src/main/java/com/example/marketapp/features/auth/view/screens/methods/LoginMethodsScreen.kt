@@ -50,7 +50,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @SuppressLint("ResourceType")
 @Destination
 @Composable
-fun MethodsScreen(
+fun LoginMethodsScreen(
     navigator: DestinationsNavigator?,
     onLoginClick : (DestinationsNavigator) -> Unit = {},
     onRegisterClick : (DestinationsNavigator) -> Unit = {},
@@ -250,7 +250,7 @@ fun MethodsScreen(
 @Composable
 fun MethodsScreenPreview() {
     MarketAppTheme {
-        MethodsScreen(
+        LoginMethodsScreen(
             navigator = null
         )
     }

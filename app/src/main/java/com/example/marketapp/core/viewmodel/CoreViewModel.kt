@@ -2,7 +2,6 @@ package com.example.marketapp.core.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.marketapp.destinations.LoginScreenDestination
-import com.example.marketapp.destinations.MethodsScreenDestination
 import com.example.marketapp.destinations.OnBoardingScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,11 +22,11 @@ class CoreViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onOnBoardingScreenNextClick(navigator : DestinationsNavigator?){
-        navigator?.navigate(MethodsScreenDestination())
+        navigator?.navigate(LoginScreenDestination())
     }
 
     fun onOnBoardingScreenSkipClick(navigator : DestinationsNavigator?){
-        navigator?.navigate(MethodsScreenDestination())
+        navigator?.navigate(LoginScreenDestination())
     }
 
     fun onMethodsScreenLoginClick(navigator : DestinationsNavigator?){

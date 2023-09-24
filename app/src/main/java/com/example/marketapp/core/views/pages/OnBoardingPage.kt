@@ -83,7 +83,7 @@ fun OnBoardingPage(
             visible = visible1,
             enter = slideInHorizontally {
                 // Slide in from 40 dp from the top.
-                with(density) { 40.dp.roundToPx() }
+                with(density) { 20.dp.roundToPx() }
             } + fadeIn(
                 // Fade in with the initial alpha of 0.3f.
                 initialAlpha = 0.3f
@@ -91,7 +91,6 @@ fun OnBoardingPage(
             exit = slideOutVertically() + shrinkVertically() + fadeOut()
         ) {
             Text(
-                modifier = Modifier.padding(horizontal = 20.dp),
                 text = label,
                 style = TextStyle(
                     fontFamily = Cairo,
@@ -116,7 +115,6 @@ fun OnBoardingPage(
             exit = slideOutVertically() + shrinkVertically() + fadeOut()
         ) {
             Text(
-                modifier = Modifier.padding(horizontal = 20.dp),
                 text = subText,
                 style = TextStyle(
                     fontFamily = Cairo,
