@@ -6,4 +6,5 @@ data class ResetPasswordState (
     var phone : String = "",
     var pinCode : String = "",
     var isSendingPinCode : Boolean = false,
+    var isValidatingPinCode : Boolean = false,
 )

@@ -1,8 +1,10 @@
 package com.example.marketapp.core.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.marketapp.destinations.LoginMethodsScreenDestination
 import com.example.marketapp.destinations.LoginScreenDestination
 import com.example.marketapp.destinations.OnBoardingScreenDestination
+import com.example.marketapp.destinations.RegisterScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -22,11 +24,11 @@ class CoreViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onOnBoardingScreenNextClick(navigator : DestinationsNavigator?){
-        navigator?.navigate(LoginScreenDestination())
+        navigator?.navigate(LoginMethodsScreenDestination())
     }
 
     fun onOnBoardingScreenSkipClick(navigator : DestinationsNavigator?){
-        navigator?.navigate(LoginScreenDestination())
+        navigator?.navigate(LoginMethodsScreenDestination())
     }
 
     fun onMethodsScreenLoginClick(navigator : DestinationsNavigator?){
@@ -34,7 +36,7 @@ class CoreViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onMethodsScreenRegisterClick(navigator : DestinationsNavigator?){
-        //navigator?.navigate(MethodsScreenDestination())
+        navigator?.navigate(RegisterScreenDestination())
     }
 
     fun onMethodsScreenLoginWithGoogleClick(navigator : DestinationsNavigator?){

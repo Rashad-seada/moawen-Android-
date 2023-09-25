@@ -47,6 +47,11 @@
     <string name="didnt_recive_code">لم يصلك الكود؟</string>
     <string name="resend_new_code">ارسل كود جديد</string>
     <string name="validate">تحقق</string>
+    <string name="register_sub_text">Please register and start the journy of successful learning</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="renter_password">Renter password</string>
+    <string name="renter_password_hint">Please renter your password</string>
+    <string name="internet_connection">Please check your internet connection and try again</string>
 
 
 </resources>

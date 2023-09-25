@@ -67,7 +67,7 @@ fun CustomTextField(
                 if(isSecure){
                     if (newValue.length <= value.length) {
                         // Handle backspace or character removal
-                        onValueChange(newValue)
+                        onValueChange(value.dropLast(1))
                     } else {
                         // Handle character addition
 
