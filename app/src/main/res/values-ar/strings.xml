@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Market app</string>
+
+    <string name="login">تسجيل الدخول</string>
+    <string name="login_sub_text">من فضلك قم بتسجيل الدخول لتستمتع بخدماتنا المميزه</string>
+
+
+    <string name="username">اسم المستخدم</string>
+    <string name="username_hint">من فضلك ادخل اسم المستخدم</string>
+
+    <string name="password">الرقم السري</string>
+    <string name="password_hint">من فضلك ادخل الرقم السري</string>
+
+    <string name="remember_me">تذكرني</string>
+    <string name="forgot_password">نسيت كلمه المرور</string>
+
+    <string name="dont_have_account">ليس لديك حساب؟</string>
+    <string name="register">تسجل حساب</string>
+
+    <string name="or_login_with">او قم بالتسجيل عبر</string>
+    <string name="google">جوجل</string>
+
+    <string name="on_boarding_title_1">اكتشف إمكانياتك</string>
+    <string name="on_boarding_sub_text_1">اكتشف قوة التعلم الذاتي مع تطبيقنا. تحكم في تعليمك بنفسك، واضبط أهدافك الخاصة، واستكشف عالم المعرفة عن كثب على متن الجهاز الذي بين يديك.</string>
+
+    <string name="on_boarding_title_2">تعلم على طريقتك</string>
+    <string name="on_boarding_sub_text_2">الحياة مزدحمة، وجدولك أيضًا. مع تطبيقنا، يمكنك الدراسة في أي وقت وأي مكان يناسبك. قم بتخصيص رحلتك التعليمية لتناسب نمط حياتك.</string>
+
+    <string name="on_boarding_title_3">إمكانيات لا حصر لها</string>
+    <string name="on_boarding_sub_text_3">انغمس في عالم مليء بفرص التعلم. من دورات تغطي مجموعة متنوعة من المواضيع إلى مدرسين محترفين، تطبيقنا هو بوابتك إلى عالم المعرفة اللامتناهية.</string>
+    <string name="skip">تخطي</string>
+    <string name="next">التالي</string>
+    <string name="welocme">مرحبا</string>
+    <string name="welocme_sub_text">من فضلك اختر الطريقه اللتي تود الدخول بيها الى التطبيق</string>
+    <string name="reset_password">اعاده تعيين كلمه المرور</string>
+    <string name="reset_password_sub_text">من فضلك قم بختيار الطريقه المفضله لاعاده تعيين كلمه المرور</string>
+    <string name="reset_password_by_email">اعاده تعيين كلمه المرور عن طريق الايميل</string>
+    <string name="reset_password_by_phone">اعاده تعيين كلمه المرور عن طريق رقم الهاتف</string>
+    <string name="reset_password_by_email_sub_text">من فضلك ادخل الايميل المربوط بحسابك</string>
+    <string name="email">الايميل</string>
+    <string name="email_hint">من فضل ادخل الايميل الخاص بك</string>
+    <string name="reset_password_by_phone_sub_text">من فضل ادخل رقم الهاتف المتصل بالحساب الخاص بك</string>
+    <string name="phone">رقم الهاتف</string>
+    <string name="phone_hint">من فضل ادخل رقم الهاتفك</string>
+    <string name="verify_pin_code">تحقق من الكود</string>
+    <string name="verify_pin_code_sub_text">ادخل الكود اللذي تم ارساله اليك للمتابعه</string>
+    <string name="didnt_recive_code">لم يصلك الكود؟</string>
+    <string name="resend_new_code">ارسل كود جديد</string>
+    <string name="validate">تحقق</string>
+    <string name="register_sub_text">Please register and start the journy of successful learning</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="renter_password">Renter password</string>
+    <string name="renter_password_hint">Please renter your password</string>
+    <string name="internet_connection">Please check your internet connection and try again</string>
+
+
+</resources>
