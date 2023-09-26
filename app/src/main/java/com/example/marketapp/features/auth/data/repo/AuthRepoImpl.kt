@@ -40,10 +40,30 @@ class AuthRepoImpl @Inject constructor(
 
             val loginEntity = remoteDataSource.login(username = email, password = password)
 
-            if (loginEntity.res.toInt() != 1) {
+            if(!loginEntity.isSuccessful){
                 return LoginResposne(
                     failure = RemoteDataFailure(
-                        message = loginEntity.msg,
+                        message = context.getString(R.string.server_is_down),
+                        screenId = screenId,
+                        customCode = 0,
+                    )
+                )
+            }
+
+            if(loginEntity.body() == null) {
+                return LoginResposne(
+                    failure = RemoteDataFailure(
+                        message = context.getString(R.string.the_server_returned_null),
+                        screenId = screenId,
+                        customCode = 1,
+                    )
+                )
+            }
+
+            if (loginEntity.body()!!.res.toInt() != 1) {
+                return LoginResposne(
+                    failure = RemoteDataFailure(
+                        message = loginEntity.body()!!.msg,
                         screenId = screenId,
                         customCode = 2,
                     )
@@ -51,7 +71,7 @@ class AuthRepoImpl @Inject constructor(
             }
 
             return LoginResposne(
-                loginEntity = loginEntity
+                loginEntity = loginEntity.body()!!
             )
 
         } catch (e: Exception) {
@@ -74,7 +94,10 @@ class AuthRepoImpl @Inject constructor(
                     customCode = 0
                 )
 
-                else -> InternalFailure(e.message.toString(), screenId, customCode = 0)
+                else -> InternalFailure(
+                    e.message.toString(),
+                    screenId, customCode = 0
+                )
             }
 
             return LoginResposne(

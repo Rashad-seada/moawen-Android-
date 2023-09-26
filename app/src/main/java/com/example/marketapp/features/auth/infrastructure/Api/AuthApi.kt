@@ -1,6 +1,7 @@
 package com.example.marketapp.features.auth.infrastructure.Api
 
 import com.example.marketapp.features.auth.data.entities.LoginEntity
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,7 +15,7 @@ interface AuthApi {
         @Query("uname") username: String,
         @Query("upass") password: String,
         @Query("SRV_DATA") serviceData: String,
-    ): LoginEntity
+    ): Response<LoginEntity>
 
 
 

@@ -52,6 +52,8 @@
     <string name="renter_password">Renter password</string>
     <string name="renter_password_hint">Please renter your password</string>
     <string name="internet_connection">Please check your internet connection and try again</string>
+    <string name="server_is_down">The server is down please try again later</string>
+    <string name="the_server_returned_null">The server returned body equal to null</string>
 
 
 </resources>
