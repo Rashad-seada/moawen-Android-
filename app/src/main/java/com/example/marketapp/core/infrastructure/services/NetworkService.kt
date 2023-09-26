@@ -4,10 +4,16 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.marketapp.core.errors.ServiceException
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 import javax.inject.Inject
 
 interface NetworkService {
     fun isNetworkConnected(context: Context): Boolean
+
+    fun isInternetStable(): Boolean
+
 }
 
 class NetworkServiceImpl @Inject constructor(): NetworkService {
@@ -31,6 +37,19 @@ class NetworkServiceImpl @Inject constructor(): NetworkService {
             throw ServiceException(e.message)
         }
 
+    }
+
+    override fun isInternetStable(): Boolean {
+        val pingUrl = "https://www.ping.com" // You can use any reliable URL
+        try {
+            val url = URL(pingUrl)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.connectTimeout = 3000 // Adjust the timeout as needed
+            connection.connect()
+            return connection.responseCode == 200
+        } catch (e: IOException) {
+            return false
+        }
     }
 
 }

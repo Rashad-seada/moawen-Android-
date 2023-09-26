@@ -160,7 +160,7 @@ fun LoginScreen(
                     Image(
                         modifier = Modifier.padding(end = 0.dp),
                         painter = painterResource(id = R.drawable.profile_inactive),
-                        contentDescription = ""
+                        contentDescription = "Good morning Rashad and good work"
                     )
                 },
 

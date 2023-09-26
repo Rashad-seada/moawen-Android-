@@ -55,22 +55,17 @@ import kotlinx.coroutines.launch
 fun RegisterScreen(
     navigator: DestinationsNavigator?,
     state: RegisterState = RegisterState(),
-
     onChangeUsername: (String) -> Unit = {},
     onChangePhone: (String) -> Unit = {},
     onChangeEmail: (String) -> Unit = {},
     onChangePassword: (String) -> Unit = {},
     onChangePasswordRenter: (String) -> Unit = {},
-
     onSecurePasswordClick: () -> Unit = {},
     onSecurePasswordRenterClick: () -> Unit = {},
-
     onLoginClick: (DestinationsNavigator) -> Unit = {},
     onRegisterClick: (DestinationsNavigator) -> Unit = {},
-
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
-
-    ) {
+) {
 
     val context: Context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -163,8 +158,8 @@ fun RegisterScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                label = context.getString(R.string.username),
-                placeHolder = context.getString(R.string.username_hint),
+                label = context.getString(R.string.email),
+                placeHolder = context.getString(R.string.email_hint),
                 leadingIcon = {
                     Image(
                         modifier = Modifier.padding(end = 0.dp),
@@ -319,7 +314,7 @@ fun RegisterScreen(
                     .clickable {
                         scope.launch {
                             navigator?.let {
-                                onLoginClick(navigator)
+                                onRegisterClick(navigator)
                             }
                         }
                     },

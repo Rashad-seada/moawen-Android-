@@ -43,7 +43,7 @@ class ResetPasswordViewModel @Inject constructor(): ViewModel() {
     }
 
     fun updateEmail(email : String ){
-        state.value = state.value.copy(
+        state.value = state.value .copy(
             email = email
         )
     }

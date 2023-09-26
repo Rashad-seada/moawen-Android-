@@ -1,4 +1,4 @@
-package com.example.marketapp.core.mappers.base64_converters
+package com.example.marketapp.core.util.base64_converters
 
 import java.util.Base64
 

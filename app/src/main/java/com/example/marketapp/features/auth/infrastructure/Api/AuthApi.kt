@@ -3,10 +3,12 @@ package com.example.marketapp.features.auth.infrastructure.Api
 import com.example.marketapp.features.auth.data.entities.LoginEntity
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface AuthApi {
 
+    @Headers("Content-Type: application/json")
     @GET("/SRV")
     suspend fun login(
         @Query("srv_code") serviceCode: Int,

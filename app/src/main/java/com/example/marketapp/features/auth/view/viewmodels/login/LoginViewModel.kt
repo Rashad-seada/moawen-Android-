@@ -1,10 +1,10 @@
 package com.example.marketapp.features.auth.view.viewmodels.login
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.destinations.RegisterScreenDestination
 import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
 import com.example.marketapp.features.auth.domain.usecases.LoginUseCase
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
 ) : ViewModel() {
 
     val loginScreenId = 0
@@ -62,15 +62,17 @@ class LoginViewModel @Inject constructor(
     private fun onLoginClick(context: Context){
         job?.cancel()
         job = viewModelScope.launch {
-            state.value = state.value.copy(
-                isLoginLoading = true
-            )
-            var resposne = loginUseCase(state.value.username,state.value.password,context,loginScreenId)
-            Log.v(">>>>>>>>>>>>>>>>>>>>>>>>>", "${resposne.failure?.message}")
 
-            state.value = state.value.copy(
-                isLoginLoading = false
-            )
+            state.value = state.value.copy(isLoginLoading = true)
+            val response = loginUseCase(state.value.username,state.value.password,context,loginScreenId)
+            state.value = state.value.copy(isLoginLoading = false)
+
+            if(response.failure != null) {
+                CoreViewModel.showSnackbar(("Error: " + response.failure.message))
+            } else {
+                CoreViewModel.showSnackbar(("Success: " + response.data?.msg))
+            }
+
         }
 
 

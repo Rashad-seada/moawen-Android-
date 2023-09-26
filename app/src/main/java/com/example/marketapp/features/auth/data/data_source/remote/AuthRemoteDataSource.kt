@@ -1,10 +1,11 @@
 package com.example.marketapp.features.auth.data.data_source.remote
 
+import com.example.marketapp.R
 import com.example.marketapp.core.errors.RemoteDataException
-import com.example.marketapp.core.mappers.base64_converters.toBase64
 import com.example.marketapp.core.util.Consts.DEFAULT_EMAIL
 import com.example.marketapp.core.util.Consts.DEFAULT_PASSWORD
 import com.example.marketapp.core.util.Consts.DEFAULT_USER_ID
+import com.example.marketapp.core.util.base64_converters.toBase64
 import com.example.marketapp.features.auth.data.entities.LoginEntity
 import com.example.marketapp.features.auth.infrastructure.Api.AuthApi
 import retrofit2.Response
@@ -37,7 +38,11 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi): AuthRemote
             )
 
         } catch (e: Exception) {
-            throw RemoteDataException(e.message)
+            if (e is java.net.SocketTimeoutException) {
+                throw RemoteDataException(R.string.internet_connection.toString())
+            } else {
+                throw RemoteDataException(e.message)
+            }
         }
 
     }

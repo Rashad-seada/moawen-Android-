@@ -10,9 +10,10 @@ import com.example.marketapp.core.errors.RemoteDataFailure
 import com.example.marketapp.core.errors.ServiceException
 import com.example.marketapp.core.errors.ServiceFailure
 import com.example.marketapp.core.infrastructure.services.NetworkServiceImpl
+import com.example.marketapp.core.util.Resource
 import com.example.marketapp.features.auth.data.data_source.remote.AuthRemoteDataSourceImpl
+import com.example.marketapp.features.auth.data.entities.LoginEntity
 import com.example.marketapp.features.auth.domain.repo.AuthRepo
-import com.example.marketapp.features.auth.infrastructure.Api.LoginResposne
 import javax.inject.Inject
 
 class AuthRepoImpl @Inject constructor(
@@ -25,11 +26,12 @@ class AuthRepoImpl @Inject constructor(
         password: String,
         context: Context,
         screenId: Int
-    ): LoginResposne {
+    ): Resource<LoginEntity> {
         try {
 
+
             if (!networkService.isNetworkConnected(context)) {
-                return LoginResposne(
+                return Resource.FailureData(
                     failure = ServiceFailure(
                         message = context.getString(R.string.internet_connection),
                         screenId = screenId,
@@ -40,38 +42,43 @@ class AuthRepoImpl @Inject constructor(
 
             val loginEntity = remoteDataSource.login(username = email, password = password)
 
-            if(!loginEntity.isSuccessful){
-                return LoginResposne(
-                    failure = RemoteDataFailure(
-                        message = context.getString(R.string.server_is_down),
-                        screenId = screenId,
-                        customCode = 0,
+
+            when {
+
+                !loginEntity.isSuccessful -> {
+                    return Resource.FailureData(
+                        failure = RemoteDataFailure(
+                            message = context.getString(R.string.server_is_down),
+                            screenId = screenId,
+                            customCode = 0,
+                        )
                     )
-                )
+                }
+
+                loginEntity.body() == null -> {
+                    return Resource.FailureData(
+                        failure = RemoteDataFailure(
+                            message = context.getString(R.string.the_server_returned_null),
+                            screenId = screenId,
+                            customCode = 1,
+                        )
+                    )
+                }
+
+                loginEntity.body()!!.res.toInt() != 1 -> {
+                    return Resource.FailureData(
+                        failure = RemoteDataFailure(
+                            message = loginEntity.body()!!.msg,
+                            screenId = screenId,
+                            customCode = 2,
+                        )
+                    )
+                }
             }
 
-            if(loginEntity.body() == null) {
-                return LoginResposne(
-                    failure = RemoteDataFailure(
-                        message = context.getString(R.string.the_server_returned_null),
-                        screenId = screenId,
-                        customCode = 1,
-                    )
-                )
-            }
 
-            if (loginEntity.body()!!.res.toInt() != 1) {
-                return LoginResposne(
-                    failure = RemoteDataFailure(
-                        message = loginEntity.body()!!.msg,
-                        screenId = screenId,
-                        customCode = 2,
-                    )
-                )
-            }
-
-            return LoginResposne(
-                loginEntity = loginEntity.body()!!
+            return Resource.SuccessData(
+                data = loginEntity.body()!!,
             )
 
         } catch (e: Exception) {
@@ -83,7 +90,7 @@ class AuthRepoImpl @Inject constructor(
                 )
 
                 is RemoteDataException -> RemoteDataFailure(
-                    e.message.toString(),
+                    context.getString(R.string.internet_connection),
                     screenId,
                     customCode = 0
                 )
@@ -100,7 +107,7 @@ class AuthRepoImpl @Inject constructor(
                 )
             }
 
-            return LoginResposne(
+            return Resource.FailureData(
                 failure = failure
             )
 
