@@ -25,7 +25,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi): AuthRemote
     override suspend fun login(username: String, password: String) : LoginEntity {
 
         try {
-            val serviceData : String = "[{uname:$username,upass:$password,ismob:0}]".toBase64()
+            val serviceData : String = "[{\"uname\":\"$username\",\"upass\":\"$password\",\"ismob\":\"0\"}]".toBase64()
             return  api.login(
                 serviceCode = serviceCode,
                 folderId = folderId,
