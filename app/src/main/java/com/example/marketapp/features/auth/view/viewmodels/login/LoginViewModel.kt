@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.marketapp.core.util.usecase.ValidateEmailUseCase
-import com.example.marketapp.core.util.usecase.ValidatePasswordUseCase
+import com.example.marketapp.core.util.usecase.ValidateEmailLocalUseCase
+import com.example.marketapp.core.util.usecase.ValidatePasswordLocalUseCase
 import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.destinations.RegisterScreenDestination
 import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
@@ -21,10 +21,10 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val validateEmailLocalUseCase: ValidateEmailLocalUseCase,
+    private val validatePasswordLocalUseCase: ValidatePasswordLocalUseCase,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     val loginScreenId = 0
     var state by mutableStateOf(LoginState())
@@ -113,8 +113,8 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun validateForm(context: Context, callBackFunction : ()-> Unit){
-        val emailResult = validateEmailUseCase(state.username,context)
-        val passwordResult = validatePasswordUseCase(state.password,context)
+        val emailResult = validateEmailLocalUseCase(state.username,context)
+        val passwordResult = validatePasswordLocalUseCase(state.password,context)
 
         val hasError = listOf(
             emailResult,

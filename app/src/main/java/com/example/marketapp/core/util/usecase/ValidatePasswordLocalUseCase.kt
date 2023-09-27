@@ -6,7 +6,7 @@ import com.example.marketapp.core.errors.Failure
 import com.example.marketapp.core.util.Resource
 import javax.inject.Inject
 
-class ValidatePasswordUseCase @Inject constructor() {
+class ValidatePasswordLocalUseCase @Inject constructor() {
 
     operator fun invoke(password: String, context: Context): Resource<Boolean?> {
 

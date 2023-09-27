@@ -7,7 +7,7 @@ import com.example.marketapp.core.util.Resource
 import com.example.marketapp.core.util.validator.Validator
 import javax.inject.Inject
 
-class ValidatePhoneUseCase @Inject constructor(
+class ValidateEmailLocalUseCase @Inject constructor(
     val validator : Validator
 ) {
 
@@ -24,10 +24,10 @@ class ValidatePhoneUseCase @Inject constructor(
             )
         }
 
-        if (!validator.isValidPhone(email)) {
+        if (!validator.isValidEmail(email)) {
             return Resource.FailureData(
                 Failure(
-                    message = context.getString(R.string.string_is_not_phone),
+                    message = context.getString(R.string.string_is_not_email),
                     screenIdInt = 0,
                     exceptionCode = 0,
                     customCode = 0

@@ -2,9 +2,9 @@ package com.example.marketapp.core.di
 
 import com.example.marketapp.core.infrastructure.services.NetworkServiceImpl
 import com.example.marketapp.core.util.Consts.BASE_URL
-import com.example.marketapp.core.util.usecase.ValidateEmailUseCase
-import com.example.marketapp.core.util.usecase.ValidatePasswordUseCase
-import com.example.marketapp.core.util.usecase.ValidatePhoneUseCase
+import com.example.marketapp.core.util.usecase.ValidateEmailLocalUseCase
+import com.example.marketapp.core.util.usecase.ValidatePasswordLocalUseCase
+import com.example.marketapp.core.util.usecase.ValidatePhoneLocalUseCase
 import com.example.marketapp.core.util.validator.Validator
 import com.example.marketapp.features.auth.data.data_source.remote.AuthRemoteDataSourceImpl
 import com.example.marketapp.features.auth.data.repo.AuthRepoImpl
@@ -14,6 +14,8 @@ import com.example.marketapp.features.auth.domain.usecases.RegisterUseCase
 import com.example.marketapp.features.auth.domain.usecases.ResetPasswordByEmailUseCase
 import com.example.marketapp.features.auth.domain.usecases.ResetPasswordByPhoneUseCase
 import com.example.marketapp.features.auth.domain.usecases.SendSmsUseCase
+import com.example.marketapp.features.auth.domain.usecases.ValidateEmailUseCase
+import com.example.marketapp.features.auth.domain.usecases.ValidatePhoneUseCase
 import com.example.marketapp.features.auth.domain.usecases.ValidateSmsUseCase
 import com.example.marketapp.features.auth.infrastructure.Api.AuthApi
 import com.google.gson.GsonBuilder
@@ -114,14 +116,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideValidateEmailUseCase(repo : AuthRepoImpl) : com.example.marketapp.features.auth.domain.usecases.ValidateEmailUseCase {
-        return com.example.marketapp.features.auth.domain.usecases.ValidateEmailUseCase(repo)
+    fun provideValidateEmailUseCase(repo : AuthRepoImpl) : ValidateEmailUseCase {
+        return ValidateEmailUseCase(repo)
     }
 
     @Provides
     @Singleton
-    fun provideValidatePhoneUseCase(repo : AuthRepoImpl) : com.example.marketapp.features.auth.domain.usecases.ValidatePhoneUseCase {
-        return com.example.marketapp.features.auth.domain.usecases.ValidatePhoneUseCase(repo)
+    fun provideValidatePhoneUseCase(repo : AuthRepoImpl) : ValidatePhoneUseCase {
+        return ValidatePhoneUseCase(repo)
     }
 
     @Provides
@@ -132,20 +134,20 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideValidateEmailUseCase(validator: Validator) : ValidateEmailUseCase {
-        return ValidateEmailUseCase(validator)
+    fun provideLocalValidateEmailUseCase(validator: Validator) : ValidateEmailLocalUseCase {
+        return ValidateEmailLocalUseCase(validator)
     }
 
     @Provides
     @Singleton
-    fun provideValidatePhoneUseCase(validator: Validator) : ValidatePhoneUseCase {
-        return ValidatePhoneUseCase(validator)
+    fun provideLocalValidatePhoneUseCase(validator: Validator) : ValidatePhoneLocalUseCase {
+        return ValidatePhoneLocalUseCase(validator)
     }
 
     @Provides
     @Singleton
-    fun provideValidatePasswordUseCase() : ValidatePasswordUseCase {
-        return ValidatePasswordUseCase()
+    fun provideValidatePasswordUseCase() : ValidatePasswordLocalUseCase {
+        return ValidatePasswordLocalUseCase()
     }
 
     @Provides
