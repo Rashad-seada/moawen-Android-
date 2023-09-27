@@ -8,7 +8,13 @@ import com.example.marketapp.core.util.usecase.ValidatePhoneUseCase
 import com.example.marketapp.core.util.validator.Validator
 import com.example.marketapp.features.auth.data.data_source.remote.AuthRemoteDataSourceImpl
 import com.example.marketapp.features.auth.data.repo.AuthRepoImpl
+import com.example.marketapp.features.auth.domain.usecases.ActivateAccountUseCase
 import com.example.marketapp.features.auth.domain.usecases.LoginUseCase
+import com.example.marketapp.features.auth.domain.usecases.RegisterUseCase
+import com.example.marketapp.features.auth.domain.usecases.ResetPasswordByEmailUseCase
+import com.example.marketapp.features.auth.domain.usecases.ResetPasswordByPhoneUseCase
+import com.example.marketapp.features.auth.domain.usecases.SendSmsUseCase
+import com.example.marketapp.features.auth.domain.usecases.ValidateSmsUseCase
 import com.example.marketapp.features.auth.infrastructure.Api.AuthApi
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -74,6 +80,54 @@ object AppModule {
     @Singleton
     fun provideLoginUseCase(repo : AuthRepoImpl) : LoginUseCase {
         return LoginUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRegisterUseCase(repo : AuthRepoImpl) : RegisterUseCase {
+        return RegisterUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivateAccountUseCase(repo : AuthRepoImpl) : ActivateAccountUseCase {
+        return ActivateAccountUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideResetPasswordByEmailUseCase(repo : AuthRepoImpl) : ResetPasswordByEmailUseCase {
+        return ResetPasswordByEmailUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideResetPasswordByPhoneUseCase(repo : AuthRepoImpl) : ResetPasswordByPhoneUseCase {
+        return ResetPasswordByPhoneUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSendSmsCodeUseCase(repo : AuthRepoImpl) : SendSmsUseCase {
+        return SendSmsUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateEmailUseCase(repo : AuthRepoImpl) : com.example.marketapp.features.auth.domain.usecases.ValidateEmailUseCase {
+        return com.example.marketapp.features.auth.domain.usecases.ValidateEmailUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidatePhoneUseCase(repo : AuthRepoImpl) : com.example.marketapp.features.auth.domain.usecases.ValidatePhoneUseCase {
+        return com.example.marketapp.features.auth.domain.usecases.ValidatePhoneUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateSmsCodeUseCase(repo : AuthRepoImpl) : ValidateSmsUseCase {
+        return ValidateSmsUseCase(repo)
     }
 
     @Provides
