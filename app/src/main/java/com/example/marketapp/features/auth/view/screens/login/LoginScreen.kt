@@ -62,15 +62,15 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     navigator: DestinationsNavigator?,
     state: LoginState = LoginState(),
-    onChangeUsername : (String) -> Unit = {},
-    onChangePassword : (String) -> Unit = {},
-    onSecurePasswordClick : () -> Unit = {},
-    onLoginClick : (DestinationsNavigator,Context) -> Unit = { _,_ ->  },
-    onLoginWithGoogleClick : (DestinationsNavigator) -> Unit = {},
-    onRememberMeClick : () -> Unit = {},
-    onForgotPasswordClick : (DestinationsNavigator) -> Unit = {},
-    onRegisterClick : (DestinationsNavigator) -> Unit = {},
-    onBackArrowClick : (DestinationsNavigator) -> Unit = {},
+    onChangeUsername: (String) -> Unit = {},
+    onChangePassword: (String) -> Unit = {},
+    onSecurePasswordClick: () -> Unit = {},
+    onLoginClick: (DestinationsNavigator, Context) -> Unit = { _, _ -> },
+    onLoginWithGoogleClick: (DestinationsNavigator) -> Unit = {},
+    onRememberMeClick: () -> Unit = {},
+    onForgotPasswordClick: (DestinationsNavigator) -> Unit = {},
+    onRegisterClick: (DestinationsNavigator) -> Unit = {},
+    onBackArrowClick: (DestinationsNavigator) -> Unit = {},
 
     ) {
 
@@ -160,11 +160,12 @@ fun LoginScreen(
                     Image(
                         modifier = Modifier.padding(end = 0.dp),
                         painter = painterResource(id = R.drawable.profile_inactive),
-                        contentDescription = "Good morning Rashad and good work"
+                        contentDescription = ""
                     )
                 },
-
-                )
+                isError = state.usernameError != null,
+                errorMessage = state.usernameError ?: "",
+            )
             Spacer(modifier = Modifier.height(5.dp))
 
             CustomTextField(
@@ -196,7 +197,9 @@ fun LoginScreen(
                         painter = painterResource(id = R.drawable.eye_slash),
                         contentDescription = ""
                     )
-                }
+                },
+                isError = state.passwordError != null,
+                errorMessage = state.passwordError ?: "",
 
                 )
 
@@ -312,11 +315,11 @@ fun LoginScreen(
                 borderColor = Color.Transparent
             ) {
 
-                if(state.isLoginLoading){
+                if (state.isLoginLoading) {
                     CustomProgressIndicator(
                         modifier = Modifier.size(20.dp)
                     )
-                }else {
+                } else {
                     Text(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.login),

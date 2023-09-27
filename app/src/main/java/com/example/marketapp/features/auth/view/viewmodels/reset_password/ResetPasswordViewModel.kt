@@ -1,6 +1,8 @@
 package com.example.marketapp.features.auth.view.viewmodels.reset_password
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.marketapp.destinations.ResetPasswordByEmailScreenDestination
 import com.example.marketapp.destinations.ResetPasswordByPhoneScreenDestination
@@ -12,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(): ViewModel() {
 
-    var state = mutableStateOf(ResetPasswordState())
+    var state by mutableStateOf(ResetPasswordState())
 
     fun onResetPasswordMethodsScreenBackClick(navigator: DestinationsNavigator){
         navigator.popBackStack()
@@ -43,19 +45,19 @@ class ResetPasswordViewModel @Inject constructor(): ViewModel() {
     }
 
     fun updateEmail(email : String ){
-        state.value = state.value .copy(
+        state = state.copy(
             email = email
         )
     }
 
     fun updatePhoneNumber(phone : String ){
-        state.value = state.value.copy(
+        state = state.copy(
             phone = phone
         )
     }
 
     fun updatePin(pinCode: String) {
-        state.value = state.value.copy(
+        state = state.copy(
             pinCode = pinCode
         )
     }

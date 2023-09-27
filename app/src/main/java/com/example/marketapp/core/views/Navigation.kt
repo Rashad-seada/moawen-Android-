@@ -1,13 +1,17 @@
 package com.example.marketapp.core.views
 
 //import com.example.marketapp.destinations.MethodsScreenDestination
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -15,16 +19,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.isDebugInspectorInfoEnabled
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marketapp.NavGraphs
+import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.Cairo
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral200
+import com.example.marketapp.core.ui.theme.Neutral300
 import com.example.marketapp.core.ui.theme.Neutral400
 import com.example.marketapp.core.ui.theme.Neutral600
+import com.example.marketapp.core.ui.theme.Neutral700
 import com.example.marketapp.core.ui.theme.Neutral800
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.viewmodel.CoreViewModel
@@ -91,7 +100,7 @@ fun Navigation(
             composable(LoginScreenDestination) {
                 LoginScreen(
                     navigator = destinationsNavigator,
-                    state = loginViewModel.state.value,
+                    state = loginViewModel.state,
                     onChangeUsername = { loginViewModel.updateUsername(it) },
                     onChangePassword = { loginViewModel.updatePassword(it) },
                     onRememberMeClick = { loginViewModel.onEvent(LoginEvent.RememberMe) },
@@ -140,7 +149,7 @@ fun Navigation(
             composable(ResetPasswordByEmailScreenDestination) {
                 ResetPasswordByEmailScreen(
                     navigator = destinationsNavigator,
-                    state = resetPasswordViewModel.state.value,
+                    state = resetPasswordViewModel.state,
                     onBackArrowClick = {
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnBackButtonClick(
@@ -162,7 +171,7 @@ fun Navigation(
             composable(ResetPasswordByPhoneScreenDestination) {
                 ResetPasswordByPhoneScreen(
                     navigator = destinationsNavigator,
-                    state = resetPasswordViewModel.state.value,
+                    state = resetPasswordViewModel.state,
                     onBackArrowClick = {
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnBackButtonClick(
@@ -184,7 +193,7 @@ fun Navigation(
 
             composable(ResetPasswordPinScreenDestination) {
                 ResetPasswordPinScreen(navigator = destinationsNavigator,
-                    state = resetPasswordViewModel.state.value,
+                    state = resetPasswordViewModel.state,
                     onBackArrowClick = {
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnBackButtonClick(
@@ -213,7 +222,7 @@ fun Navigation(
             composable(RegisterScreenDestination) {
                 RegisterScreen(
                     navigator = destinationsNavigator,
-                    state = registerViewModel.state.value,
+                    state = registerViewModel.state,
                     onBackArrowClick = { registerViewModel.onEvent(RegisterEvent.OnBackClick(it)) },
                     onChangeUsername = { registerViewModel.updateUsername(it) },
                     onChangePhone = { registerViewModel.updatePhone(it) },
@@ -250,29 +259,41 @@ fun Navigation(
 
                     val messages = it.visuals.message.split(":")
 
-                    Column {
-                        Text(
-                            text = messages[0],
-                            style = TextStyle(
-                                fontFamily = Cairo,
-                                color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
-                                fontSize = 20.sp
+                    Row (
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Column {
+                            Text(
+                                text = messages[0],
+                                style = TextStyle(
+                                    fontFamily = Cairo,
+                                    color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                                    fontSize = 20.sp
+                                )
                             )
-                        )
 
-                        messages.forEachIndexed { index, s -> if(index != 0) Text(
-                            text = s,
-                            style = TextStyle(
-                                fontFamily = Cairo,
-                                color = if (isSystemInDarkTheme()) Neutral400 else Neutral600,
-                                fontSize = 16.sp
-                            )
-                        )
+                            messages.forEachIndexed { index, s ->
+                                if (index != 0) Text(
+                                    text = s,
+                                    style = TextStyle(
+                                        fontFamily = Cairo,
+                                        color = if (isSystemInDarkTheme()) Neutral400 else Neutral600,
+                                        fontSize = 16.sp
+                                    )
+                                )
+                            }
 
                         }
-
-
-
+                        Icon(
+                            modifier = Modifier.clickable {
+                                CoreViewModel.snackbarHostState.currentSnackbarData?.dismiss()
+                            },
+                            painter = painterResource(id = R.drawable.close_circle),
+                            contentDescription = null,
+                            tint = if(isDebugInspectorInfoEnabled) Neutral300 else Neutral700
+                        )
                     }
 
                 }

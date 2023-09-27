@@ -32,7 +32,8 @@ class CoreViewModel @Inject constructor() : ViewModel() {
                 snackbarHostState
                     .showSnackbar(
                         message = message,
-                        duration = SnackbarDuration.Short
+                        duration = SnackbarDuration.Short,
+                        withDismissAction = true
                     )
             }
         }

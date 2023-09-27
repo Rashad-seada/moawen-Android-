@@ -1,9 +1,13 @@
 package com.example.marketapp.features.auth.view.viewmodels.login
 
 import android.content.Context
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marketapp.core.util.usecase.ValidateEmailUseCase
+import com.example.marketapp.core.util.usecase.ValidatePasswordUseCase
 import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.destinations.RegisterScreenDestination
 import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
@@ -17,33 +21,37 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
+
 ) : ViewModel() {
 
     val loginScreenId = 0
-    var state = mutableStateOf(LoginState())
+    var state by mutableStateOf(LoginState())
     private var job : Job? = null
 
+
     fun updatePassword(paasword : String){
-        state.value = state.value.copy(
+        state = state.copy(
             password = paasword
         )
     }
 
     fun updateUsername(username : String){
-        state.value = state.value.copy(
+        state = state.copy(
             username = username
         )
     }
 
     fun updatePasswordSecureState(){
-        state.value = state.value.copy(
-            isPasswordSecure = !state.value.isPasswordSecure
+        state = state.copy(
+            isPasswordSecure = !state.isPasswordSecure
         )
     }
 
     private fun updateRememberMeState(){
-        state.value = state.value.copy(
-            rememberMe = !state.value.rememberMe
+        state= state.copy(
+            rememberMe = !state.rememberMe
         )
     }
 
@@ -63,9 +71,9 @@ class LoginViewModel @Inject constructor(
         job?.cancel()
         job = viewModelScope.launch {
 
-            state.value = state.value.copy(isLoginLoading = true)
-            val response = loginUseCase(state.value.username,state.value.password,context,loginScreenId)
-            state.value = state.value.copy(isLoginLoading = false)
+            state = state.copy(isLoginLoading = true)
+            val response = loginUseCase(state.username,state.password,context,loginScreenId)
+            state = state.copy(isLoginLoading = false)
 
             if(response.failure != null) {
                 CoreViewModel.showSnackbar(("Error: " + response.failure.message))
@@ -83,7 +91,7 @@ class LoginViewModel @Inject constructor(
 
         when(event){
             is LoginEvent.Login -> {
-                onLoginClick(event.context)
+                validateForm(event.context) { onLoginClick(event.context) }
             }
             is LoginEvent.Register -> {
                 onRegisterClick(event.navigator)
@@ -102,6 +110,30 @@ class LoginViewModel @Inject constructor(
                 onBackClick(event.navigator)
             }
         }
+    }
+
+    private fun validateForm(context: Context, callBackFunction : ()-> Unit){
+        val emailResult = validateEmailUseCase(state.username,context)
+        val passwordResult = validatePasswordUseCase(state.password,context)
+
+        val hasError = listOf(
+            emailResult,
+            passwordResult
+        ).any {
+            it.failure != null
+        }
+
+        state = state.copy(
+            usernameError = emailResult.failure?.message,
+            passwordError = passwordResult.failure?.message
+        )
+
+        if(hasError) {
+            return
+        }
+
+        callBackFunction()
+
     }
 
 

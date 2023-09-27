@@ -1,6 +1,8 @@
 package com.example.marketapp.features.auth.view.viewmodels.register
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.marketapp.destinations.LoginScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -10,47 +12,47 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(): ViewModel() {
 
-    var state = mutableStateOf(RegisterState())
+    var state by mutableStateOf(RegisterState())
 
     fun updateUsername(username: String){
-        state.value = state.value.copy(
+        state = state.copy(
             username = username
         )
     }
 
     fun updateEmail(email: String){
-        state.value = state.value.copy(
+        state = state.copy(
             email = email
         )
     }
 
     fun updatePhone(phone: String){
-        state.value = state.value.copy(
+        state= state.copy(
             phone = phone
         )
     }
 
     fun updatePassword(password: String){
-        state.value = state.value.copy(
+        state= state.copy(
             password = password
         )
     }
 
     fun updatePasswordRenter(passwordRenter: String) {
-        state.value = state.value.copy(
+        state= state.copy(
             passwordRenter = passwordRenter
         )
     }
 
     fun updateIsPasswordSecure(){
-        state.value = state.value.copy(
-            isPasswordSecure = !state.value.isPasswordSecure
+        state= state.copy(
+            isPasswordSecure = !state.isPasswordSecure
         )
     }
 
     fun updateIsPasswordRenterSecure(){
-        state.value = state.value.copy(
-            isPasswordRenterSecure = !state.value.isPasswordRenterSecure
+        state= state.copy(
+            isPasswordRenterSecure = !state.isPasswordRenterSecure
         )
     }
 

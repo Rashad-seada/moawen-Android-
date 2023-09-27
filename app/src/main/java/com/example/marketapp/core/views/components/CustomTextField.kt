@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,11 +18,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Error400Clr
+import com.example.marketapp.core.ui.theme.Error500Clr
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral300
 import com.example.marketapp.core.ui.theme.Neutral400
@@ -54,13 +58,18 @@ fun CustomTextField(
         focusedPlaceholderColor = if (isSystemInDarkTheme()) Neutral300 else Neutral600,
 
         unfocusedLabelColor = Neutral400,
-        unfocusedPlaceholderColor = Neutral400
+        unfocusedPlaceholderColor = Neutral400,
+
+        errorContainerColor = Color.Transparent,
+        errorLabelColor = if (isSystemInDarkTheme()) Error400Clr else Error500Clr,
+        errorIndicatorColor = if (isSystemInDarkTheme()) Error400Clr else Error500Clr
 
     )
 
     Column {
 
         OutlinedTextField(
+            modifier = modifier,
             value = if (isSecure) "●".repeat(value.length) else value,
             onValueChange = { newValue ->
 
@@ -107,7 +116,6 @@ fun CustomTextField(
             ),
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
-            modifier = modifier,
             shape = RoundedCornerShape(8.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = if(isSecure) KeyboardType.Password else KeyboardType.Text // This disables suggestions
@@ -121,8 +129,11 @@ fun CustomTextField(
         if (isError) {
             Text(
                 text = errorMessage,
-                color = Color.Red,
-                modifier = Modifier.align(alignment = Alignment.End)
+                fontFamily = Cairo,
+                color = if (isSystemInDarkTheme()) Error400Clr else Error500Clr,
+                fontSize = 14.sp,
+                modifier = Modifier.align(alignment = Alignment.End).fillMaxWidth().then(modifier),
+                textAlign = TextAlign.End
             )
         }
     }
@@ -136,7 +147,7 @@ fun DefaultPreview() {
         label = "Email",
         placeHolder = "Please enter your email",
         value = "rashadatef2@gmail.com",
-        isError = false,
+        isError = true,
         errorMessage = "Invalid input",
         leadingIcon = {
             Image(
@@ -144,6 +155,7 @@ fun DefaultPreview() {
                 contentDescription = ""
             )
         },
+
         //prefix = ,
     )
 }

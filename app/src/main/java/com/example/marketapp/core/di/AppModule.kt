@@ -2,6 +2,10 @@ package com.example.marketapp.core.di
 
 import com.example.marketapp.core.infrastructure.services.NetworkServiceImpl
 import com.example.marketapp.core.util.Consts.BASE_URL
+import com.example.marketapp.core.util.usecase.ValidateEmailUseCase
+import com.example.marketapp.core.util.usecase.ValidatePasswordUseCase
+import com.example.marketapp.core.util.usecase.ValidatePhoneUseCase
+import com.example.marketapp.core.util.validator.Validator
 import com.example.marketapp.features.auth.data.data_source.remote.AuthRemoteDataSourceImpl
 import com.example.marketapp.features.auth.data.repo.AuthRepoImpl
 import com.example.marketapp.features.auth.domain.usecases.LoginUseCase
@@ -70,6 +74,30 @@ object AppModule {
     @Singleton
     fun provideLoginUseCase(repo : AuthRepoImpl) : LoginUseCase {
         return LoginUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateEmailUseCase(validator: Validator) : ValidateEmailUseCase {
+        return ValidateEmailUseCase(validator)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidatePhoneUseCase(validator: Validator) : ValidatePhoneUseCase {
+        return ValidatePhoneUseCase(validator)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidatePasswordUseCase() : ValidatePasswordUseCase {
+        return ValidatePasswordUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidator() : Validator {
+        return Validator()
     }
 
 

@@ -5,6 +5,10 @@ data class LoginState(
     var isLoginLoading: Boolean = false,
     var isLoginWithGoogleLoading: Boolean = false,
     var isPasswordSecure: Boolean = true,
+
     var username: String = "",
-    var password: String = ""
+    var usernameError : String? = null,
+
+    var password: String = "",
+    val passwordError : String? = null
 )
