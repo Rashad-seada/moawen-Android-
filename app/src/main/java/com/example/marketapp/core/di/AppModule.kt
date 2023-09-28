@@ -10,16 +10,10 @@ import com.example.marketapp.core.util.usecase.ValidateUsernameLocalUseCase
 import com.example.marketapp.core.util.validator.Validator
 import com.example.marketapp.features.auth.data.data_source.remote.AuthRemoteDataSourceImpl
 import com.example.marketapp.features.auth.data.repo.AuthRepoImpl
-import com.example.marketapp.features.auth.domain.usecases.ActivateAccountUseCase
-import com.example.marketapp.features.auth.domain.usecases.LoginUseCase
-import com.example.marketapp.features.auth.domain.usecases.RegisterUseCase
-import com.example.marketapp.features.auth.domain.usecases.ResetPasswordByEmailUseCase
-import com.example.marketapp.features.auth.domain.usecases.ResetPasswordByPhoneUseCase
-import com.example.marketapp.features.auth.domain.usecases.SendSmsUseCase
-import com.example.marketapp.features.auth.domain.usecases.ValidateEmailUseCase
-import com.example.marketapp.features.auth.domain.usecases.ValidatePhoneUseCase
-import com.example.marketapp.features.auth.domain.usecases.ValidateSmsUseCase
-import com.example.marketapp.features.auth.infrastructure.Api.AuthApi
+import com.example.marketapp.features.auth.domain.usecases.*
+import com.example.marketapp.features.auth.infrastructure.api.AuthApi
+import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPref
+import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPrefImpl
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -70,20 +64,47 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideUserInfoSharedPref (
+    ) : UserInfoSharedPrefImpl {
+        return UserInfoSharedPrefImpl()
+    }
+
+    @Provides
+    @Singleton
     fun provideAuthRepo(
         networkService : NetworkServiceImpl,
+        sharedPref: UserInfoSharedPrefImpl,
         remoteDataSource : AuthRemoteDataSourceImpl
     ) : AuthRepoImpl {
         return AuthRepoImpl(
             networkService = networkService,
+            sharedPref = sharedPref,
             remoteDataSource = remoteDataSource
         )
     }
 
     @Provides
     @Singleton
-    fun provideLoginUseCase(repo : AuthRepoImpl) : LoginUseCase {
-        return LoginUseCase(repo)
+    fun provideSaveUserInfoUseCase(repo : AuthRepoImpl,) : SaveUserInfoUseCase {
+        return SaveUserInfoUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserInfoUseCase(repo : AuthRepoImpl) : GetUserInfoUseCase {
+        return GetUserInfoUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteUserInfoUseCasee(repo : AuthRepoImpl) : DeleteUserInfoUseCase {
+        return DeleteUserInfoUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLoginUseCase(repo : AuthRepoImpl,saveUserInfoUseCase: SaveUserInfoUseCase) : LoginUseCase {
+        return LoginUseCase(repo,saveUserInfoUseCase)
     }
 
     @Provides

@@ -1,4 +1,4 @@
-package com.example.marketapp.features.auth.infrastructure.Api
+package com.example.marketapp.features.auth.infrastructure.api
 
 import com.example.marketapp.features.auth.data.entities.ActivateAccountEntity
 import com.example.marketapp.features.auth.data.entities.LoginEntity

@@ -15,7 +15,7 @@ import com.example.marketapp.features.auth.data.entities.SendSmsCodeEntity
 import com.example.marketapp.features.auth.data.entities.ValidateEmailEntity
 import com.example.marketapp.features.auth.data.entities.ValidatePhoneEntity
 import com.example.marketapp.features.auth.data.entities.ValidateSmsCodeEntity
-import com.example.marketapp.features.auth.infrastructure.Api.AuthApi
+import com.example.marketapp.features.auth.infrastructure.api.AuthApi
 import retrofit2.Response
 import javax.inject.Inject
 

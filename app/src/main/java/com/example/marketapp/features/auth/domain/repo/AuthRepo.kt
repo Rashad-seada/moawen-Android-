@@ -11,6 +11,7 @@ import com.example.marketapp.features.auth.data.entities.SendSmsCodeEntity
 import com.example.marketapp.features.auth.data.entities.ValidateEmailEntity
 import com.example.marketapp.features.auth.data.entities.ValidatePhoneEntity
 import com.example.marketapp.features.auth.data.entities.ValidateSmsCodeEntity
+import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfo
 
 interface AuthRepo {
     suspend fun login(
@@ -75,5 +76,23 @@ interface AuthRepo {
         context: Context,
         screenId: Int
     ): Resource<ValidatePhoneEntity>
+
+
+    fun getUserInfo(
+        context: Context,
+        screenId: Int
+
+    ) : Resource<UserInfo>
+
+    fun saveUserInfo(
+        context: Context,
+        userInfo: UserInfo,
+        screenId: Int
+    ) : Resource.FailureData<UserInfo>?
+
+    fun deleteUserInfo(
+        context: Context,
+        screenId: Int
+    ) : Resource.FailureData<UserInfo>?
 
 }

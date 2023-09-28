@@ -23,10 +23,14 @@ import com.example.marketapp.features.auth.data.entities.ValidateEmailEntity
 import com.example.marketapp.features.auth.data.entities.ValidatePhoneEntity
 import com.example.marketapp.features.auth.data.entities.ValidateSmsCodeEntity
 import com.example.marketapp.features.auth.domain.repo.AuthRepo
+import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfo
+import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPref
+import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPrefImpl
 import javax.inject.Inject
 
 class AuthRepoImpl @Inject constructor(
     val remoteDataSource: AuthRemoteDataSourceImpl,
+    val sharedPref: UserInfoSharedPrefImpl,
     val networkService: NetworkServiceImpl,
 ) : AuthRepo {
 
@@ -852,6 +856,113 @@ class AuthRepoImpl @Inject constructor(
                     screenId,
                     customCode = 0
                 )
+
+                is LocalDataException -> LocalDataFailure(
+                    e.message.toString(),
+                    screenId,
+                    customCode = 0
+                )
+
+                else -> InternalFailure(
+                    e.message.toString(),
+                    screenId, customCode = 0
+                )
+            }
+
+            return Resource.FailureData(
+                failure = failure
+            )
+
+        }
+    }
+
+    override fun getUserInfo(context: Context,screenId: Int): Resource<UserInfo> {
+        try {
+
+            val userInfo = sharedPref.getUserInfo(context)
+                ?: return Resource.FailureData(
+                    failure = RemoteDataFailure(
+                        message = context.getString(R.string.the_server_returned_null),
+                        screenId = screenId,
+                        customCode = 1,
+                    )
+                )
+
+            return Resource.SuccessData(
+                data = userInfo,
+            )
+
+        } catch (e: Exception) {
+            val failure = when (e) {
+
+                is LocalDataException -> LocalDataFailure(
+                    e.message.toString(),
+                    screenId,
+                    customCode = 0
+                )
+
+                else -> InternalFailure(
+                    e.message.toString(),
+                    screenId, customCode = 0
+                )
+            }
+
+            return Resource.FailureData(
+                failure = failure
+            )
+
+        }
+    }
+
+    override fun saveUserInfo(
+        context: Context,
+        userInfo: UserInfo,
+        screenId: Int
+    ): Resource.FailureData<UserInfo> {
+        try {
+
+            val userInfo = sharedPref.saveUserInfo(context, userInfo)
+
+            return Resource.FailureData(
+                failure = null
+            )
+
+        } catch (e: Exception) {
+            val failure = when (e) {
+
+                is LocalDataException -> LocalDataFailure(
+                    e.message.toString(),
+                    screenId,
+                    customCode = 0
+                )
+
+                else -> InternalFailure(
+                    e.message.toString(),
+                    screenId, customCode = 0
+                )
+            }
+
+            return Resource.FailureData(
+                failure = failure
+            )
+
+        }
+    }
+
+    override fun deleteUserInfo(
+        context: Context,
+        screenId: Int
+    ): Resource.FailureData<UserInfo> {
+        try {
+
+            val userInfo = sharedPref.deleteUserInfo(context)
+
+            return Resource.FailureData(
+                failure = null
+            )
+
+        } catch (e: Exception) {
+            val failure = when (e) {
 
                 is LocalDataException -> LocalDataFailure(
                     e.message.toString(),
