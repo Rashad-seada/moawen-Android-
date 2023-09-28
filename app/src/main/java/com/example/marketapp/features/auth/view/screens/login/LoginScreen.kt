@@ -305,11 +305,9 @@ fun LoginScreen(
                     .height(55.dp)
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
-                        scope.launch {
                             navigator?.let {
                                 onLoginClick(navigator, context)
                             }
-                        }
                     },
                 cardColor = Primary900,
                 borderColor = Color.Transparent

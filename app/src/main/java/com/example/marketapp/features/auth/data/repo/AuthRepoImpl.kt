@@ -1,6 +1,7 @@
 package com.example.marketapp.features.auth.data.repo
 
 import android.content.Context
+import android.util.Log
 import com.example.marketapp.R
 import com.example.marketapp.core.errors.InternalFailure
 import com.example.marketapp.core.errors.LocalDataException
@@ -146,6 +147,7 @@ class AuthRepoImpl @Inject constructor(
             val loginEntity = remoteDataSource.register(
                 username, email, password, phone
             )
+
 
 
             when {
@@ -332,6 +334,8 @@ class AuthRepoImpl @Inject constructor(
             }
 
             val loginEntity = remoteDataSource.resetPasswordByEmail(email)
+
+            Log.v("url","${loginEntity.raw().request.url}")
 
 
             when {

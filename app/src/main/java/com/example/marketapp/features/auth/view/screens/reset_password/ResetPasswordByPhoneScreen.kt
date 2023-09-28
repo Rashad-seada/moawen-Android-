@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -35,6 +36,7 @@ import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.views.components.CustomProgressIndicator
 import com.example.marketapp.core.views.components.MainButton
 import com.example.marketapp.core.views.components.PhoneTextField
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordState
@@ -52,7 +54,7 @@ fun ResetPasswordByPhoneScreen(
 
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
     onPhoneChangeClick: (String) -> Unit = {},
-    onNextClick: (DestinationsNavigator) -> Unit = {},
+    onNextClick: (DestinationsNavigator,Context) -> Unit = {_,_-> },
 
     ) {
 
@@ -138,8 +140,9 @@ fun ResetPasswordByPhoneScreen(
                     .padding(horizontal = 20.dp),
                 label = context.getString(R.string.phone),
                 placeHolder = context.getString(R.string.phone_hint),
-
-                )
+                isError = state.phoneError != null,
+                errorMessage = state.phoneError ?: ""
+            )
 
             Spacer(modifier = Modifier.height(440.dp))
 
@@ -153,22 +156,31 @@ fun ResetPasswordByPhoneScreen(
                     .clickable {
                         scope.launch {
                             navigator?.let {
-                                onNextClick(navigator)
+                                onNextClick(navigator,context)
                             }
                         }
                     },
                 cardColor = Primary900,
                 borderColor = Color.Transparent
             ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    text = context.getString(R.string.next),
-                    style = TextStyle(
-                        fontFamily = Cairo,
-                        color = Neutral100,
-                        fontSize = 16.sp,
+
+                if(!state.isSendingPinCode){
+                    Text(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        text = context.getString(R.string.next),
+                        style = TextStyle(
+                            fontFamily = Cairo,
+                            color = Neutral100,
+                            fontSize = 16.sp,
+                        )
                     )
-                )
+                }else {
+                    CustomProgressIndicator(
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+
             }
 
 

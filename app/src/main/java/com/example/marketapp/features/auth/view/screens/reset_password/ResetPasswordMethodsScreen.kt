@@ -43,7 +43,7 @@ fun ResetPasswordMethodsScreen(
     navigator: DestinationsNavigator?,
     onBackArrowClick : (DestinationsNavigator)-> Unit = {},
     onResetByEmailClick : (DestinationsNavigator)-> Unit = {},
-    onResetByPhoneClick : (DestinationsNavigator)-> Unit = {} ,
+    onResetByPhoneClick : (DestinationsNavigator)-> Unit = { } ,
 
     ) {
 

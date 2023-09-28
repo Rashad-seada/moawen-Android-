@@ -92,16 +92,6 @@ fun ResetPasswordPinScreen(
             )
 
 
-//            Image(
-//                painter = painterResource(id = R.drawable.reset_password_methods), // Provide the resource ID
-//                contentDescription = "",
-//                modifier = Modifier
-//                    .fillMaxWidth() // Adjust the size as needed
-//                    .height(200.dp)
-//                    .padding(horizontal = 20.dp)
-//                    .align(alignment = Alignment.CenterHorizontally)
-//            )
-
             Spacer(modifier = Modifier.height(30.dp))
 
             Column(

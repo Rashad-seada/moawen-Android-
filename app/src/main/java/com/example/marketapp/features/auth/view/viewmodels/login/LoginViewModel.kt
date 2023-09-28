@@ -14,6 +14,7 @@ import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
 import com.example.marketapp.features.auth.domain.usecases.LoginUseCase
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -69,16 +70,16 @@ class LoginViewModel @Inject constructor(
 
     private fun onLoginClick(context: Context){
         job?.cancel()
-        job = viewModelScope.launch {
+        job = viewModelScope.launch(Dispatchers.IO) {
 
             state = state.copy(isLoginLoading = true)
             val response = loginUseCase(state.username,state.password,context,loginScreenId)
             state = state.copy(isLoginLoading = false)
 
             if(response.failure != null) {
-                CoreViewModel.showSnackbar(("Error: " + response.failure.message))
+                CoreViewModel.showSnackbar(("Error:" + response.failure.message))
             } else {
-                CoreViewModel.showSnackbar(("Success: " + response.data?.msg))
+                CoreViewModel.showSnackbar(("Success:" + response.data?.msg))
             }
 
         }

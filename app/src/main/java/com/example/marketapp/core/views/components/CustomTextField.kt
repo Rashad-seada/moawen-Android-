@@ -73,7 +73,7 @@ fun CustomTextField(
             value = if (isSecure) "●".repeat(value.length) else value,
             onValueChange = { newValue ->
 
-                if(isSecure){
+                if (isSecure) {
                     if (newValue.length <= value.length) {
                         // Handle backspace or character removal
                         onValueChange(value.dropLast(1))
@@ -83,7 +83,7 @@ fun CustomTextField(
                         val addedChar = newValue.last()
                         onValueChange(value + addedChar)
                     }
-                }else {
+                } else {
                     onValueChange(newValue)
                 }
 
@@ -118,7 +118,7 @@ fun CustomTextField(
             trailingIcon = trailingIcon,
             shape = RoundedCornerShape(8.dp),
             keyboardOptions = KeyboardOptions(
-                keyboardType = if(isSecure) KeyboardType.Password else KeyboardType.Text // This disables suggestions
+                keyboardType = if (isSecure) KeyboardType.Password else KeyboardType.Text // This disables suggestions
             )
         )
 
@@ -132,7 +132,10 @@ fun CustomTextField(
                 fontFamily = Cairo,
                 color = if (isSystemInDarkTheme()) Error400Clr else Error500Clr,
                 fontSize = 14.sp,
-                modifier = Modifier.align(alignment = Alignment.End).fillMaxWidth().then(modifier),
+                modifier = Modifier
+                    .align(alignment = Alignment.End)
+                    .fillMaxWidth()
+                    .then(modifier),
                 textAlign = TextAlign.End
             )
         }

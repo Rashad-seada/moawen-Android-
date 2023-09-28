@@ -37,8 +37,10 @@ import com.example.marketapp.core.ui.theme.Neutral700
 import com.example.marketapp.core.ui.theme.Neutral800
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.viewmodel.CoreViewModel
+import com.example.marketapp.core.views.screens.DoneMessageScreen
 import com.example.marketapp.core.views.screens.OnBoardingScreen
 import com.example.marketapp.core.views.screens.SplashScreen
+import com.example.marketapp.destinations.DoneMessageScreenDestination
 import com.example.marketapp.destinations.LoginMethodsScreenDestination
 import com.example.marketapp.destinations.LoginScreenDestination
 import com.example.marketapp.destinations.OnBoardingScreenDestination
@@ -136,10 +138,10 @@ fun Navigation(
                             )
                         )
                     },
-                    onResetByPhoneClick = {
+                    onResetByPhoneClick = {navigator ->
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnResetWithPhoneClick(
-                                it
+                                navigator,
                             )
                         )
                     },
@@ -158,10 +160,10 @@ fun Navigation(
                         )
                     },
                     onEmailChangeClick = { resetPasswordViewModel.updateEmail(it) },
-                    onNextClick = {
+                    onNextClick = { navigator,context ->
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnSendCodeToEmailClick(
-                                it
+                                navigator,context
                             )
                         )
                     },
@@ -180,10 +182,10 @@ fun Navigation(
                         )
                     },
                     onPhoneChangeClick = { resetPasswordViewModel.updatePhoneNumber(it) },
-                    onNextClick = {
+                    onNextClick = {navigator,context->
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnSendCodeToPhoneClick(
-                                it
+                                navigator,context
                             )
                         )
                     },
@@ -219,6 +221,14 @@ fun Navigation(
                     onResendClick = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnResendClickClick) })
             }
 
+            composable(DoneMessageScreenDestination) {
+                DoneMessageScreen(
+                    navigator = destinationsNavigator,
+                    onButtonTap = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnDoneMessageScreenClick(it)) }
+                )
+
+            }
+
             composable(RegisterScreenDestination) {
                 RegisterScreen(
                     navigator = destinationsNavigator,
@@ -226,13 +236,14 @@ fun Navigation(
                     onBackArrowClick = { registerViewModel.onEvent(RegisterEvent.OnBackClick(it)) },
                     onChangeUsername = { registerViewModel.updateUsername(it) },
                     onChangePhone = { registerViewModel.updatePhone(it) },
-                    onChangeEmail = { registerViewModel.updateEmail(it) },
+                    onChangeEmail = {navigator,context ->  registerViewModel.updateEmail(navigator,context) },
                     onChangePassword = { registerViewModel.updatePassword(it) },
                     onChangePasswordRenter = { registerViewModel.updatePasswordRenter(it) },
                     onSecurePasswordClick = { registerViewModel.updateIsPasswordSecure() },
                     onSecurePasswordRenterClick = { registerViewModel.updateIsPasswordRenterSecure() },
                     onLoginClick = { registerViewModel.onEvent(RegisterEvent.OnLoginClick(it)) },
-                    onRegisterClick = { registerViewModel.onEvent(RegisterEvent.Register(it)) },
+                    onRegisterClick = {navigator,context -> registerViewModel.onEvent(RegisterEvent.Register(navigator,context)) },
+                    onChangePhoneWithCountryCode = {navigator,context -> registerViewModel.updatePhoneWithCountryCode(navigator,context) }
                 )
             }
 

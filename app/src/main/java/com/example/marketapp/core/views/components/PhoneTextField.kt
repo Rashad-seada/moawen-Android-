@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,11 +36,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Error400Clr
+import com.example.marketapp.core.ui.theme.Error500Clr
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral200
 import com.example.marketapp.core.ui.theme.Neutral300
@@ -59,15 +62,17 @@ fun PhoneTextField(
     label: String = "",
     placeHolder: String = "",
     onValueChange: (String) -> Unit = {},
+    onPhoneChange: (String) -> Unit = {},
     isError: Boolean = false,
     errorMessage: String = "",
+    trailingIcon: @Composable (() -> Unit) = {}
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
     var selectedCountry by remember {
-        mutableStateOf(Country(R.drawable.eg, "EG", "Egypt", "+20"))
+        mutableStateOf(Country(R.drawable.eg, "EG", "Egypt", "20"))
     }
 
 
@@ -82,19 +87,25 @@ fun PhoneTextField(
         focusedPlaceholderColor = if (isSystemInDarkTheme()) Neutral300 else Neutral600,
 
         unfocusedLabelColor = Neutral400,
-        unfocusedPlaceholderColor = Neutral400
+        unfocusedPlaceholderColor = Neutral400,
+
+        errorContainerColor = Color.Transparent,
+        errorLabelColor = if (isSystemInDarkTheme()) Error400Clr else Error500Clr,
+        errorIndicatorColor = if (isSystemInDarkTheme()) Error400Clr else Error500Clr
+
 
     )
 
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Top,
     ) {
 
         Surface(
             modifier = Modifier
                 .height(60.dp)
                 .width(100.dp)
+                .padding(top = 8.dp)
                 .clickable {
                     showBottomSheet = true
                     scope.launch {
@@ -125,12 +136,12 @@ fun PhoneTextField(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
 
-                Icon(
-                    modifier = Modifier
-                        .size(10.dp),
-                    painter = painterResource(id = R.drawable.arrow_down),
-                    contentDescription = "",
-                    tint = if (isSystemInDarkTheme()) Neutral200 else Neutral800
+                Text(
+                    text = "+"+selectedCountry.phoneCode,
+                    fontFamily = Cairo,
+                    color = Neutral500,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.End
                 )
             }
 
@@ -140,12 +151,15 @@ fun PhoneTextField(
         Spacer(modifier = Modifier.width(10.dp))
 
 
-        Column {
+        Column(
+            verticalArrangement = Arrangement.Top
+        ) {
 
             OutlinedTextField(
                 value = value,
                 onValueChange = { newValue ->
                     onValueChange(newValue)
+                    onPhoneChange(selectedCountry.phoneCode + newValue)
                 },
                 maxLines = 1,
                 label = {
@@ -186,7 +200,8 @@ fun PhoneTextField(
                         tint = if (isSystemInDarkTheme()) Neutral200 else Neutral800
 
                     )
-                }
+                },
+                trailingIcon = trailingIcon
             )
 
 
@@ -197,8 +212,11 @@ fun PhoneTextField(
 
                 Text(
                     text = errorMessage,
-                    color = Color.Red,
-                    modifier = Modifier.align(alignment = Alignment.End)
+                    fontFamily = Cairo,
+                    color = if (isSystemInDarkTheme()) Error400Clr else Error500Clr,
+                    fontSize = 14.sp,
+                    modifier = Modifier.align(alignment = Alignment.End).fillMaxWidth().then(modifier),
+                    textAlign = TextAlign.End
                 )
             }
         }
@@ -227,6 +245,7 @@ fun PhoneTextField(
                         scope.launch {
                             sheetState.hide()
                             showBottomSheet = false
+
                         }
 
                     }.padding(bottom = 20.dp),
@@ -281,9 +300,9 @@ data class Country(
 )
 
 val countries = listOf(
-    Country(R.drawable.eg, "EG", "Egypt", "+20"),
-    Country(R.drawable.sa, "SA", "Saudi Arabia", "+966"),
-    Country(R.drawable.ae, "AE", "United Arab Emirates", "+971")
+    Country(R.drawable.eg, "EG", "Egypt", "20"),
+    Country(R.drawable.sa, "SA", "Saudi Arabia", "966"),
+    Country(R.drawable.ae, "AE", "United Arab Emirates", "971")
 )
 
 

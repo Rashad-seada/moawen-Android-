@@ -41,7 +41,7 @@
     <string name="email_hint">please Enter your email</string>
     <string name="reset_password_by_phone_sub_text">Please enter the phone number that is connected to your account</string>
     <string name="phone">Phone</string>
-    <string name="phone_hint">Please enter your number</string>
+    <string name="phone_hint">Enter your number</string>
     <string name="verify_pin_code">Verify your pin code</string>
     <string name="verify_pin_code_sub_text">Please enter the code that have been sent to you to proceed</string>
     <string name="didnt_recive_code">did\'t recive code?</string>
@@ -58,6 +58,11 @@
     <string name="string_is_not_email">Please enter a valid email</string>
     <string name="password_is_not_eight">The password at least must be 8 char</string>
     <string name="string_is_not_phone">Please enter a valid phone number</string>
+    <string name="username_contain_special_char">Username mustn\'t contain special char</string>
+    <string name="username_contain_white_space">Username mustn\'t contain white spaces</string>
+    <string name="password_must_match">Passwords must match</string>
+    <string name="done">Done</string>
+    <string name="all_done">All done</string>
 
 
 </resources>

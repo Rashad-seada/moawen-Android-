@@ -19,6 +19,7 @@ import com.example.marketapp.R
 @Composable
 fun LottieAnimation(
     isPlaying : Boolean = false,
+    restartOnPlay : Boolean = false,
     speed : Float = 1f,
     lottieAnimationRes : Int = R.raw.default_lottie_animation,
     modifier: Modifier = Modifier
@@ -61,7 +62,7 @@ fun LottieAnimation(
 
         // this makes animation to restart when paused and play
         // pass false to continue the animation at which it was paused
-        restartOnPlay = false
+        restartOnPlay = restartOnPlay
 
     )
 

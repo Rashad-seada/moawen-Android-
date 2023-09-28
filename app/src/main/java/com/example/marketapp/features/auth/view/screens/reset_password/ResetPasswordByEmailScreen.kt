@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,6 +35,7 @@ import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.views.components.CustomProgressIndicator
 import com.example.marketapp.core.views.components.CustomTextField
 import com.example.marketapp.core.views.components.MainButton
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordState
@@ -51,7 +53,7 @@ fun ResetPasswordByEmailScreen(
 
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
     onEmailChangeClick: (String) -> Unit = {},
-    onNextClick: (DestinationsNavigator) -> Unit = {},
+    onNextClick: (DestinationsNavigator,Context) -> Unit = {_,_-> },
 
     ) {
 
@@ -143,6 +145,8 @@ fun ResetPasswordByEmailScreen(
                         tint = Neutral500
                     )
                 },
+                isError = state.emailError != null,
+                errorMessage = state.emailError?: ""
 
                 )
 
@@ -158,22 +162,31 @@ fun ResetPasswordByEmailScreen(
                     .clickable {
                         scope.launch {
                             navigator?.let {
-                                onNextClick(navigator)
+                                onNextClick(navigator,context)
                             }
                         }
                     },
                 cardColor = Primary900,
                 borderColor = Color.Transparent
             ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    text = context.getString(R.string.next),
-                    style = TextStyle(
-                        fontFamily = Cairo,
-                        color = Neutral100,
-                        fontSize = 16.sp,
+
+                if(!state.isSendingEmail){
+                    Text(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        text = context.getString(R.string.next),
+                        style = TextStyle(
+                            fontFamily = Cairo,
+                            color = Neutral100,
+                            fontSize = 16.sp,
+                        )
                     )
-                )
+                }else {
+                    CustomProgressIndicator(
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+
             }
 
 

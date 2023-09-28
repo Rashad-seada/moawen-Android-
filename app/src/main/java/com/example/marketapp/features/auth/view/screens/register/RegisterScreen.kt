@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -41,6 +42,7 @@ import com.example.marketapp.core.ui.theme.Neutral400
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.views.components.CustomProgressIndicator
 import com.example.marketapp.core.views.components.CustomTextField
 import com.example.marketapp.core.views.components.MainButton
 import com.example.marketapp.core.views.components.PhoneTextField
@@ -57,13 +59,14 @@ fun RegisterScreen(
     state: RegisterState = RegisterState(),
     onChangeUsername: (String) -> Unit = {},
     onChangePhone: (String) -> Unit = {},
-    onChangeEmail: (String) -> Unit = {},
+    onChangePhoneWithCountryCode: (String,Context) -> Unit = {_,_->},
+    onChangeEmail: (String,Context) -> Unit = {_,_->},
     onChangePassword: (String) -> Unit = {},
     onChangePasswordRenter: (String) -> Unit = {},
     onSecurePasswordClick: () -> Unit = {},
     onSecurePasswordRenterClick: () -> Unit = {},
     onLoginClick: (DestinationsNavigator) -> Unit = {},
-    onRegisterClick: (DestinationsNavigator) -> Unit = {},
+    onRegisterClick: (DestinationsNavigator,Context) -> Unit = {_,_-> },
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
 ) {
 
@@ -73,8 +76,8 @@ fun RegisterScreen(
 
     Scaffold(
         containerColor = if (isSystemInDarkTheme()) Neutral900 else Neutral100
-    ) {
-        it
+    ) { padding ->
+        padding
 
         Column(
             modifier = Modifier
@@ -146,14 +149,15 @@ fun RegisterScreen(
                         contentDescription = ""
                     )
                 },
-
+                isError = state.usernameError != null,
+                errorMessage = state.usernameError?: "",
                 )
             Spacer(modifier = Modifier.height(5.dp))
 
             CustomTextField(
                 value = state.email,
                 onValueChange = {
-                    onChangeEmail(it)
+                    onChangeEmail(it,context)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -167,6 +171,24 @@ fun RegisterScreen(
                         contentDescription = ""
                     )
                 },
+                trailingIcon = {
+
+                    if (state.isValidatingEmail) {
+                        CustomProgressIndicator(
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Icon(
+                            modifier = Modifier.padding(end = 0.dp),
+                            painter = painterResource(id = if(state.isEmailValid) R.drawable.tick_circle else R.drawable.close_circle),
+                            contentDescription = ""
+                        )
+                    }
+
+
+                },
+                isError = state.emailError != null,
+                errorMessage = state.emailError?: "",
 
                 )
             Spacer(modifier = Modifier.height(5.dp))
@@ -181,8 +203,26 @@ fun RegisterScreen(
                     .padding(horizontal = 20.dp),
                 label = context.getString(R.string.phone),
                 placeHolder = context.getString(R.string.phone_hint),
+                isError = state.phoneError != null,
+                errorMessage = state.phoneError?: "",
+                onPhoneChange = {
+                    onChangePhoneWithCountryCode(it,context)
+                },
+                trailingIcon = {
+                    if (state.isValidatingPhone) {
+                        CustomProgressIndicator(
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Icon(
+                            modifier = Modifier.padding(end = 0.dp),
+                            painter = painterResource(id = if(state.isPhoneValid) R.drawable.tick_circle else R.drawable.close_circle),
+                            contentDescription = ""
+                        )
+                    }
+                }
 
-                )
+            )
 
             Spacer(modifier = Modifier.height(5.dp))
 
@@ -215,9 +255,14 @@ fun RegisterScreen(
                         painter = painterResource(id = R.drawable.eye_slash),
                         contentDescription = ""
                     )
-                }
+                },
+                isError = state.passwordError != null,
+                errorMessage = state.passwordError?: "",
 
             )
+
+            Spacer(modifier = Modifier.height(5.dp))
+
 
             CustomTextField(
                 isSecure = state.isPasswordRenterSecure,
@@ -248,7 +293,9 @@ fun RegisterScreen(
                         painter = painterResource(id = R.drawable.eye_slash),
                         contentDescription = ""
                     )
-                }
+                },
+                isError = state.passwordRenterError != null,
+                errorMessage = state.passwordRenterError?: "",
 
             )
 
@@ -312,24 +359,30 @@ fun RegisterScreen(
                     .height(55.dp)
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
-                        scope.launch {
                             navigator?.let {
-                                onRegisterClick(navigator)
+                                onRegisterClick(navigator,context)
                             }
-                        }
                     },
                 cardColor = Primary900,
                 borderColor = Color.Transparent
             ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    text = context.getString(R.string.register),
-                    style = TextStyle(
-                        fontFamily = Cairo,
-                        color = Neutral100,
-                        fontSize = 16.sp,
+
+                if (state.isRegisterLoading) {
+                    CustomProgressIndicator(
+                        modifier = Modifier.size(20.dp)
                     )
-                )
+                } else {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        text = context.getString(R.string.register),
+                        style = TextStyle(
+                            fontFamily = Cairo,
+                            color = Neutral100,
+                            fontSize = 16.sp,
+                        )
+                    )
+                }
+
             }
 
 

@@ -4,7 +4,9 @@ import com.example.marketapp.core.infrastructure.services.NetworkServiceImpl
 import com.example.marketapp.core.util.Consts.BASE_URL
 import com.example.marketapp.core.util.usecase.ValidateEmailLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidatePasswordLocalUseCase
+import com.example.marketapp.core.util.usecase.ValidatePasswordRepeatedLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidatePhoneLocalUseCase
+import com.example.marketapp.core.util.usecase.ValidateUsernameLocalUseCase
 import com.example.marketapp.core.util.validator.Validator
 import com.example.marketapp.features.auth.data.data_source.remote.AuthRemoteDataSourceImpl
 import com.example.marketapp.features.auth.data.repo.AuthRepoImpl
@@ -132,6 +134,13 @@ object AppModule {
         return ValidateSmsUseCase(repo)
     }
 
+
+    @Provides
+    @Singleton
+    fun provideLocalValidateUsernameUseCase() : ValidateUsernameLocalUseCase {
+        return ValidateUsernameLocalUseCase()
+    }
+
     @Provides
     @Singleton
     fun provideLocalValidateEmailUseCase(validator: Validator) : ValidateEmailLocalUseCase {
@@ -148,6 +157,12 @@ object AppModule {
     @Singleton
     fun provideValidatePasswordUseCase() : ValidatePasswordLocalUseCase {
         return ValidatePasswordLocalUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidatePasswordRepeatedUseCase() : ValidatePasswordRepeatedLocalUseCase {
+        return ValidatePasswordRepeatedLocalUseCase()
     }
 
     @Provides

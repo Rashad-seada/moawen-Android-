@@ -114,15 +114,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
 
         try {
 
-            val serviceData: String = "[{" +
-                    "\"id\":\"0\"," +
-                    "\"atxt\":\"$username\"," +
-                    "\"etxt\":\"$username\"," +
-                    "\"uname\":\"$username\"," +
-                    "\"umail\":\"$email\"," +
-                    "\"upass\":\"$password\"," +
-                    "\"mobile\":\"$phone\"" +
-                    "}]".toBase64()
+            val serviceData: String = ("[{\"id\":\"0\",\"atxt\":\"$username\",\"etxt\":\"$username\",\"uname\":\"$username\",\"umail\":\"$email\",\"upass\":\"$password\",\"mobile\":\"$phone\"}]").toBase64()
+
             return api.register(
                 serviceCode = 20,
                 folderId = 10,
