@@ -189,6 +189,9 @@ fun ResetPasswordByEmailScreen(
 
             }
 
+            Spacer(modifier = Modifier.height(30.dp))
+
+
 
         }
 

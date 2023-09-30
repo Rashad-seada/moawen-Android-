@@ -263,7 +263,7 @@ fun PhoneTextField(
                     Spacer(modifier = Modifier.width(15.dp))
 
                     Text(
-                        text = countries[index].phoneCode ,
+                        text = "+"+countries[index].phoneCode ,
                         style = TextStyle(
                             fontFamily = Cairo,
                             color = if (isSystemInDarkTheme()) Neutral400 else Neutral600,
@@ -301,6 +301,7 @@ data class Country(
 
 val countries = listOf(
     Country(R.drawable.eg, "EG", "Egypt", "20"),
+    Country(R.drawable.kw, "KW", "Kuwait", "965"),
     Country(R.drawable.sa, "SA", "Saudi Arabia", "966"),
     Country(R.drawable.ae, "AE", "United Arab Emirates", "971")
 )

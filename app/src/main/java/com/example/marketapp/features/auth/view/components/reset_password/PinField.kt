@@ -15,10 +15,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,6 +43,16 @@ fun PinField(
     count: Int = 4,
     onComplete: () -> Unit = {}
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(key1 = value.length){
+        // Check if PIN is complete and invoke onComplete
+        if (value.length == count) {
+            keyboardController?.hide()
+            onComplete()
+        }
+    }
+
     Box(
         modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
@@ -81,10 +93,7 @@ fun PinField(
             }
         }
 
-        // Check if PIN is complete and invoke onComplete
-        if (value.length == count) {
-            onComplete()
-        }
+
 
         // Create a hidden BasicTextField for the actual input
         BasicTextField(

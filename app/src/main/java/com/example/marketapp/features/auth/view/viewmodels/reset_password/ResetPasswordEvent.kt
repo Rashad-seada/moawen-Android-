@@ -9,11 +9,10 @@ sealed class ResetPasswordMethodsEvent {
     class OnResetWithPhoneClick(val navigator: DestinationsNavigator?) : ResetPasswordMethodsEvent()
     class OnSendCodeToEmailClick(val navigator: DestinationsNavigator?,val context: Context) : ResetPasswordMethodsEvent()
     class OnSendCodeToPhoneClick(val navigator: DestinationsNavigator?,val context: Context) : ResetPasswordMethodsEvent()
-
-    class OnValidateClick(val navigator: DestinationsNavigator?) : ResetPasswordMethodsEvent()
+    class OnValidateClick(val navigator: DestinationsNavigator?,val context: Context) : ResetPasswordMethodsEvent()
+    class OnSettingNewPasswordClick(val navigator: DestinationsNavigator?,val context: Context) : ResetPasswordMethodsEvent()
     class OnDoneMessageScreenClick(val navigator: DestinationsNavigator) : ResetPasswordMethodsEvent()
-
-    object OnResendClickClick : ResetPasswordMethodsEvent()
+    class OnResendClickClick(val navigator: DestinationsNavigator?,val context: Context) : ResetPasswordMethodsEvent()
 
 
 }

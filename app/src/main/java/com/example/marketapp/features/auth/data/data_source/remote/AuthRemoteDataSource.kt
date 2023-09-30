@@ -96,11 +96,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
+
         }
 
     }
@@ -114,7 +111,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
 
         try {
 
-            val serviceData: String = ("[{\"id\":\"0\",\"atxt\":\"$username\",\"etxt\":\"$username\",\"uname\":\"$username\",\"umail\":\"$email\",\"upass\":\"$password\",\"mobile\":\"$phone\"}]").toBase64()
+            val serviceData: String =
+                ("[{\"id\":\"0\",\"atxt\":\"$username\",\"etxt\":\"$username\",\"uname\":\"$email\",\"umail\":\"$email\",\"upass\":\"$password\",\"mobile\":\"$phone\"}]").toBase64()
 
             return api.register(
                 serviceCode = 20,
@@ -126,11 +124,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
+
         }
     }
 
@@ -156,11 +151,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
+
         }
     }
 
@@ -180,11 +172,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
+
         }
     }
 
@@ -194,7 +183,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
         try {
 
             val serviceData: String = ("[{" +
-                    "\"mobile\":\"$phone\"" +
+                    "\"mobile\":\"$phone\"," +
                     "\"is_code_sms\":\"0\"" +
                     "}]").toBase64()
             return api.sendSmsCode(
@@ -207,11 +196,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
         }
     }
 
@@ -222,7 +207,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
         try {
 
             val serviceData: String = ("[{" +
-                    "\"mobile\":\"$phone\"" +
+                    "\"mobile\":\"$phone\"," +
                     "\"mcode\":\"$smsCode\"" +
                     "}]").toBase64()
             return api.validateSmsCode(
@@ -235,11 +220,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
         }
     }
 
@@ -251,8 +232,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
         try {
 
             val serviceData: String = ("[{" +
-                    "\"mobile\":\"$phone\"" +
-                    "\"mcode\":\"$smsCode\"" +
+                    "\"mobile\":\"$phone\"," +
+                    "\"mcode\":\"$smsCode\"," +
                     "\"upass\":\"$newPassword\"" +
                     "}]").toBase64()
             return api.resetPasswordByPhone(
@@ -265,11 +246,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
+
         }
     }
 
@@ -291,11 +269,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
+
         }
     }
 
@@ -317,11 +292,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
             )
 
         } catch (e: Exception) {
-            if (e is java.net.SocketTimeoutException) {
-                throw RemoteDataException(R.string.internet_connection.toString())
-            } else {
-                throw RemoteDataException(e.message)
-            }
+            throw RemoteDataException(R.string.internet_connection.toString())
         }
     }
 

@@ -24,7 +24,6 @@ import com.example.marketapp.features.auth.data.entities.ValidatePhoneEntity
 import com.example.marketapp.features.auth.data.entities.ValidateSmsCodeEntity
 import com.example.marketapp.features.auth.domain.repo.AuthRepo
 import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfo
-import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPref
 import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPrefImpl
 import javax.inject.Inject
 
@@ -431,12 +430,15 @@ class AuthRepoImpl @Inject constructor(
                 )
             }
 
-            val loginEntity = remoteDataSource.sendSmsCode(phone)
+            val sendSmsEntity = remoteDataSource.sendSmsCode(phone)
+
+            Log.v("url","${sendSmsEntity.raw().request.url}")
+
 
 
             when {
 
-                !loginEntity.isSuccessful -> {
+                !sendSmsEntity.isSuccessful -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
                             message = context.getString(R.string.server_is_down),
@@ -446,7 +448,7 @@ class AuthRepoImpl @Inject constructor(
                     )
                 }
 
-                loginEntity.body() == null -> {
+                sendSmsEntity.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
                             message = context.getString(R.string.the_server_returned_null),
@@ -456,10 +458,10 @@ class AuthRepoImpl @Inject constructor(
                     )
                 }
 
-                loginEntity.body()!!.res.toInt() <= 0 -> {
+                sendSmsEntity.body()!!.res.toInt() <= 0 -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
+                            message = sendSmsEntity.body()!!.msg,
                             screenId = screenId,
                             customCode = 2,
                         )
@@ -469,7 +471,7 @@ class AuthRepoImpl @Inject constructor(
 
 
             return Resource.SuccessData(
-                data = loginEntity.body()!!,
+                data = sendSmsEntity.body()!!,
             )
 
         } catch (e: Exception) {
@@ -524,12 +526,13 @@ class AuthRepoImpl @Inject constructor(
                 )
             }
 
-            val loginEntity = remoteDataSource.validateSmsCode(phone, smsCode)
+            val validateSmsEntity = remoteDataSource.validateSmsCode(phone, smsCode)
 
+            Log.v("url","${validateSmsEntity.raw().request.url}")
 
             when {
 
-                !loginEntity.isSuccessful -> {
+                !validateSmsEntity.isSuccessful -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
                             message = context.getString(R.string.server_is_down),
@@ -539,7 +542,7 @@ class AuthRepoImpl @Inject constructor(
                     )
                 }
 
-                loginEntity.body() == null -> {
+                validateSmsEntity.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
                             message = context.getString(R.string.the_server_returned_null),
@@ -549,10 +552,10 @@ class AuthRepoImpl @Inject constructor(
                     )
                 }
 
-                loginEntity.body()!!.res.toInt() <= 0 -> {
+                validateSmsEntity.body()!!.res.toInt() <= 0 -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
+                            message = validateSmsEntity.body()!!.msg,
                             screenId = screenId,
                             customCode = 2,
                         )
@@ -562,7 +565,7 @@ class AuthRepoImpl @Inject constructor(
 
 
             return Resource.SuccessData(
-                data = loginEntity.body()!!,
+                data = validateSmsEntity.body()!!,
             )
 
         } catch (e: Exception) {
@@ -619,6 +622,9 @@ class AuthRepoImpl @Inject constructor(
             }
 
             val loginEntity = remoteDataSource.resetPasswordByPhone(phone, smsCode, newPassword)
+
+            Log.v("url","${loginEntity.raw().request.url}")
+
 
 
             when {

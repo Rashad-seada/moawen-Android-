@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,7 +41,6 @@ import com.example.marketapp.core.views.components.PhoneTextField
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnrememberedMutableState")
@@ -53,14 +51,14 @@ fun ResetPasswordByPhoneScreen(
     state: ResetPasswordState = ResetPasswordState(),
 
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
-    onPhoneChangeClick: (String) -> Unit = {},
+    onPhoneChange: (String) -> Unit = {},
+    onPhoneWithCountryCode: (String) -> Unit = {},
+
     onNextClick: (DestinationsNavigator,Context) -> Unit = {_,_-> },
 
     ) {
 
     val context: Context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
 
 
     Scaffold(
@@ -133,7 +131,7 @@ fun ResetPasswordByPhoneScreen(
             PhoneTextField(
                 value = state.phone,
                 onValueChange = {
-                    onPhoneChangeClick(it)
+                    onPhoneChange(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -141,7 +139,10 @@ fun ResetPasswordByPhoneScreen(
                 label = context.getString(R.string.phone),
                 placeHolder = context.getString(R.string.phone_hint),
                 isError = state.phoneError != null,
-                errorMessage = state.phoneError ?: ""
+                errorMessage = state.phoneError ?: "",
+                onPhoneChange = {
+                    onPhoneWithCountryCode(it)
+                }
             )
 
             Spacer(modifier = Modifier.height(440.dp))
@@ -154,11 +155,10 @@ fun ResetPasswordByPhoneScreen(
                     .height(55.dp)
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
-                        scope.launch {
                             navigator?.let {
                                 onNextClick(navigator,context)
                             }
-                        }
+
                     },
                 cardColor = Primary900,
                 borderColor = Color.Transparent
@@ -182,6 +182,9 @@ fun ResetPasswordByPhoneScreen(
 
 
             }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
 
 
         }

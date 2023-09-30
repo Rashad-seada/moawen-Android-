@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,14 +19,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,8 +36,8 @@ import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.ui.theme.Primary900
 import com.example.marketapp.core.views.components.CustomProgressIndicator
+import com.example.marketapp.core.views.components.CustomTextField
 import com.example.marketapp.core.views.components.MainButton
-import com.example.marketapp.features.auth.view.components.reset_password.PinField
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -51,19 +47,20 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnrememberedMutableState")
 @Destination
 @Composable
-fun ResetPasswordPinScreen(
+fun ResetPasswordNewPasswordScreen(
     navigator: DestinationsNavigator?,
     state: ResetPasswordState = ResetPasswordState(),
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
-    onPinChangeClick: (String) -> Unit = {},
-    onValidateClick: (DestinationsNavigator, Context) -> Unit = { _, _ -> },
-    onResendClick: (DestinationsNavigator, Context) -> Unit = { _, _ -> },
-    onComplete: (DestinationsNavigator, Context) -> Unit = { _, _ -> },
-) {
+
+    onNewPasswordChange: (String) -> Unit = {},
+    onNewPasswordRpeatedChange: (String) -> Unit = {},
+
+    onDoneClick: (DestinationsNavigator, Context) -> Unit = { _, _ -> },
+
+    ) {
 
     val context: Context = LocalContext.current
     val scope = rememberCoroutineScope()
-
 
     Scaffold(
         containerColor = if (isSystemInDarkTheme()) Neutral900 else Neutral100
@@ -93,109 +90,83 @@ fun ResetPasswordPinScreen(
             )
 
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Column(
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(start = 0.dp),
+                text = context.getString(R.string.new_password),
+                style = TextStyle(
+                    fontFamily = Cairo,
+                    color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                    fontSize = 28.sp
+                )
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(end = 50.dp, start = 0.dp),
+                text = context.getString(R.string.new_password_sub_text),
+                style = TextStyle(
+                    fontFamily = Cairo,
+                    color = Neutral500,
+                    fontSize = 16.sp,
+
+                    )
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            CustomTextField(
+                value = state.newPassword,
+                onValueChange = {
+                    onNewPasswordChange(it)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp),
-                    text = context.getString(R.string.verify_pin_code),
-                    style = TextStyle(
-                        fontFamily = Cairo,
-                        color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
-                        fontSize = 28.sp,
-                        textAlign = TextAlign.Center
+                label = context.getString(R.string.new_password),
+                placeHolder = context.getString(R.string.new_password_hint),
+                leadingIcon = {
+                    Icon(
+                        modifier = Modifier.padding(end = 0.dp),
+                        painter = painterResource(id = R.drawable.lock_inactive),
+                        contentDescription = "",
+                        tint = Neutral500
                     )
-                )
+                },
+                isError = state.newPasswordError != null,
+                errorMessage = state.newPasswordError ?: ""
 
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp),
-                    text = context.getString(R.string.verify_pin_code_sub_text),
-                    style = TextStyle(
-                        fontFamily = Cairo,
-                        color = Neutral500,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(5.dp))
 
-                    )
-                )
-            }
-
-
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            PinField(
+            CustomTextField(
+                value = state.newPasswordRepeated,
+                onValueChange = {
+                    onNewPasswordRpeatedChange(it)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 40.dp),
-                value = state.pinCode,
-                onValueChange = {
-                    onPinChangeClick(it)
+                    .padding(horizontal = 20.dp),
+                label = context.getString(R.string.renter_password),
+                placeHolder = context.getString(R.string.renter_password_hint),
+                leadingIcon = {
+                    Icon(
+                        modifier = Modifier.padding(end = 0.dp),
+                        painter = painterResource(id = R.drawable.lock_inactive),
+                        contentDescription = "",
+                        tint = Neutral500
+                    )
                 },
-                onComplete = {
-                    navigator?.let {
-                        onComplete(navigator, context)
-                    }
-                }
+                isError = state.newPasswordRepeatedError != null,
+                errorMessage = state.newPasswordRepeatedError ?: ""
+
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 40.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-
-                Text(
-                    modifier = Modifier
-                        .padding(end = 5.dp),
-                    text = context.getString(R.string.didnt_recive_code),
-                    style = TextStyle(
-                        fontFamily = Cairo,
-                        color = Neutral500,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center
-
-                    )
-                )
-
-                if (!state.isSendingPinCode) {
-                    Text(
-                        modifier = Modifier.clickable {
-                            navigator?.let {
-                                onResendClick(navigator,context)
-                            }
-                        },
-                        text = context.getString(R.string.resend_new_code),
-                        style = TextStyle(
-                            fontFamily = Cairo,
-                            color = Primary900,
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Center
-
-                        )
-                    )
-                } else {
-                    CustomProgressIndicator( modifier = Modifier.size(10.dp))
-                }
-            }
-
-
-
-
-            Spacer(modifier = Modifier.height(400.dp))
-
+            Spacer(modifier = Modifier.height(350.dp))
 
 
             MainButton(
@@ -207,7 +178,7 @@ fun ResetPasswordPinScreen(
                     .clickable {
                         scope.launch {
                             navigator?.let {
-                                onValidateClick(navigator, context)
+                                onDoneClick(navigator, context)
                             }
                         }
                     },
@@ -215,10 +186,10 @@ fun ResetPasswordPinScreen(
                 borderColor = Color.Transparent
             ) {
 
-                if (!state.isValidatingPinCode) {
+                if (!state.isResettingPassword) {
                     Text(
                         modifier = Modifier.padding(horizontal = 20.dp),
-                        text = context.getString(R.string.validate),
+                        text = context.getString(R.string.next),
                         style = TextStyle(
                             fontFamily = Cairo,
                             color = Neutral100,
@@ -231,9 +202,11 @@ fun ResetPasswordPinScreen(
                     )
                 }
 
+
             }
 
             Spacer(modifier = Modifier.height(30.dp))
+
 
 
         }
@@ -245,9 +218,9 @@ fun ResetPasswordPinScreen(
 
 @Preview
 @Composable
-fun ResetPasswordPinScreenPreview() {
+fun ResetPasswordNewPasswordScreenPreview() {
     MarketAppTheme {
-        ResetPasswordPinScreen(
+        ResetPasswordNewPasswordScreen(
             navigator = null
         )
     }

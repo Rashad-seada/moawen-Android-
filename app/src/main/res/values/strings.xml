@@ -63,6 +63,10 @@
     <string name="password_must_match">Passwords must match</string>
     <string name="done">Done</string>
     <string name="all_done">All done</string>
+    <string name="new_password">New password</string>
+    <string name="new_password_sub_text">"create a new password, the password must be 8 char. "</string>
+    <string name="new_password_hint">Please enter a new password</string>
+    <string name="all_done_sub_text">"All done, please click done to procced "</string>
 
 
 </resources>

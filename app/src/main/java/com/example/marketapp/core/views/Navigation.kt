@@ -48,6 +48,7 @@ import com.example.marketapp.destinations.RegisterScreenDestination
 import com.example.marketapp.destinations.ResetPasswordByEmailScreenDestination
 import com.example.marketapp.destinations.ResetPasswordByPhoneScreenDestination
 import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
+import com.example.marketapp.destinations.ResetPasswordNewPasswordScreenDestination
 import com.example.marketapp.destinations.ResetPasswordPinScreenDestination
 import com.example.marketapp.destinations.SplashScreenDestination
 import com.example.marketapp.features.auth.view.screens.login.LoginScreen
@@ -56,6 +57,7 @@ import com.example.marketapp.features.auth.view.screens.register.RegisterScreen
 import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordByEmailScreen
 import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordByPhoneScreen
 import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordMethodsScreen
+import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordNewPasswordScreen
 import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordPinScreen
 import com.example.marketapp.features.auth.view.viewmodels.login.LoginEvent
 import com.example.marketapp.features.auth.view.viewmodels.login.LoginViewModel
@@ -75,7 +77,6 @@ fun Navigation(
     registerViewModel: RegisterViewModel = hiltViewModel()
 
 ) {
-
     val scope = rememberCoroutineScope()
 
     Box {
@@ -138,7 +139,7 @@ fun Navigation(
                             )
                         )
                     },
-                    onResetByPhoneClick = {navigator ->
+                    onResetByPhoneClick = { navigator ->
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnResetWithPhoneClick(
                                 navigator,
@@ -160,10 +161,10 @@ fun Navigation(
                         )
                     },
                     onEmailChangeClick = { resetPasswordViewModel.updateEmail(it) },
-                    onNextClick = { navigator,context ->
+                    onNextClick = { navigator, context ->
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnSendCodeToEmailClick(
-                                navigator,context
+                                navigator, context
                             )
                         )
                     },
@@ -181,11 +182,16 @@ fun Navigation(
                             )
                         )
                     },
-                    onPhoneChangeClick = { resetPasswordViewModel.updatePhoneNumber(it) },
-                    onNextClick = {navigator,context->
+                    onPhoneChange = { resetPasswordViewModel.updatePhoneNumber(it) },
+                    onPhoneWithCountryCode = {
+                        resetPasswordViewModel.updatePhoneNumberWithCountryCode(
+                            it
+                        )
+                    },
+                    onNextClick = { navigator, context ->
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnSendCodeToPhoneClick(
-                                navigator,context
+                                navigator, context
                             )
                         )
                     },
@@ -194,7 +200,8 @@ fun Navigation(
 
 
             composable(ResetPasswordPinScreenDestination) {
-                ResetPasswordPinScreen(navigator = destinationsNavigator,
+                ResetPasswordPinScreen(
+                    navigator = destinationsNavigator,
                     state = resetPasswordViewModel.state,
                     onBackArrowClick = {
                         resetPasswordViewModel.onEvent(
@@ -204,27 +211,63 @@ fun Navigation(
                         )
                     },
                     onPinChangeClick = { resetPasswordViewModel.updatePin(it) },
-                    onValidateClick = {
+                    onValidateClick = { navaigator, context ->
                         resetPasswordViewModel.onEvent(
                             ResetPasswordMethodsEvent.OnValidateClick(
+                                navaigator, context
+                            )
+                        )
+                    },
+                    onComplete = { navaigator, context ->
+                        resetPasswordViewModel.onEvent(
+                            ResetPasswordMethodsEvent.OnValidateClick(
+                                navaigator, context
+                            )
+                        )
+                    },
+                    onResendClick = { navigator, context ->
+                        resetPasswordViewModel.onEvent(
+                            ResetPasswordMethodsEvent.OnResendClickClick(navigator, context)
+                        )
+                    })
+            }
+
+            composable(ResetPasswordNewPasswordScreenDestination) {
+                ResetPasswordNewPasswordScreen(
+                    navigator = destinationsNavigator,
+                    state = resetPasswordViewModel.state,
+                    onBackArrowClick = {
+                        resetPasswordViewModel.onEvent(
+                            ResetPasswordMethodsEvent.OnBackButtonClick(
                                 it
                             )
                         )
                     },
-                    onComplete = {
+                    onDoneClick = { navigator, context ->
                         resetPasswordViewModel.onEvent(
-                            ResetPasswordMethodsEvent.OnValidateClick(
-                                it
-                            )
+                            ResetPasswordMethodsEvent.OnSettingNewPasswordClick(navigator, context)
                         )
                     },
-                    onResendClick = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnResendClickClick) })
+                    onNewPasswordChange = { resetPasswordViewModel.updateNewPassword(it) },
+                    onNewPasswordRpeatedChange = {
+                        resetPasswordViewModel.updateNewPasswordRepeated(
+                            it
+                        )
+                    }
+                )
+
             }
 
             composable(DoneMessageScreenDestination) {
                 DoneMessageScreen(
                     navigator = destinationsNavigator,
-                    onButtonTap = { resetPasswordViewModel.onEvent(ResetPasswordMethodsEvent.OnDoneMessageScreenClick(it)) }
+                    onButtonTap = {
+                        resetPasswordViewModel.onEvent(
+                            ResetPasswordMethodsEvent.OnDoneMessageScreenClick(
+                                it
+                            )
+                        )
+                    }
                 )
 
             }
@@ -236,14 +279,28 @@ fun Navigation(
                     onBackArrowClick = { registerViewModel.onEvent(RegisterEvent.OnBackClick(it)) },
                     onChangeUsername = { registerViewModel.updateUsername(it) },
                     onChangePhone = { registerViewModel.updatePhone(it) },
-                    onChangeEmail = {navigator,context ->  registerViewModel.updateEmail(navigator,context) },
+                    onChangeEmail = { navigator, context ->
+                        registerViewModel.updateEmail(
+                            navigator,
+                            context
+                        )
+                    },
                     onChangePassword = { registerViewModel.updatePassword(it) },
                     onChangePasswordRenter = { registerViewModel.updatePasswordRenter(it) },
                     onSecurePasswordClick = { registerViewModel.updateIsPasswordSecure() },
                     onSecurePasswordRenterClick = { registerViewModel.updateIsPasswordRenterSecure() },
                     onLoginClick = { registerViewModel.onEvent(RegisterEvent.OnLoginClick(it)) },
-                    onRegisterClick = {navigator,context -> registerViewModel.onEvent(RegisterEvent.Register(navigator,context)) },
-                    onChangePhoneWithCountryCode = {navigator,context -> registerViewModel.updatePhoneWithCountryCode(navigator,context) }
+                    onRegisterClick = { navigator, context ->
+                        registerViewModel.onEvent(
+                            RegisterEvent.Register(navigator, context)
+                        )
+                    },
+                    onChangePhoneWithCountryCode = { navigator, context ->
+                        registerViewModel.updatePhoneWithCountryCode(
+                            navigator,
+                            context
+                        )
+                    }
                 )
             }
 
@@ -266,15 +323,15 @@ fun Navigation(
                         .fillMaxSize()
                         .padding(horizontal = 20.dp),
                     contentAlignment = Alignment.CenterStart,
-                ){
+                ) {
 
                     val messages = it.visuals.message.split(":")
 
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         Column {
                             Text(
                                 text = messages[0],
@@ -303,7 +360,7 @@ fun Navigation(
                             },
                             painter = painterResource(id = R.drawable.close_circle),
                             contentDescription = null,
-                            tint = if(isDebugInspectorInfoEnabled) Neutral300 else Neutral700
+                            tint = if (isDebugInspectorInfoEnabled) Neutral300 else Neutral700
                         )
                     }
 

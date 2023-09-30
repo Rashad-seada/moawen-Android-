@@ -40,8 +40,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun DoneMessageScreen(
-    label : String = "",
-    message : String = "",
     onButtonTap : (DestinationsNavigator) -> Unit = {},
     navigator: DestinationsNavigator?
 ) {
@@ -68,7 +66,7 @@ fun DoneMessageScreen(
 
 
             Text(
-                text = label,
+                text = context.getString(R.string.all_done),
                 style = TextStyle(
                     fontFamily = Cairo,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
@@ -77,7 +75,7 @@ fun DoneMessageScreen(
             )
 
             Text(
-                text = message,
+                text = context.getString(R.string.all_done_sub_text),
                 style = TextStyle(
                     fontFamily = Cairo,
                     color = Neutral500,
@@ -140,8 +138,6 @@ fun DefoultMessageScreenPreview() {
     MarketAppTheme {
         DoneMessageScreen(
             navigator = null,
-            label = "All Done",
-            message = "You have reset your password successfully",
-            )
+        )
     }
 }
