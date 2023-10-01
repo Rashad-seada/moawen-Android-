@@ -66,18 +66,16 @@ fun LoginScreen(
     onChangePassword: (String) -> Unit = {},
     onSecurePasswordClick: () -> Unit = {},
     onLoginClick: (DestinationsNavigator, Context) -> Unit = { _, _ -> },
-    onLoginWithGoogleClick: (DestinationsNavigator) -> Unit = {},
     onRememberMeClick: () -> Unit = {},
     onForgotPasswordClick: (DestinationsNavigator) -> Unit = {},
     onRegisterClick: (DestinationsNavigator) -> Unit = {},
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
-
     ) {
 
     val context: Context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    //val state: MutableState<LoginState> = mutableStateOf(state)
+
 
     Scaffold(
         containerColor = if (isSystemInDarkTheme()) Neutral900 else Neutral100
@@ -380,12 +378,9 @@ fun LoginScreen(
                     .height(55.dp)
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
-                        scope.launch {
                             navigator?.let {
-                                onLoginWithGoogleClick(navigator)
-                            }
 
-                        }
+                            }
                     },
                 cardColor = Color.Transparent,
                 borderColor = Neutral500

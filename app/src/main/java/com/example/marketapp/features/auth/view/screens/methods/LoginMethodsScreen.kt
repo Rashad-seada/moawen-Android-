@@ -3,6 +3,8 @@ package com.example.marketapp.features.auth.view.screens.methods
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -43,27 +45,67 @@ import com.example.marketapp.core.ui.theme.Neutral400
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
 import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.core.views.components.MainButton
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.tasks.Task
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.stevdzasan.onetap.OneTapSignInWithGoogle
+import com.stevdzasan.onetap.rememberOneTapSignInState
 
 @SuppressLint("ResourceType")
 @Destination
 @Composable
 fun LoginMethodsScreen(
     navigator: DestinationsNavigator?,
-    onLoginClick : (DestinationsNavigator) -> Unit = {},
-    onRegisterClick : (DestinationsNavigator) -> Unit = {},
-    onLoginWithGoogleClick : (DestinationsNavigator) -> Unit = {},
+    onLoginClick: (DestinationsNavigator) -> Unit = {},
+    onRegisterClick: (DestinationsNavigator) -> Unit = {},
+    onLoginWithGoogleClick: (DestinationsNavigator, Task<GoogleSignInAccount>) -> Unit = { _, _ -> },
+    signInIntent: Intent = Intent()
 
-    ) {
-
+) {
     val context: Context = LocalContext.current
+
+
+//    val startForResult =
+//        rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
+//            Log.v("login with google result", "${result.resultCode}")
+//            if (result.resultCode == Activity.RESULT_OK) {
+//                val intent = result.data
+//                if (result.data != null) {
+//                    val task: Task<GoogleSignInAccount> =
+//                        GoogleSignIn.getSignedInAccountFromIntent(intent)
+//
+//                    navigator?.let {
+//                        onLoginWithGoogleClick(navigator, task)
+//                    }
+//
+//                }
+//            }else {
+//                CoreViewModel.showSnackbar("Error:"+context.getString(R.string.google_sign_in_faild))
+//            }
+//        }
+    val state = rememberOneTapSignInState()
+    OneTapSignInWithGoogle(
+        state = state,
+        clientId = "1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com",
+        onTokenIdReceived = { tokenId ->
+            Log.d("LOG12", tokenId)
+            CoreViewModel.showSnackbar("Success:$tokenId")
+        },
+        onDialogDismissed = { message ->
+            Log.d("LOG12", message)
+            CoreViewModel.showSnackbar("Error:$message")
+        }
+    )
+
 
     Scaffold(
         containerColor = if (isSystemInDarkTheme()) Neutral900 else Neutral100
     ) {
         it
+
 
         Column(
             verticalArrangement = Arrangement.Center,
@@ -85,7 +127,9 @@ fun LoginMethodsScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                modifier = Modifier.padding(horizontal = 20.dp).padding(start =10.dp),
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(start = 10.dp),
                 text = context.getString(R.string.welocme),
                 style = TextStyle(
                     fontFamily = Cairo,
@@ -95,7 +139,9 @@ fun LoginMethodsScreen(
             )
 
             Text(
-                modifier = Modifier.padding(horizontal = 20.dp).padding(end = 50.dp,start =10.dp),
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(end = 50.dp, start = 10.dp),
                 text = context.getString(R.string.welocme_sub_text),
                 style = TextStyle(
                     fontFamily = Cairo,
@@ -209,7 +255,7 @@ fun LoginMethodsScreen(
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {
                         navigator?.let {
-                            onLoginWithGoogleClick(navigator)
+                            state.open()
                         }
                     },
                 cardColor = Color.Transparent,

@@ -1,0 +1,9 @@
+{
+  "installed": {
+    "client_id": "1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com",
+    "project_id": "flutter-shop-project-398713",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs"
+  }
+}

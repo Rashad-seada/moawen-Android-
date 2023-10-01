@@ -67,6 +67,8 @@
     <string name="new_password_sub_text">"create a new password, the password must be 8 char. "</string>
     <string name="new_password_hint">Please enter a new password</string>
     <string name="all_done_sub_text">"All done, please click done to procced "</string>
+    <string name="gcp_id">1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com</string>
+    <string name="google_sign_in_faild">Faild to sign with google</string>
 
 
 </resources>

@@ -12,11 +12,30 @@ val Neutral300 = Color(0xffD1D5DB)
 val Neutral200 = Color(0xffE5E7EB)
 val Neutral100 = Color(0xffF4F4F5)
 
+
 val Primary900 = Color(0xff87C159)
 
 
 val Error500Clr = Color(0xffFF472B)
 val Error400Clr = Color(0xffFF8160)
 
+
 val SuccessClr = Color(0xff60C631)
 val InfoClr = Color(0xff0CAEFF)
+
+
+val color1 = Color(0xffCAAB70)
+val color2 = Color(0xff848B98)
+val color3 = Color(0xff9E9E9E)
+val color4 = Color(0xff8E7149)
+
+
+
+
+
+
+
+
+
+
+

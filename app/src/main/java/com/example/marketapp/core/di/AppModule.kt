@@ -1,5 +1,7 @@
 package com.example.marketapp.core.di
 
+import android.content.Context
+import com.example.marketapp.R
 import com.example.marketapp.core.infrastructure.services.NetworkServiceImpl
 import com.example.marketapp.core.util.Consts.BASE_URL
 import com.example.marketapp.core.util.usecase.ValidateEmailLocalUseCase
@@ -12,12 +14,15 @@ import com.example.marketapp.features.auth.data.data_source.remote.AuthRemoteDat
 import com.example.marketapp.features.auth.data.repo.AuthRepoImpl
 import com.example.marketapp.features.auth.domain.usecases.*
 import com.example.marketapp.features.auth.infrastructure.api.AuthApi
-import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPref
 import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPrefImpl
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -190,6 +195,18 @@ object AppModule {
     @Singleton
     fun provideValidator() : Validator {
         return Validator()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSignWithGoogleService(@ApplicationContext context: Context) : GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestIdToken(R.string.gcp_id.toString())
+            .requestId()
+            .requestProfile()
+            .build()
+        return GoogleSignIn.getClient(context, gso)
     }
 
 

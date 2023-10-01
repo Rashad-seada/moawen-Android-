@@ -81,6 +81,12 @@ fun Navigation(
 
     Box {
         DestinationsNavHost(NavGraphs.root) {
+
+            composable(SplashScreenDestination) {
+                SplashScreen(navigator = destinationsNavigator,
+                    onScreenLaunch = { scope.launch { coreViewModel.onSplashScreenLaunch(it) } })
+            }
+
             composable(OnBoardingScreenDestination) {
                 OnBoardingScreen(
                     onSkipClick = { coreViewModel.onOnBoardingScreenSkipClick(it) },
@@ -88,18 +94,17 @@ fun Navigation(
                     navigator = destinationsNavigator
                 )
             }
-            composable(SplashScreenDestination) {
-                SplashScreen(navigator = destinationsNavigator,
-                    onScreenLaunch = { scope.launch { coreViewModel.onSplashScreenLaunch(it) } })
-            }
+
             composable(LoginMethodsScreenDestination) {
                 LoginMethodsScreen(
                     navigator = destinationsNavigator,
                     onLoginClick = { coreViewModel.onMethodsScreenLoginClick(it) },
                     onRegisterClick = { coreViewModel.onMethodsScreenRegisterClick(it) },
-                    onLoginWithGoogleClick = { coreViewModel.onMethodsScreenLoginWithGoogleClick(it) },
+                    onLoginWithGoogleClick = { navigator,task-> coreViewModel.onMethodsScreenLoginWithGoogleClick(navigator,task) },
+                    signInIntent = coreViewModel.provideSignInIntent()
                 )
             }
+
             composable(LoginScreenDestination) {
                 LoginScreen(
                     navigator = destinationsNavigator,
@@ -116,10 +121,9 @@ fun Navigation(
                         )
                     },
                     onRegisterClick = { loginViewModel.onEvent(LoginEvent.Register(it)) },
-                    onLoginWithGoogleClick = { loginViewModel.onEvent(LoginEvent.LoginWithGoogle) },
                     onForgotPasswordClick = { loginViewModel.onEvent(LoginEvent.ForgotPassword(it)) },
                     onSecurePasswordClick = { loginViewModel.updatePasswordSecureState() },
-                    onBackArrowClick = { loginViewModel.onEvent(LoginEvent.OnBackClick(it)) }
+                    onBackArrowClick = { loginViewModel.onEvent(LoginEvent.OnBackClick(it)) },
                 )
             }
             composable(ResetPasswordMethodsScreenDestination) {
@@ -342,9 +346,9 @@ fun Navigation(
                                 )
                             )
 
-                            messages.forEachIndexed { index, s ->
+                            messages.forEachIndexed { index, text ->
                                 if (index != 0) Text(
-                                    text = s,
+                                    text = text,
                                     style = TextStyle(
                                         fontFamily = Cairo,
                                         color = if (isSystemInDarkTheme()) Neutral400 else Neutral600,

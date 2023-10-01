@@ -16,6 +16,7 @@ import com.example.marketapp.destinations.LoginScreenDestination
 import com.example.marketapp.features.auth.domain.usecases.RegisterUseCase
 import com.example.marketapp.features.auth.domain.usecases.ValidateEmailUseCase
 import com.example.marketapp.features.auth.domain.usecases.ValidatePhoneUseCase
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -33,8 +34,10 @@ class RegisterViewModel @Inject constructor(
     private val validateEmailLocalUseCase: ValidateEmailLocalUseCase,
     private val validatePhoneLocalUseCase: ValidatePhoneLocalUseCase,
     private val validatePasswordLocalUseCase: ValidatePasswordLocalUseCase,
-    private val validatePasswordRepeatedLocalUseCase: ValidatePasswordRepeatedLocalUseCase
-) : ViewModel() {
+    private val validatePasswordRepeatedLocalUseCase: ValidatePasswordRepeatedLocalUseCase,
+
+
+    ) : ViewModel() {
 
     var state by mutableStateOf(RegisterState())
     private var job : Job? = null
@@ -202,6 +205,7 @@ class RegisterViewModel @Inject constructor(
         callBackFunction()
 
     }
+
 
 
 

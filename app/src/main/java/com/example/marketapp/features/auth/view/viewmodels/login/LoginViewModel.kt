@@ -12,6 +12,7 @@ import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.destinations.RegisterScreenDestination
 import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
 import com.example.marketapp.features.auth.domain.usecases.LoginUseCase
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -83,8 +84,12 @@ class LoginViewModel @Inject constructor(
             }
 
         }
+    }
 
 
+
+
+    private fun loginWithGoogle(){
 
     }
 
@@ -98,7 +103,7 @@ class LoginViewModel @Inject constructor(
                 onRegisterClick(event.navigator)
             }
             is LoginEvent.LoginWithGoogle -> {
-
+                loginWithGoogle()
             }
             is LoginEvent.RememberMe -> {
                 updateRememberMeState()
