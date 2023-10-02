@@ -3,10 +3,10 @@ package com.example.marketapp.features.auth.domain.usecases
 import android.content.Context
 import com.example.marketapp.core.util.Resource
 import com.example.marketapp.core.viewmodel.CoreViewModel
-import com.example.marketapp.core.viewmodel.CoreViewModel.Companion.userInfo
-import com.example.marketapp.features.auth.data.entities.LoginEntity
+import com.example.marketapp.features.auth.data.entities.login.LoginResponse
+import com.example.marketapp.features.auth.data.entities.login.User
 import com.example.marketapp.features.auth.data.repo.AuthRepoImpl
-import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfo
+import com.example.marketapp.features.auth.infrastructure.api.request.LoginRequest
 import javax.inject.Inject
 
 
@@ -17,24 +17,33 @@ class LoginUseCase @Inject constructor(
     ) {
 
     suspend operator fun invoke(
-        email: String,
-        password: String,
-        context: Context,
-        screenId: Int
-    ): Resource<LoginEntity> {
+        loginRequest: LoginRequest,
+        context: Context
+    ): Resource<LoginResponse> {
 
         val result = repo.login(
-            email = email,
-            password = password,
+            loginRequest = loginRequest,
             context = context,
-            screenId = screenId,
         )
 
         if(result.failure == null) {
-            val userInfo = UserInfo(result.data!!.id.toInt(),password)
-            CoreViewModel.userInfo = userInfo
 
-            val saveResult = saveUserInfoUseCase(UserInfo(result.data.id.toInt(),password),context,screenId)
+            val user = User(
+                result.data!!.data.user.country_code,
+                result.data!!.data.user.currency,
+                result.data!!.data.user.flag,
+                result.data!!.data.user.fullname,
+                result.data!!.data.user.id,
+                result.data!!.data.user.image,
+                result.data!!.data.user.is_active,
+                result.data!!.data.user.phone,
+                result.data!!.data.user.token,
+                )
+
+            val saveResult = saveUserInfoUseCase(user,context,0)
+
+            CoreViewModel.user = user
+
 
             return if(saveResult.failure == null) {
                 result

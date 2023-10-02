@@ -29,12 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
-import com.example.marketapp.core.ui.theme.MarketAppTheme
-import com.example.marketapp.core.ui.theme.Neutral100
-import com.example.marketapp.core.ui.theme.Neutral500
-import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.ui.theme.*
 import com.example.marketapp.core.views.components.CustomPageIndicator
 import com.example.marketapp.core.views.components.MainButton
 import com.example.marketapp.core.views.pages.OnBoardingPage
@@ -76,19 +71,19 @@ fun OnBoardingScreen(
                 ) { page ->
                 when (page) {
                     0 -> OnBoardingPage(
-                        image = R.drawable.on_boarding_1,
+                        image = R.drawable.on_boarding1,
                         label = context.getString(R.string.on_boarding_title_1),
                         subText = context.getString(R.string.on_boarding_sub_text_1),
                     )
 
                     1 -> OnBoardingPage(
-                        image = R.drawable.on_boarding_2,
+                        image = R.drawable.on_boarding2,
                         label = context.getString(R.string.on_boarding_title_2),
                         subText = context.getString(R.string.on_boarding_sub_text_2),
                     )
 
                     2 -> OnBoardingPage(
-                        image = R.drawable.pin,
+                        image = R.drawable.on_boarding3,
                         label = context.getString(R.string.on_boarding_title_3),
                         subText = context.getString(R.string.on_boarding_sub_text_3),
                     )
@@ -100,18 +95,18 @@ fun OnBoardingScreen(
             CustomPageIndicator(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 120.dp),
+                    .padding(bottom = 320.dp),
                 totalPages = pagerState.pageCount,
                 currentPage = pagerState.currentPage,
                 indicatorSize = 7.dp,
-                color = if( isSystemInDarkTheme()) Neutral100 else Neutral900,
+                color = Secondary,
             )
 
 
             MainButton(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 30.dp)
+                    .padding(bottom = 100.dp)
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .height(55.dp)
@@ -133,7 +128,7 @@ fun OnBoardingScreen(
 
                     }
                     ,
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ){
                 Row (
@@ -145,8 +140,8 @@ fun OnBoardingScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.next),
                         style = TextStyle(
-                            fontFamily = Cairo,
-                            color = if( isSystemInDarkTheme()) Neutral100 else Neutral900,
+                            fontFamily = Lato,
+                            color = Neutral100 ,
                             fontSize = 16.sp
                         )
                     )
@@ -156,19 +151,18 @@ fun OnBoardingScreen(
 
             Text(
                 modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 45.dp)
                     .wrapContentHeight()
                     .clickable {
 
                         navigator?.let {
                             onSkipClick(navigator)
                         }
-                    }
-                    .padding(horizontal = 20.dp, vertical = 20.dp)
-                    .align(Alignment.TopEnd),
-
+                    },
                 text = context.getString(R.string.skip),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = Neutral500,
                     fontSize = 18.sp,
 

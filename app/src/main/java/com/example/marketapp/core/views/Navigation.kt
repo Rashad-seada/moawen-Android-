@@ -3,14 +3,7 @@ package com.example.marketapp.core.views
 //import com.example.marketapp.destinations.MethodsScreenDestination
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
@@ -27,44 +20,30 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marketapp.NavGraphs
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
-import com.example.marketapp.core.ui.theme.Neutral100
-import com.example.marketapp.core.ui.theme.Neutral200
-import com.example.marketapp.core.ui.theme.Neutral300
-import com.example.marketapp.core.ui.theme.Neutral400
-import com.example.marketapp.core.ui.theme.Neutral600
-import com.example.marketapp.core.ui.theme.Neutral700
-import com.example.marketapp.core.ui.theme.Neutral800
-import com.example.marketapp.core.ui.theme.Neutral900
+import com.example.marketapp.core.ui.theme.*
 import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.core.views.screens.DoneMessageScreen
 import com.example.marketapp.core.views.screens.OnBoardingScreen
 import com.example.marketapp.core.views.screens.SplashScreen
-import com.example.marketapp.destinations.DoneMessageScreenDestination
-import com.example.marketapp.destinations.LoginMethodsScreenDestination
-import com.example.marketapp.destinations.LoginScreenDestination
-import com.example.marketapp.destinations.OnBoardingScreenDestination
-import com.example.marketapp.destinations.RegisterScreenDestination
-import com.example.marketapp.destinations.ResetPasswordByEmailScreenDestination
-import com.example.marketapp.destinations.ResetPasswordByPhoneScreenDestination
-import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
-import com.example.marketapp.destinations.ResetPasswordNewPasswordScreenDestination
-import com.example.marketapp.destinations.ResetPasswordPinScreenDestination
-import com.example.marketapp.destinations.SplashScreenDestination
+import com.example.marketapp.destinations.*
 import com.example.marketapp.features.auth.view.screens.login.LoginScreen
 import com.example.marketapp.features.auth.view.screens.methods.LoginMethodsScreen
+import com.example.marketapp.features.auth.view.screens.register.ActivationPinScreen
 import com.example.marketapp.features.auth.view.screens.register.RegisterScreen
-import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordByEmailScreen
-import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordByPhoneScreen
-import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordMethodsScreen
-import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordNewPasswordScreen
-import com.example.marketapp.features.auth.view.screens.reset_password.ResetPasswordPinScreen
+import com.example.marketapp.features.auth.view.screens.reset_password.*
 import com.example.marketapp.features.auth.view.viewmodels.login.LoginEvent
 import com.example.marketapp.features.auth.view.viewmodels.login.LoginViewModel
 import com.example.marketapp.features.auth.view.viewmodels.register.RegisterEvent
 import com.example.marketapp.features.auth.view.viewmodels.register.RegisterViewModel
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordMethodsEvent
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordViewModel
+import com.example.marketapp.features.home.view.screens.main.MainScreen
+import com.example.marketapp.features.home.view.viewmodels.main.MainViewModel
+import com.example.marketapp.features.order.view.screens.*
+import com.example.marketapp.features.order.view.viewmodel.order.OrderEvent
+import com.example.marketapp.features.order.view.viewmodel.order.OrderViewModel
+import com.example.marketapp.features.order.view.viewmodel.select_location.SelectLocationEvent
+import com.example.marketapp.features.order.view.viewmodel.select_location.SelectLocationViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import kotlinx.coroutines.launch
@@ -74,8 +53,10 @@ fun Navigation(
     coreViewModel: CoreViewModel = hiltViewModel(),
     loginViewModel: LoginViewModel = hiltViewModel(),
     resetPasswordViewModel: ResetPasswordViewModel = hiltViewModel(),
-    registerViewModel: RegisterViewModel = hiltViewModel()
-
+    registerViewModel: RegisterViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
+    orderViewModel : OrderViewModel = hiltViewModel(),
+    locationViewModel : SelectLocationViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
 
@@ -100,8 +81,12 @@ fun Navigation(
                     navigator = destinationsNavigator,
                     onLoginClick = { coreViewModel.onMethodsScreenLoginClick(it) },
                     onRegisterClick = { coreViewModel.onMethodsScreenRegisterClick(it) },
-                    onLoginWithGoogleClick = { navigator,task-> coreViewModel.onMethodsScreenLoginWithGoogleClick(navigator,task) },
-                    signInIntent = coreViewModel.provideSignInIntent()
+                    onLoginWithGoogleClick = { navigator, task ->
+                        coreViewModel.onMethodsScreenLoginWithGoogleClick(
+                            navigator,
+                            task
+                        )
+                    },
                 )
             }
 
@@ -109,7 +94,8 @@ fun Navigation(
                 LoginScreen(
                     navigator = destinationsNavigator,
                     state = loginViewModel.state,
-                    onChangeUsername = { loginViewModel.updateUsername(it) },
+                    onChangePhone = { loginViewModel.updatePhone(it) },
+                    onChangePhoneWithCountryCode = { loginViewModel.updatePhoneWithCountryCode(it) },
                     onChangePassword = { loginViewModel.updatePassword(it) },
                     onRememberMeClick = { loginViewModel.onEvent(LoginEvent.RememberMe) },
                     onLoginClick = { navigator, context ->
@@ -126,54 +112,7 @@ fun Navigation(
                     onBackArrowClick = { loginViewModel.onEvent(LoginEvent.OnBackClick(it)) },
                 )
             }
-            composable(ResetPasswordMethodsScreenDestination) {
-                ResetPasswordMethodsScreen(
-                    navigator = destinationsNavigator,
-                    onBackArrowClick = {
-                        resetPasswordViewModel.onEvent(
-                            ResetPasswordMethodsEvent.OnBackButtonClick(
-                                it
-                            )
-                        )
-                    },
-                    onResetByEmailClick = {
-                        resetPasswordViewModel.onEvent(
-                            ResetPasswordMethodsEvent.OnResetWithEmailClick(
-                                it
-                            )
-                        )
-                    },
-                    onResetByPhoneClick = { navigator ->
-                        resetPasswordViewModel.onEvent(
-                            ResetPasswordMethodsEvent.OnResetWithPhoneClick(
-                                navigator,
-                            )
-                        )
-                    },
-                )
-            }
 
-            composable(ResetPasswordByEmailScreenDestination) {
-                ResetPasswordByEmailScreen(
-                    navigator = destinationsNavigator,
-                    state = resetPasswordViewModel.state,
-                    onBackArrowClick = {
-                        resetPasswordViewModel.onEvent(
-                            ResetPasswordMethodsEvent.OnBackButtonClick(
-                                it
-                            )
-                        )
-                    },
-                    onEmailChangeClick = { resetPasswordViewModel.updateEmail(it) },
-                    onNextClick = { navigator, context ->
-                        resetPasswordViewModel.onEvent(
-                            ResetPasswordMethodsEvent.OnSendCodeToEmailClick(
-                                navigator, context
-                            )
-                        )
-                    },
-                )
-            }
 
             composable(ResetPasswordByPhoneScreenDestination) {
                 ResetPasswordByPhoneScreen(
@@ -281,14 +220,13 @@ fun Navigation(
                     navigator = destinationsNavigator,
                     state = registerViewModel.state,
                     onBackArrowClick = { registerViewModel.onEvent(RegisterEvent.OnBackClick(it)) },
-                    onChangeUsername = { registerViewModel.updateUsername(it) },
-                    onChangePhone = { registerViewModel.updatePhone(it) },
-                    onChangeEmail = { navigator, context ->
-                        registerViewModel.updateEmail(
+                    onChangePhone = { navigator, context ->
+                        registerViewModel.updatePhone(
                             navigator,
                             context
                         )
                     },
+                    onChangePhoneWithCountryCode = { registerViewModel.updatePhoneWithCountryCode(it) },
                     onChangePassword = { registerViewModel.updatePassword(it) },
                     onChangePasswordRenter = { registerViewModel.updatePasswordRenter(it) },
                     onSecurePasswordClick = { registerViewModel.updateIsPasswordSecure() },
@@ -299,16 +237,122 @@ fun Navigation(
                             RegisterEvent.Register(navigator, context)
                         )
                     },
-                    onChangePhoneWithCountryCode = { navigator, context ->
-                        registerViewModel.updatePhoneWithCountryCode(
-                            navigator,
-                            context
-                        )
-                    }
+                    onChangeFullName = {
+                        registerViewModel.updateFullName(it)
+                    },
+                    onTermsClick = {
+                        registerViewModel.updateTerms()
+                    },
+
+
                 )
             }
 
+            composable(ActivationPinScreenDestination) {
+                ActivationPinScreen(
+                    navigator = destinationsNavigator,
+                    state = registerViewModel.state,
+                    onBackArrowClick = {
+                        registerViewModel.onEvent(
+                            RegisterEvent.OnBackClick(
+                                it
+                            )
+                        )
+                    },
+                    onPinChangeClick = { registerViewModel.updatePin(it) },
+                    onValidateClick = { navaigator, context ->
+                        registerViewModel.onEvent(
+                            RegisterEvent.OnValidateClick(
+                                navaigator, context
+                            )
+                        )
+                    },
+                    onComplete = { navaigator, context ->
+                        registerViewModel.onEvent(
+                            RegisterEvent.OnValidateClick(
+                                navaigator, context
+                            )
+                        )
+                    },
+                    onResendClick = { navigator, context ->
+                        registerViewModel.onEvent(
+                            RegisterEvent.OnResendClick(navigator, context)
+                        )
+                    })
+            }
+
+            composable(MainScreenDestination) {
+                MainScreen(
+                    state = mainViewModel.state,
+                    navigator = destinationsNavigator,
+                    onIndexChange = {
+                        mainViewModel.updateCurrentIndex(it)
+                    }
+                )
+
+            }
+
+            composable(OrderScreenDestination) {
+                OrderScreen(
+                    state = orderViewModel.state,
+                    navigator = destinationsNavigator,
+                    onRecording = { orderViewModel.onRecording() },
+                    onImageSelection = { orderViewModel.onImageSelection(it) },
+                    onFileSelection = { orderViewModel.onFileSelection(it) },
+                    onConfirmClick = {navigator,context->  orderViewModel.onEvent(OrderEvent.OnConfirmClick(navigator,context)) },
+                    onDescriptionChange = { orderViewModel.onUpdateDescription(it) }
+                )
+
+            }
+
+            composable(SelectLocationScreenDestination) {
+                SelectLocationScreen(
+                    state = locationViewModel.state,
+                    navigator = destinationsNavigator,
+                    onFromLocationClick = { locationViewModel.onEvent(SelectLocationEvent.OnFromLocationClick(it)) },
+                    onToLocationClick = { locationViewModel.onEvent(SelectLocationEvent.OnToLocationClick(it)) },
+                    onNextClick = {navigator,context ->  locationViewModel.onEvent(SelectLocationEvent.OnLocationSelected(navigator, context)) }
+                )
+
+            }
+
+
+            composable(SearchLocationToScreenDestination) {
+                SearchLocationToScreen(
+                    state = locationViewModel.state,
+                    navigator = destinationsNavigator,
+                    onQueryChange = { locationViewModel.onSearchUpdate(it) },
+                    onLocationSelect = {navigator,placeInfo->  locationViewModel.onEvent(SelectLocationEvent.OnFromLocationSelect(navigator,placeInfo)) },
+                    onSearch = {  }
+                )
+
+            }
+
+            composable(SearchLocationFromScreenDestination) {
+                SearchLocationFromScreen(
+                    state = locationViewModel.state,
+                    navigator = destinationsNavigator,
+                    onQueryChange = { locationViewModel.onSearchUpdate(it) },
+                    onLocationSelect = {navigator,placeInfo ->  locationViewModel.onEvent(SelectLocationEvent.OnToLocationSelect(navigator,placeInfo)) },
+                    onSearch = {  }
+                )
+
+            }
+
+            composable(OrderMessageScreenDestination) {
+                OrderMessageScreen(
+                    navigator = destinationsNavigator,
+                    onButtonTap = {  it.navigate(MainScreenDestination) }
+
+                )
+
+            }
+
+
+
         }
+
+
 
 
         SnackbarHost(
@@ -340,17 +384,19 @@ fun Navigation(
                             Text(
                                 text = messages[0],
                                 style = TextStyle(
-                                    fontFamily = Cairo,
+                                    fontFamily = Lato,
                                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                                     fontSize = 20.sp
                                 )
                             )
 
+                            Spacer(modifier = Modifier.height(5.dp))
+
                             messages.forEachIndexed { index, text ->
                                 if (index != 0) Text(
                                     text = text,
                                     style = TextStyle(
-                                        fontFamily = Cairo,
+                                        fontFamily = Lato,
                                         color = if (isSystemInDarkTheme()) Neutral400 else Neutral600,
                                         fontSize = 16.sp
                                     )

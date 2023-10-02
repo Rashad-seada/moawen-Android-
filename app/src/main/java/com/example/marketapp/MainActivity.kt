@@ -10,6 +10,7 @@ import com.example.marketapp.core.views.Navigation
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.libraries.places.api.Places
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +20,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+
+
+
+
+
 
         setContent {
             ScaffoldDefaults.contentWindowInsets // Fixes blank screen for Xiaomi devices
@@ -32,14 +39,4 @@ class MainActivity : ComponentActivity() {
     }
 
 
-
-    private fun getGoogleLoginAuth(): GoogleSignInClient {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .requestIdToken(getString(R.string.gcp_id))
-            .requestId()
-            .requestProfile()
-            .build()
-        return GoogleSignIn.getClient(this, gso)
-    }
 }

@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -39,18 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
-import com.example.marketapp.core.ui.theme.MarketAppTheme
-import com.example.marketapp.core.ui.theme.Neutral100
-import com.example.marketapp.core.ui.theme.Neutral300
-import com.example.marketapp.core.ui.theme.Neutral400
-import com.example.marketapp.core.ui.theme.Neutral500
-import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.ui.theme.Primary900
-import com.example.marketapp.core.views.components.CustomCheckBox
-import com.example.marketapp.core.views.components.CustomProgressIndicator
-import com.example.marketapp.core.views.components.CustomTextField
-import com.example.marketapp.core.views.components.MainButton
+import com.example.marketapp.core.ui.theme.*
+import com.example.marketapp.core.views.components.*
 import com.example.marketapp.features.auth.view.viewmodels.login.LoginState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -62,7 +51,9 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     navigator: DestinationsNavigator?,
     state: LoginState = LoginState(),
-    onChangeUsername: (String) -> Unit = {},
+    onChangePhone: (String) -> Unit = {},
+    onChangePhoneWithCountryCode: (PhoneNumber) -> Unit = {},
+
     onChangePassword: (String) -> Unit = {},
     onSecurePasswordClick: () -> Unit = {},
     onLoginClick: (DestinationsNavigator, Context) -> Unit = { _, _ -> },
@@ -106,35 +97,50 @@ fun LoginScreen(
 
 
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
 
-            Image(
-                painter = painterResource(id = R.drawable.education), // Provide the resource ID
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxWidth() // Adjust the size as needed
-                    .height(150.dp)
-                    .align(alignment = Alignment.CenterHorizontally),
-                contentScale = ContentScale.FillHeight
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo), // Provide the resource ID
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(65.83.dp) // Adjust the size as needed
+                        .height(51.19.dp)
+                )
+
+                Text(
+                    text = context.getString(R.string.oawen),
+                    style = TextStyle(
+                        fontFamily = Lato,
+                        color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                        fontSize = 50.sp
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
 
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 text = context.getString(R.string.login),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                     fontSize = 32.sp
                 )
             )
-            //Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 text = context.getString(R.string.login_sub_text),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = Neutral500,
                     fontSize = 16.sp,
 
@@ -144,25 +150,21 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
 
-            CustomTextField(
-                value = state.username,
+            PhoneTextField(
+                value = state.phone,
                 onValueChange = {
-                    onChangeUsername(it)
+                    onChangePhone(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                label = context.getString(R.string.username),
-                placeHolder = context.getString(R.string.username_hint),
-                leadingIcon = {
-                    Image(
-                        modifier = Modifier.padding(end = 0.dp),
-                        painter = painterResource(id = R.drawable.profile_inactive),
-                        contentDescription = ""
-                    )
-                },
-                isError = state.usernameError != null,
-                errorMessage = state.usernameError ?: "",
+                label = context.getString(R.string.phone),
+                placeHolder = context.getString(R.string.phone_hint),
+                isError = state.phoneError != null,
+                errorMessage = state.phoneError ?: "",
+                onPhoneChange = {
+                    onChangePhoneWithCountryCode(it)
+                }
             )
             Spacer(modifier = Modifier.height(5.dp))
 
@@ -237,8 +239,8 @@ fun LoginScreen(
                         },
                     text = context.getString(R.string.forgot_password),
                     style = TextStyle(
-                        fontFamily = Cairo,
-                        color = Primary900,
+                        fontFamily = Lato,
+                        color = Secondary,
                         fontSize = 16.sp,
 
                         ),
@@ -261,7 +263,7 @@ fun LoginScreen(
                     modifier = Modifier.wrapContentSize(),
                     text = context.getString(R.string.dont_have_account),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = Neutral400,
                         fontSize = 16.sp,
 
@@ -284,8 +286,8 @@ fun LoginScreen(
                         },
                     text = context.getString(R.string.register),
                     style = TextStyle(
-                        fontFamily = Cairo,
-                        color = Primary900,
+                        fontFamily = Lato,
+                        color = Secondary,
                         fontSize = 16.sp,
 
                         ),
@@ -307,7 +309,7 @@ fun LoginScreen(
                                 onLoginClick(navigator, context)
                             }
                     },
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ) {
 
@@ -320,7 +322,7 @@ fun LoginScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.login),
                         style = TextStyle(
-                            fontFamily = Cairo,
+                            fontFamily = Lato,
                             color = Neutral100,
                             fontSize = 16.sp,
                         )
@@ -352,7 +354,7 @@ fun LoginScreen(
                         .padding(horizontal = 10.dp),
                     text = context.getString(R.string.or_login_with),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = Neutral400,
                         fontSize = 16.sp,
                     ),
@@ -398,7 +400,44 @@ fun LoginScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.google),
                         style = TextStyle(
-                            fontFamily = Cairo,
+                            fontFamily = Lato,
+                            color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                            fontSize = 16.sp
+                        )
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            MainButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .height(55.dp)
+                    .clip(RoundedCornerShape(100.dp))
+                    .clickable {
+                        navigator?.let {
+
+                        }
+                    },
+                cardColor = Color.Transparent,
+                borderColor = Neutral500
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier.padding(end = 0.dp),
+                        painter = painterResource(id = R.drawable.facebook),
+                        contentDescription = ""
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        text = context.getString(R.string.facebook),
+                        style = TextStyle(
+                            fontFamily = Lato,
                             color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                             fontSize = 16.sp
                         )

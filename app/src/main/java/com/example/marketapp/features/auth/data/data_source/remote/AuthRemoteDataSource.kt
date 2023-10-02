@@ -6,64 +6,45 @@ import com.example.marketapp.core.util.Consts.DEFAULT_EMAIL
 import com.example.marketapp.core.util.Consts.DEFAULT_PASSWORD
 import com.example.marketapp.core.util.Consts.DEFAULT_USER_ID
 import com.example.marketapp.core.util.base64_converters.toBase64
-import com.example.marketapp.features.auth.data.entities.ActivateAccountEntity
-import com.example.marketapp.features.auth.data.entities.LoginEntity
-import com.example.marketapp.features.auth.data.entities.RegisterEntity
-import com.example.marketapp.features.auth.data.entities.ResetPasswordByEmailEntity
-import com.example.marketapp.features.auth.data.entities.ResetPasswordByPhoneEntity
-import com.example.marketapp.features.auth.data.entities.SendSmsCodeEntity
-import com.example.marketapp.features.auth.data.entities.ValidateEmailEntity
-import com.example.marketapp.features.auth.data.entities.ValidatePhoneEntity
-import com.example.marketapp.features.auth.data.entities.ValidateSmsCodeEntity
+import com.example.marketapp.features.auth.data.entities.check_code_sent.CheckCodeSentResponse
+import com.example.marketapp.features.auth.data.entities.login.LoginResponse
+import com.example.marketapp.features.auth.data.entities.register.RegisterResponse
+import com.example.marketapp.features.auth.data.entities.resend_activition_code.ResendActivitionCodeResponse
+import com.example.marketapp.features.auth.data.entities.reset_password.ResetPasswordResponse
+import com.example.marketapp.features.auth.data.entities.send_code_to_phone.SendCodeToPhoneResponse
 import com.example.marketapp.features.auth.infrastructure.api.AuthApi
+import com.example.marketapp.features.auth.infrastructure.api.request.*
 import retrofit2.Response
 import javax.inject.Inject
 
 interface AuthRemoteDataSource {
     suspend fun login(
-        username: String,
-        password: String
-    ): Response<LoginEntity>
+        loginRequest: LoginRequest
+    ): Response<LoginResponse>
 
     suspend fun register(
-        username: String,
-        email: String,
-        password: String,
-        mobile: String
-    ): Response<RegisterEntity>
+        registerRequest: RegisterRequest
+    ): Response<RegisterResponse>
 
-    suspend fun activateAccount(
-        phoneNumber: String,
-        pin: String,
-        expectedPin: String
-    ): Response<ActivateAccountEntity>
+    suspend fun confirmCode(
+        confirmCodeRequest: ConfirmCodeRequest
+    ): Response<LoginResponse>
 
-    suspend fun resetPasswordByEmail(
-        email: String,
-    ): Response<ResetPasswordByEmailEntity>
+    suspend fun resendActivitionCode(
+        resendActivitionCodeRequest: ResendActivitionCodeRequest
+    ): Response<ResendActivitionCodeResponse>
 
-    suspend fun sendSmsCode(
-        phone: String,
-    ): Response<SendSmsCodeEntity>
+    suspend fun sendCodeToPhone(
+        sendCodeToPhoneRequest: SendCodeToPhoneRequest
+    ): Response<SendCodeToPhoneResponse>
 
-    suspend fun validateSmsCode(
-        phone: String,
-        smsCode: String,
-    ): Response<ValidateSmsCodeEntity>
+    suspend fun checkCodeSent(
+        checkCodeSentRequest: CheckCodeSentRequest
+    ): Response<CheckCodeSentResponse>
 
-    suspend fun resetPasswordByPhone(
-        phone: String,
-        smsCode: String,
-        newPassword: String
-    ): Response<ResetPasswordByPhoneEntity>
-
-    suspend fun validateEmail(
-        email: String,
-    ): Response<ValidateEmailEntity>
-
-    suspend fun validatePhone(
-        phone: String,
-    ): Response<ValidatePhoneEntity>
+    suspend fun resetPassword(
+        resetPasswordRequest: ResetPasswordRequest
+    ): Response<ResetPasswordResponse>
 
 
 }
@@ -75,24 +56,13 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
     }
 
     override suspend fun login(
-        username: String,
-        password: String
-    ): Response<LoginEntity> {
+        loginRequest: LoginRequest
+    ): Response<LoginResponse> {
 
         try {
-            val serviceData: String = ("[{" +
-                    "\"uname\":\"$username\"," +
-                    "\"upass\":\"$password\"," +
-                    "\"ismob\":\"0\"" +
-                    "}]").toBase64()
 
             return api.login(
-                serviceCode = 10,
-                folderId = 0,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
+                loginRequest
             )
 
         } catch (e: Exception) {
@@ -103,24 +73,27 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
     }
 
     override suspend fun register(
-        username: String,
-        email: String,
-        password: String,
-        phone: String
-    ): Response<RegisterEntity> {
+        registerRequest: RegisterRequest
+    ): Response<RegisterResponse> {
 
         try {
-
-            val serviceData: String =
-                ("[{\"id\":\"0\",\"atxt\":\"$username\",\"etxt\":\"$username\",\"uname\":\"$email\",\"umail\":\"$email\",\"upass\":\"$password\",\"mobile\":\"$phone\"}]").toBase64()
 
             return api.register(
-                serviceCode = 20,
-                folderId = 10,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
+                registerRequest
+            )
+
+        } catch (e: Exception) {
+            throw RemoteDataException(e.message.toString())
+
+        }
+    }
+
+    override suspend fun confirmCode(
+        confirmCodeRequest: ConfirmCodeRequest
+    ): Response<LoginResponse> {
+        try {
+            return api.confirmCode(
+                confirmCodeRequest
             )
 
         } catch (e: Exception) {
@@ -129,25 +102,12 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
         }
     }
 
-    override suspend fun activateAccount(
-        phoneNumber: String,
-        pin: String,
-        expectedPin: String
-    ): Response<ActivateAccountEntity> {
+    override suspend fun resendActivitionCode(
+        resendActivitionCodeRequest: ResendActivitionCodeRequest
+    ): Response<ResendActivitionCodeResponse> {
         try {
-
-            val serviceData: String = "[{" +
-                    "\"mobile\":\"0\"," +
-                    "\"mcode\":\"$expectedPin\"," +
-                    "\"ncode\":\"$pin\"," +
-                    "}]".toBase64()
-            return api.activateAccount(
-                serviceCode = 50,
-                folderId = 0,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
+            return api.resendActivitionCode(
+                resendActivitionCodeRequest
             )
 
         } catch (e: Exception) {
@@ -156,43 +116,13 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
         }
     }
 
-    override suspend fun resetPasswordByEmail(
-        email: String
-    ): Response<ResetPasswordByEmailEntity> {
+
+    override suspend fun sendCodeToPhone(
+        sendCodeToPhoneRequest: SendCodeToPhoneRequest
+    ): Response<SendCodeToPhoneResponse>{
         try {
-
-            val serviceData: String = "[{\"umail\":\"$email\"}]".toBase64()
-            return api.resetPasswordByEmail(
-                serviceCode = 90,
-                folderId = 0,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
-            )
-
-        } catch (e: Exception) {
-            throw RemoteDataException(R.string.internet_connection.toString())
-
-        }
-    }
-
-    override suspend fun sendSmsCode(
-        phone: String
-    ): Response<SendSmsCodeEntity> {
-        try {
-
-            val serviceData: String = ("[{" +
-                    "\"mobile\":\"$phone\"," +
-                    "\"is_code_sms\":\"0\"" +
-                    "}]").toBase64()
             return api.sendSmsCode(
-                serviceCode = 60,
-                folderId = 0,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
+                sendCodeToPhoneRequest
             )
 
         } catch (e: Exception) {
@@ -200,23 +130,13 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
         }
     }
 
-    override suspend fun validateSmsCode(
-        phone: String,
-        smsCode: String
-    ): Response<ValidateSmsCodeEntity> {
+    override suspend fun checkCodeSent(
+        checkCodeSentRequest: CheckCodeSentRequest
+    ): Response<CheckCodeSentResponse> {
         try {
 
-            val serviceData: String = ("[{" +
-                    "\"mobile\":\"$phone\"," +
-                    "\"mcode\":\"$smsCode\"" +
-                    "}]").toBase64()
-            return api.validateSmsCode(
-                serviceCode = 70,
-                folderId = 0,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
+            return api.checkCodeSent(
+                checkCodeSentRequest
             )
 
         } catch (e: Exception) {
@@ -224,25 +144,13 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
         }
     }
 
-    override suspend fun resetPasswordByPhone(
-        phone: String,
-        smsCode: String,
-        newPassword: String
-    ): Response<ResetPasswordByPhoneEntity> {
+    override suspend fun resetPassword(
+        resetPasswordRequest: ResetPasswordRequest
+    ): Response<ResetPasswordResponse> {
         try {
 
-            val serviceData: String = ("[{" +
-                    "\"mobile\":\"$phone\"," +
-                    "\"mcode\":\"$smsCode\"," +
-                    "\"upass\":\"$newPassword\"" +
-                    "}]").toBase64()
-            return api.resetPasswordByPhone(
-                serviceCode = 80,
-                folderId = 0,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
+            return api.resetPassword(
+                resetPasswordRequest
             )
 
         } catch (e: Exception) {
@@ -250,51 +158,5 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
 
         }
     }
-
-    override suspend fun validateEmail(
-        email: String
-    ): Response<ValidateEmailEntity> {
-        try {
-
-            val serviceData: String = ("[{" +
-                    "\"umail\":\"$email\"" +
-                    "}]").toBase64()
-            return api.validateEmail(
-                serviceCode = 30,
-                folderId = 0,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
-            )
-
-        } catch (e: Exception) {
-            throw RemoteDataException(R.string.internet_connection.toString())
-
-        }
-    }
-
-    override suspend fun validatePhone(
-        phone: String
-    ): Response<ValidatePhoneEntity> {
-        try {
-
-            val serviceData: String = ("[{" +
-                    "\"mobile\":\"$phone\"" +
-                    "}]").toBase64()
-            return api.validatePhone(
-                serviceCode = 40,
-                folderId = 0,
-                userId = DEFAULT_USER_ID.toString(),
-                username = DEFAULT_EMAIL,
-                password = DEFAULT_PASSWORD,
-                serviceData = serviceData,
-            )
-
-        } catch (e: Exception) {
-            throw RemoteDataException(R.string.internet_connection.toString())
-        }
-    }
-
 
 }

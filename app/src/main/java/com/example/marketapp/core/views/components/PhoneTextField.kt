@@ -4,31 +4,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,18 +20,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
-import com.example.marketapp.core.ui.theme.Error400Clr
-import com.example.marketapp.core.ui.theme.Error500Clr
-import com.example.marketapp.core.ui.theme.Neutral100
-import com.example.marketapp.core.ui.theme.Neutral200
-import com.example.marketapp.core.ui.theme.Neutral300
-import com.example.marketapp.core.ui.theme.Neutral400
-import com.example.marketapp.core.ui.theme.Neutral500
-import com.example.marketapp.core.ui.theme.Neutral600
-import com.example.marketapp.core.ui.theme.Neutral800
-import com.example.marketapp.core.ui.theme.Neutral900
+import com.example.marketapp.core.ui.theme.*
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,17 +34,18 @@ fun PhoneTextField(
     label: String = "",
     placeHolder: String = "",
     onValueChange: (String) -> Unit = {},
-    onPhoneChange: (String) -> Unit = {},
+    onPhoneChange: (PhoneNumber) -> Unit = {},
     isError: Boolean = false,
     errorMessage: String = "",
-    trailingIcon: @Composable (() -> Unit) = {}
+    trailingIcon: @Composable (() -> Unit) = {},
+    countries: List<Country> = defaultCountries
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
     var selectedCountry by remember {
-        mutableStateOf(Country(R.drawable.eg, "EG", "Egypt", "20"))
+        mutableStateOf(countries[0])
     }
 
 
@@ -112,12 +85,10 @@ fun PhoneTextField(
                         sheetState.show()
                     }
                 },
-            shape = RoundedCornerShape(10.dp),
-            border = BorderStroke(
+            shape = RoundedCornerShape(100.dp), border = BorderStroke(
                 1.dp,
                 if (isSystemInDarkTheme()) Neutral600 else Neutral300,
-            ),
-            color = Color.Transparent
+            ), color = Color.Transparent
         ) {
 
             Row(
@@ -130,15 +101,19 @@ fun PhoneTextField(
                     modifier = Modifier
                         .height(20.dp)
                         .width(30.dp),
-                    painter = painterResource(id = selectedCountry.flag),
+                    painter = rememberImagePainter(data = selectedCountry.flag, builder = {
+                        transformations(CircleCropTransformation()) // Apply transformations if needed
+                        placeholder(R.drawable.photo) // Placeholder resource while loading
+                        error(R.drawable.photo_error) // Error resource if loading fails
+                    }),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight
                 )
                 Spacer(modifier = Modifier.width(10.dp))
 
                 Text(
-                    text = "+"+selectedCountry.phoneCode,
-                    fontFamily = Cairo,
+                    text = selectedCountry.countryCode,
+                    fontFamily = Lato,
                     color = Neutral500,
                     fontSize = 14.sp,
                     textAlign = TextAlign.End
@@ -155,53 +130,39 @@ fun PhoneTextField(
             verticalArrangement = Arrangement.Top
         ) {
 
-            OutlinedTextField(
-                value = value,
-                onValueChange = { newValue ->
-                    onValueChange(newValue)
-                    onPhoneChange(selectedCountry.phoneCode + newValue)
-                },
-                maxLines = 1,
-                label = {
-                    Text(
-                        text = label,
-                        style = TextStyle(
-                            fontFamily = Cairo,
-                            fontSize = 14.sp
-                        )
+            OutlinedTextField(value = value, onValueChange = { newValue ->
+                onValueChange(newValue)
+                onPhoneChange(PhoneNumber(selectedCountry.countryCode,newValue))
+            }, maxLines = 1, label = {
+                Text(
+                    text = label, style = TextStyle(
+                        fontFamily = Lato, fontSize = 14.sp
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = placeHolder,
-                        style = TextStyle(
-                            fontFamily = Cairo,
-                            fontSize = 14.sp
-                        )
+                )
+            }, placeholder = {
+                Text(
+                    text = placeHolder, style = TextStyle(
+                        fontFamily = Lato, fontSize = 14.sp
                     )
-                },
+                )
+            },
 
-                isError = isError,
-                colors = colors,
-                textStyle = TextStyle(
-                    fontFamily = Cairo,
+                isError = isError, colors = colors, textStyle = TextStyle(
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                     fontSize = 14.sp
                 ),
                 //modifier = modifier,
-                shape = RoundedCornerShape(8.dp),
-                keyboardOptions = KeyboardOptions(
+                shape = RoundedCornerShape(100.dp), keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number // This disables suggestions
-                ),
-                leadingIcon = {
+                ), leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.phone),
                         contentDescription = "",
                         tint = if (isSystemInDarkTheme()) Neutral200 else Neutral800
 
                     )
-                },
-                trailingIcon = trailingIcon
+                }, trailingIcon = trailingIcon
             )
 
 
@@ -212,10 +173,13 @@ fun PhoneTextField(
 
                 Text(
                     text = errorMessage,
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Error400Clr else Error500Clr,
                     fontSize = 14.sp,
-                    modifier = Modifier.align(alignment = Alignment.End).fillMaxWidth().then(modifier),
+                    modifier = Modifier
+                        .align(alignment = Alignment.End)
+                        .fillMaxWidth()
+                        .then(modifier),
                     textAlign = TextAlign.End
                 )
             }
@@ -238,9 +202,9 @@ fun PhoneTextField(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
 
-            repeat(countries.size){ index->
-                Row (
-                    modifier = modifier.clickable {
+            repeat(countries.size) { index ->
+                Row(modifier = modifier
+                    .clickable {
                         selectedCountry = countries[index]
                         scope.launch {
                             sheetState.hide()
@@ -248,24 +212,26 @@ fun PhoneTextField(
 
                         }
 
-                    }.padding(bottom = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ){
+                    }
+                    .padding(bottom = 20.dp), verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         modifier = Modifier
                             .height(30.dp)
                             .width(50.dp),
-                        painter = painterResource(id = countries[index].flag ),
-                        contentDescription = "",
+                        painter = rememberImagePainter(data = countries[index].flag, builder = {
+                            transformations(CircleCropTransformation()) // Apply transformations if needed
+                            placeholder(R.drawable.photo) // Placeholder resource while loading
+                            error(R.drawable.photo_error) // Error resource if loading fails
+                        }),
+                        contentDescription = null, //
                         contentScale = ContentScale.FillHeight
                     )
 
                     Spacer(modifier = Modifier.width(15.dp))
 
                     Text(
-                        text = "+"+countries[index].phoneCode ,
-                        style = TextStyle(
-                            fontFamily = Cairo,
+                        text = countries[index].countryCode, style = TextStyle(
+                            fontFamily = Lato,
                             color = if (isSystemInDarkTheme()) Neutral400 else Neutral600,
                             fontSize = 16.sp,
 
@@ -275,9 +241,8 @@ fun PhoneTextField(
                     Spacer(modifier = Modifier.width(20.dp))
 
                     Text(
-                        text = countries[index].countryName ,
-                        style = TextStyle(
-                            fontFamily = Cairo,
+                        text = countries[index].countryName, style = TextStyle(
+                            fontFamily = Lato,
                             color = Neutral500,
                             fontSize = 16.sp,
 
@@ -293,17 +258,26 @@ fun PhoneTextField(
 }
 
 data class Country(
-    val flag: Int,
+    val flag: String,
     val countryCode: String,
     val countryName: String,
-    val phoneCode: String
 )
 
-val countries = listOf(
-    Country(R.drawable.eg, "EG", "Egypt", "20"),
-    Country(R.drawable.kw, "KW", "Kuwait", "965"),
-    Country(R.drawable.sa, "SA", "Saudi Arabia", "966"),
-    Country(R.drawable.ae, "AE", "United Arab Emirates", "971")
+data class PhoneNumber(
+    val countryCode: String,
+    val phoneNumber: String
+)
+
+val defaultCountries = listOf(
+    Country(
+        "https://moawen.safeeralemarat.com/storage/images/countryFlag/pngtree-egypt-flag-icon-png-image_6873090.png",
+        "+20",
+        "Egypt",
+    ), Country(
+        "https://moawen.safeeralemarat.com/storage/images/countryFlag/download.png",
+        "+971",
+        "United Arab Emirates"
+    )
 )
 
 

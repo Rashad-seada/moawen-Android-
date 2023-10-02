@@ -28,11 +28,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Lato
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
@@ -60,6 +61,7 @@ fun OnBoardingPage(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp, vertical = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
 
@@ -71,11 +73,11 @@ fun OnBoardingPage(
             contentDescription = "",
             modifier = Modifier
                 .fillMaxWidth() // Adjust the size as needed
-                .height(300.dp)
+                .height(370.dp)
                 .align(alignment = Alignment.CenterHorizontally)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(80.dp))
 
 
 
@@ -93,15 +95,17 @@ fun OnBoardingPage(
             Text(
                 text = label,
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
-                    fontSize = 32.sp
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center
+
                 )
             )
         }
 
 
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         AnimatedVisibility(
             visible = visible2,
@@ -117,10 +121,10 @@ fun OnBoardingPage(
             Text(
                 text = subText,
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = Neutral500,
                     fontSize = 16.sp,
-
+                    textAlign = TextAlign.Center
                     )
             )
         }

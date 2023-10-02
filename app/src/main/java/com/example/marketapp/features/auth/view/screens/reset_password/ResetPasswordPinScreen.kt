@@ -33,12 +33,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Lato
 import com.example.marketapp.core.ui.theme.MarketAppTheme
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.ui.theme.Primary
 import com.example.marketapp.core.views.components.CustomProgressIndicator
 import com.example.marketapp.core.views.components.MainButton
 import com.example.marketapp.features.auth.view.components.reset_password.PinField
@@ -106,19 +106,21 @@ fun ResetPasswordPinScreen(
                         .padding(horizontal = 20.dp),
                     text = context.getString(R.string.verify_pin_code),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                         fontSize = 28.sp,
                         textAlign = TextAlign.Center
                     )
                 )
 
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 20.dp),
                     text = context.getString(R.string.verify_pin_code_sub_text),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = Neutral500,
                         fontSize = 16.sp,
                         textAlign = TextAlign.Center
@@ -162,7 +164,7 @@ fun ResetPasswordPinScreen(
                         .padding(end = 5.dp),
                     text = context.getString(R.string.didnt_recive_code),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = Neutral500,
                         fontSize = 16.sp,
                         textAlign = TextAlign.Center
@@ -179,8 +181,8 @@ fun ResetPasswordPinScreen(
                         },
                         text = context.getString(R.string.resend_new_code),
                         style = TextStyle(
-                            fontFamily = Cairo,
-                            color = Primary900,
+                            fontFamily = Lato,
+                            color = Primary,
                             fontSize = 16.sp,
                             textAlign = TextAlign.Center
 
@@ -211,7 +213,7 @@ fun ResetPasswordPinScreen(
                             }
                         }
                     },
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ) {
 
@@ -220,7 +222,7 @@ fun ResetPasswordPinScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.validate),
                         style = TextStyle(
-                            fontFamily = Cairo,
+                            fontFamily = Lato,
                             color = Neutral100,
                             fontSize = 16.sp,
                         )

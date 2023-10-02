@@ -29,14 +29,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Lato
 import com.example.marketapp.core.ui.theme.MarketAppTheme
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.ui.theme.Primary
 import com.example.marketapp.core.views.components.CustomProgressIndicator
 import com.example.marketapp.core.views.components.MainButton
+import com.example.marketapp.core.views.components.PhoneNumber
 import com.example.marketapp.core.views.components.PhoneTextField
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordState
 import com.ramcosta.composedestinations.annotation.Destination
@@ -52,7 +53,7 @@ fun ResetPasswordByPhoneScreen(
 
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
     onPhoneChange: (String) -> Unit = {},
-    onPhoneWithCountryCode: (String) -> Unit = {},
+    onPhoneWithCountryCode: (PhoneNumber) -> Unit = {},
 
     onNextClick: (DestinationsNavigator,Context) -> Unit = {_,_-> },
 
@@ -89,16 +90,6 @@ fun ResetPasswordByPhoneScreen(
             )
 
 
-//            Image(
-//                painter = painterResource(id = R.drawable.reset_password_methods), // Provide the resource ID
-//                contentDescription = "",
-//                modifier = Modifier
-//                    .fillMaxWidth() // Adjust the size as needed
-//                    .height(200.dp)
-//                    .padding(horizontal = 20.dp)
-//                    .align(alignment = Alignment.CenterHorizontally)
-//            )
-
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
@@ -107,11 +98,12 @@ fun ResetPasswordByPhoneScreen(
                     .padding(start = 0.dp),
                 text = context.getString(R.string.reset_password_by_phone),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                     fontSize = 28.sp
                 )
             )
+            Spacer(modifier = Modifier.height(10.dp))
 
             Text(
                 modifier = Modifier
@@ -119,7 +111,7 @@ fun ResetPasswordByPhoneScreen(
                     .padding(end = 50.dp, start = 0.dp),
                 text = context.getString(R.string.reset_password_by_phone_sub_text),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = Neutral500,
                     fontSize = 16.sp,
 
@@ -160,7 +152,7 @@ fun ResetPasswordByPhoneScreen(
                             }
 
                     },
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ) {
 
@@ -169,7 +161,7 @@ fun ResetPasswordByPhoneScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.next),
                         style = TextStyle(
-                            fontFamily = Cairo,
+                            fontFamily = Lato,
                             color = Neutral100,
                             fontSize = 16.sp,
                         )

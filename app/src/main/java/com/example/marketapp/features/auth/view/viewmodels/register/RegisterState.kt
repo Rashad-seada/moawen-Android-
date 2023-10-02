@@ -1,15 +1,16 @@
 package com.example.marketapp.features.auth.view.viewmodels.register
 
 data class RegisterState(
-    var username : String = "",
-    var usernameError : String? = null,
 
-    var email : String = "",
-    var emailError : String? = null,
+
+
+    var countryCode : String = "",
 
     var phone : String = "",
-    var phoneWithCountryCode : String = "",
     var phoneError : String? = null,
+
+    var fullName : String = "",
+    var fullNameError : String? = null,
 
     var password : String = "",
     var passwordError : String? = null,
@@ -17,14 +18,18 @@ data class RegisterState(
     var passwordRenter : String = "",
     var passwordRenterError : String? = null,
 
-    val isEmailValid: Boolean = false,
-    val isValidatingEmail: Boolean = false,
+    var terms : Boolean = false,
+
+
+    var pinCode : String = "",
+    var isResendingPinCode : Boolean = false,
+    var isValidatingPinCode : Boolean = false,
 
     val isPhoneValid: Boolean = false,
-    val isValidatingPhone: Boolean = false,
-
     var isRegisterLoading : Boolean = false,
     var isPasswordSecure : Boolean = true,
-    var isPasswordRenterSecure : Boolean = true
+    var isPasswordRenterSecure : Boolean = true,
+
+
 
 )

@@ -1,19 +1,14 @@
 package com.example.marketapp.core.viewmodel
 
 import android.app.Application
-import android.content.Intent
 import android.util.Log
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.AndroidViewModel
-import com.example.marketapp.destinations.LoginMethodsScreenDestination
-import com.example.marketapp.destinations.LoginScreenDestination
-import com.example.marketapp.destinations.OnBoardingScreenDestination
-import com.example.marketapp.destinations.RegisterScreenDestination
+import com.example.marketapp.destinations.*
+import com.example.marketapp.features.auth.data.entities.login.User
 import com.example.marketapp.features.auth.domain.usecases.GetUserInfoUseCase
-import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfo
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.tasks.Task
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +22,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CoreViewModel @Inject constructor(
     val getUserInfoUseCase: GetUserInfoUseCase,
-    val signWithGoogleService : GoogleSignInClient,
     application: Application,
 ) : AndroidViewModel(application) {
 
@@ -35,11 +29,8 @@ class CoreViewModel @Inject constructor(
 
     companion object {
         private var job: Job? = null
-
         val scope = CoroutineScope(Dispatchers.Default)
-
-        var userInfo : UserInfo? = null
-
+        var user : User? = null
         val snackbarHostState = SnackbarHostState()
         fun showSnackbar(message : String) {
             job?.cancel()
@@ -52,9 +43,6 @@ class CoreViewModel @Inject constructor(
                     )
             }
         }
-
-
-
     }
 
 
@@ -65,21 +53,24 @@ class CoreViewModel @Inject constructor(
     fun getUserInfo(){
         val result = getUserInfoUseCase(getApplication<Application>().applicationContext,splashScreenId)
         if(result.data != null){
-            userInfo = result.data
+            user = result.data
         }
     }
 
     suspend fun onSplashScreenLaunch(navigator: DestinationsNavigator?) {
         initApp()
         delay(1000)
+
+//        if(user != null) {
+//            navigator?.navigate(MainScreenDestination())
 //
-//        if(userInfo != null){
-//            navigator?.navigate(LoginScreenDestination())
-//        }else {
+//        } else {
 //            navigator?.navigate(OnBoardingScreenDestination())
+//
 //        }
 
         navigator?.navigate(OnBoardingScreenDestination())
+
 
     }
 
@@ -106,10 +97,6 @@ class CoreViewModel @Inject constructor(
             Log.v("Google","is not successful")
         }
         navigator?.navigate(RegisterScreenDestination)
-    }
-
-    fun provideSignInIntent() : Intent {
-        return signWithGoogleService.signInIntent
     }
 
     sealed class CoreUiEvent

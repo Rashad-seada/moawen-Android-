@@ -1,123 +1,65 @@
 package com.example.marketapp.features.auth.infrastructure.api
 
-import com.example.marketapp.features.auth.data.entities.ActivateAccountEntity
-import com.example.marketapp.features.auth.data.entities.LoginEntity
-import com.example.marketapp.features.auth.data.entities.RegisterEntity
-import com.example.marketapp.features.auth.data.entities.ResetPasswordByEmailEntity
-import com.example.marketapp.features.auth.data.entities.ResetPasswordByPhoneEntity
-import com.example.marketapp.features.auth.data.entities.SendSmsCodeEntity
-import com.example.marketapp.features.auth.data.entities.ValidateEmailEntity
-import com.example.marketapp.features.auth.data.entities.ValidatePhoneEntity
-import com.example.marketapp.features.auth.data.entities.ValidateSmsCodeEntity
+import com.example.marketapp.features.auth.data.entities.check_code_sent.CheckCodeSentResponse
+import com.example.marketapp.features.auth.data.entities.login.LoginResponse
+import com.example.marketapp.features.auth.data.entities.register.RegisterResponse
+import com.example.marketapp.features.auth.data.entities.resend_activition_code.ResendActivitionCodeResponse
+import com.example.marketapp.features.auth.data.entities.reset_password.ResetPasswordResponse
+import com.example.marketapp.features.auth.data.entities.send_code_to_phone.SendCodeToPhoneResponse
+import com.example.marketapp.features.auth.infrastructure.api.request.*
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface AuthApi {
 
     @Headers("Content-Type: application/json")
-    @GET("/SRV")
+    @POST("api/user-login")
     suspend fun login(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<LoginEntity>
+        @Body registerRequest: LoginRequest
+    ): Response<LoginResponse>
+
 
     @Headers("Content-Type: application/json")
-    @GET("/SRV")
+    @POST("api/user-register")
     suspend fun register(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<RegisterEntity>
+        @Body registerRequest: RegisterRequest
+    ): Response<RegisterResponse>
+
 
     @Headers("Content-Type: application/json")
-    @GET("/SRV")
-    suspend fun activateAccount(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<ActivateAccountEntity>
+    @POST("api/confirm-code")
+    suspend fun confirmCode(
+        @Body confirmCodeRequest: ConfirmCodeRequest
+    ): Response<LoginResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("/SRV")
-    suspend fun resetPasswordByEmail(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<ResetPasswordByEmailEntity>
+    @POST("api/resend-otp")
+    suspend fun resendActivitionCode(
+        @Body resendActivitionCodeRequest: ResendActivitionCodeRequest
+    ): Response<ResendActivitionCodeResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("/SRV")
+    @POST("api/send-code")
     suspend fun sendSmsCode(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<SendSmsCodeEntity>
+        @Body sendCodeToPhoneRequest: SendCodeToPhoneRequest
+    ): Response<SendCodeToPhoneResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("/SRV")
-    suspend fun validateSmsCode(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<ValidateSmsCodeEntity>
+    @POST("api/check-code")
+    suspend fun checkCodeSent(
+        @Body checkCodeSentRequest: CheckCodeSentRequest
+    ): Response<CheckCodeSentResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("/SRV")
-    suspend fun resetPasswordByPhone(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<ResetPasswordByPhoneEntity>
-
-    @Headers("Content-Type: application/json")
-    @GET("/SRV")
-    suspend fun validateEmail(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<ValidateEmailEntity>
-
-    @Headers("Content-Type: application/json")
-    @GET("/SRV")
-    suspend fun validatePhone(
-        @Query("srv_code") serviceCode: Int,
-        @Query("fid") folderId: Int,
-        @Query("userid") userId: String,
-        @Query("uname") username: String,
-        @Query("upass") password: String,
-        @Query("SRV_DATA") serviceData: String,
-    ): Response<ValidatePhoneEntity>
+    @POST("api/reset-password")
+    suspend fun resetPassword(
+        @Body resetPasswordRequest: ResetPasswordRequest,
+    ): Response<ResetPasswordResponse>
 
 
-
-//    @GET("/products/{id}")
-//    suspend fun getProducts(@Query("id") id : Int) : ProductsResponse
 
 }

@@ -26,12 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Lato
 import com.example.marketapp.core.ui.theme.MarketAppTheme
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.ui.theme.Primary
 import com.example.marketapp.core.views.components.LottieAnimation
 import com.example.marketapp.core.views.components.MainButton
 import com.ramcosta.composedestinations.annotation.Destination
@@ -68,7 +68,7 @@ fun DoneMessageScreen(
             Text(
                 text = context.getString(R.string.all_done),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                     fontSize = 28.sp
                 )
@@ -77,7 +77,7 @@ fun DoneMessageScreen(
             Text(
                 text = context.getString(R.string.all_done_sub_text),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = Neutral500,
                     fontSize = 16.sp,
 
@@ -100,7 +100,7 @@ fun DoneMessageScreen(
                         }
                     }
                 ,
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ){
                 Row (
@@ -112,7 +112,7 @@ fun DoneMessageScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.done),
                         style = TextStyle(
-                            fontFamily = Cairo,
+                            fontFamily = Lato,
                             color = if( isSystemInDarkTheme()) Neutral100 else Neutral900,
                             fontSize = 16.sp
                         )

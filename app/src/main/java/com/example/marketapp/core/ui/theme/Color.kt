@@ -13,7 +13,8 @@ val Neutral200 = Color(0xffE5E7EB)
 val Neutral100 = Color(0xffF4F4F5)
 
 
-val Primary900 = Color(0xff87C159)
+val Primary = Color(0xff312183)
+val Secondary = Color(0xffEA6217)
 
 
 val Error500Clr = Color(0xffFF472B)

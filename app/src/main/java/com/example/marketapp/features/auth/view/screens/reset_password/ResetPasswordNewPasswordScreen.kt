@@ -29,12 +29,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Lato
 import com.example.marketapp.core.ui.theme.MarketAppTheme
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.ui.theme.Primary
 import com.example.marketapp.core.views.components.CustomProgressIndicator
 import com.example.marketapp.core.views.components.CustomTextField
 import com.example.marketapp.core.views.components.MainButton
@@ -98,11 +98,13 @@ fun ResetPasswordNewPasswordScreen(
                     .padding(start = 0.dp),
                 text = context.getString(R.string.new_password),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                     fontSize = 28.sp
                 )
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             Text(
                 modifier = Modifier
@@ -110,7 +112,7 @@ fun ResetPasswordNewPasswordScreen(
                     .padding(end = 50.dp, start = 0.dp),
                 text = context.getString(R.string.new_password_sub_text),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = Neutral500,
                     fontSize = 16.sp,
 
@@ -182,7 +184,7 @@ fun ResetPasswordNewPasswordScreen(
                             }
                         }
                     },
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ) {
 
@@ -191,7 +193,7 @@ fun ResetPasswordNewPasswordScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.next),
                         style = TextStyle(
-                            fontFamily = Cairo,
+                            fontFamily = Lato,
                             color = Neutral100,
                             fontSize = 16.sp,
                         )

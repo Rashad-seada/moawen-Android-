@@ -5,25 +5,17 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -35,17 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
-import com.example.marketapp.core.ui.theme.MarketAppTheme
-import com.example.marketapp.core.ui.theme.Neutral100
-import com.example.marketapp.core.ui.theme.Neutral400
-import com.example.marketapp.core.ui.theme.Neutral500
-import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.ui.theme.Primary900
-import com.example.marketapp.core.views.components.CustomProgressIndicator
-import com.example.marketapp.core.views.components.CustomTextField
-import com.example.marketapp.core.views.components.MainButton
-import com.example.marketapp.core.views.components.PhoneTextField
+import com.example.marketapp.core.ui.theme.*
+import com.example.marketapp.core.views.components.*
 import com.example.marketapp.features.auth.view.viewmodels.register.RegisterState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -57,10 +40,9 @@ import kotlinx.coroutines.launch
 fun RegisterScreen(
     navigator: DestinationsNavigator?,
     state: RegisterState = RegisterState(),
-    onChangeUsername: (String) -> Unit = {},
-    onChangePhone: (String) -> Unit = {},
-    onChangePhoneWithCountryCode: (String,Context) -> Unit = {_,_->},
-    onChangeEmail: (String,Context) -> Unit = {_,_->},
+    onChangeFullName: (String) -> Unit = { },
+    onChangePhone: (String, Context) -> Unit = { _, _->},
+    onChangePhoneWithCountryCode : (PhoneNumber) -> Unit = {},
     onChangePassword: (String) -> Unit = {},
     onChangePasswordRenter: (String) -> Unit = {},
     onSecurePasswordClick: () -> Unit = {},
@@ -68,6 +50,7 @@ fun RegisterScreen(
     onLoginClick: (DestinationsNavigator) -> Unit = {},
     onRegisterClick: (DestinationsNavigator,Context) -> Unit = {_,_-> },
     onBackArrowClick: (DestinationsNavigator) -> Unit = {},
+    onTermsClick : () -> Unit = {},
 ) {
 
     val context: Context = LocalContext.current
@@ -104,44 +87,58 @@ fun RegisterScreen(
 
 
 
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(15.dp))
+
+
+            Row(
+                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo), // Provide the resource ID
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(65.83.dp) // Adjust the size as needed
+                        .height(51.19.dp)
+                )
+
+                Text(
+                    text = context.getString(R.string.oawen),
+                    style = TextStyle(
+                        fontFamily = Lato,
+                        color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                        fontSize = 50.sp
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
 
 
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 text = context.getString(R.string.register),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                     fontSize = 32.sp
                 )
             )
-            //Spacer(modifier = Modifier.height(5.dp))
 
-            Text(
-                modifier = Modifier.padding(horizontal = 20.dp),
-                text = context.getString(R.string.register_sub_text),
-                style = TextStyle(
-                    fontFamily = Cairo,
-                    color = Neutral500,
-                    fontSize = 16.sp,
-
-                    )
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
 
             CustomTextField(
-                value = state.username,
+                value = state.fullName,
                 onValueChange = {
-                    onChangeUsername(it)
+                    onChangeFullName(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                label = context.getString(R.string.username),
-                placeHolder = context.getString(R.string.username_hint),
+                label = context.getString(R.string.fullName),
+                placeHolder = context.getString(R.string.fullName_hint),
                 leadingIcon = {
                     Image(
                         modifier = Modifier.padding(end = 0.dp),
@@ -149,54 +146,17 @@ fun RegisterScreen(
                         contentDescription = ""
                     )
                 },
-                isError = state.usernameError != null,
-                errorMessage = state.usernameError?: "",
-                )
-            Spacer(modifier = Modifier.height(5.dp))
-
-            CustomTextField(
-                value = state.email,
-                onValueChange = {
-                    onChangeEmail(it,context)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                label = context.getString(R.string.email),
-                placeHolder = context.getString(R.string.email_hint),
-                leadingIcon = {
-                    Image(
-                        modifier = Modifier.padding(end = 0.dp),
-                        painter = painterResource(id = R.drawable.email),
-                        contentDescription = ""
-                    )
-                },
-                trailingIcon = {
-
-                    if (state.isValidatingEmail) {
-                        CustomProgressIndicator(
-                            modifier = Modifier.size(20.dp)
-                        )
-                    } else {
-                        Icon(
-                            modifier = Modifier.padding(end = 0.dp),
-                            painter = painterResource(id = if(state.isEmailValid) R.drawable.tick_circle else R.drawable.close_circle),
-                            contentDescription = ""
-                        )
-                    }
-
-
-                },
-                isError = state.emailError != null,
-                errorMessage = state.emailError?: "",
+                isError = state.fullNameError != null,
+                errorMessage = state.fullNameError?: "",
 
                 )
+
             Spacer(modifier = Modifier.height(5.dp))
 
             PhoneTextField(
                 value = state.phone,
                 onValueChange = {
-                    onChangePhone(it)
+                    onChangePhone(it,context)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -204,24 +164,10 @@ fun RegisterScreen(
                 label = context.getString(R.string.phone),
                 placeHolder = context.getString(R.string.phone_hint),
                 isError = state.phoneError != null,
-                errorMessage = state.phoneError?: "",
+                errorMessage = state.phoneError ?: "",
                 onPhoneChange = {
-                    onChangePhoneWithCountryCode(it,context)
-                },
-                trailingIcon = {
-                    if (state.isValidatingPhone) {
-                        CustomProgressIndicator(
-                            modifier = Modifier.size(20.dp)
-                        )
-                    } else {
-                        Icon(
-                            modifier = Modifier.padding(end = 0.dp),
-                            painter = painterResource(id = if(state.isPhoneValid) R.drawable.tick_circle else R.drawable.close_circle),
-                            contentDescription = ""
-                        )
-                    }
+                    onChangePhoneWithCountryCode(it)
                 }
-
             )
 
             Spacer(modifier = Modifier.height(5.dp))
@@ -300,9 +246,19 @@ fun RegisterScreen(
             )
 
 
+            Spacer(modifier = Modifier.height(10.dp))
 
+            CustomCheckBox(
+                checked = state.terms,
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .clickable {
+                            onTermsClick()
+                    },
+                title = context.getString(R.string.accept_terms)
+            )
 
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
 
             Row(
@@ -317,7 +273,7 @@ fun RegisterScreen(
                     modifier = Modifier.wrapContentSize(),
                     text = context.getString(R.string.already_have_account),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = Neutral400,
                         fontSize = 16.sp,
 
@@ -340,8 +296,8 @@ fun RegisterScreen(
                         },
                     text = context.getString(R.string.login),
                     style = TextStyle(
-                        fontFamily = Cairo,
-                        color = Primary900,
+                        fontFamily = Lato,
+                        color = Secondary,
                         fontSize = 16.sp,
 
                         ),
@@ -363,9 +319,11 @@ fun RegisterScreen(
                                 onRegisterClick(navigator,context)
                             }
                     },
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ) {
+
+
 
                 if (state.isRegisterLoading) {
                     CustomProgressIndicator(
@@ -376,7 +334,7 @@ fun RegisterScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.register),
                         style = TextStyle(
-                            fontFamily = Cairo,
+                            fontFamily = Lato,
                             color = Neutral100,
                             fontSize = 16.sp,
                         )
@@ -385,9 +343,120 @@ fun RegisterScreen(
 
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+
+                HorizontalDivider(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(1.7.dp),
+                    color = Neutral300
+                )
+
+                Text(
+
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(horizontal = 10.dp),
+                    text = context.getString(R.string.or_login_with),
+                    style = TextStyle(
+                        fontFamily = Lato,
+                        color = Neutral400,
+                        fontSize = 16.sp,
+                    ),
+                    textAlign = TextAlign.End
+                )
+                HorizontalDivider(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(1.5.dp),
+                    color = Neutral300
+                )
+
+
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+
+            MainButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .height(55.dp)
+                    .clip(RoundedCornerShape(100.dp))
+                    .clickable {
+                        navigator?.let {
+
+                        }
+                    },
+                cardColor = Color.Transparent,
+                borderColor = Neutral500
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier.padding(end = 0.dp),
+                        painter = painterResource(id = R.drawable.google),
+                        contentDescription = ""
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        text = context.getString(R.string.google),
+                        style = TextStyle(
+                            fontFamily = Lato,
+                            color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                            fontSize = 16.sp
+                        )
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            MainButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .height(55.dp)
+                    .clip(RoundedCornerShape(100.dp))
+                    .clickable {
+                        navigator?.let {
+
+                        }
+                    },
+                cardColor = Color.Transparent,
+                borderColor = Neutral500
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier.padding(end = 0.dp),
+                        painter = painterResource(id = R.drawable.facebook),
+                        contentDescription = ""
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        text = context.getString(R.string.facebook),
+                        style = TextStyle(
+                            fontFamily = Lato,
+                            color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                            fontSize = 16.sp
+                        )
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
-
 
         }
 

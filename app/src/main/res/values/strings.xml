@@ -20,14 +20,14 @@
     <string name="or_login_with">Or Login With Account</string>
     <string name="google">Google</string>
 
-    <string name="on_boarding_title_1">Unlock Your Potential</string>
-    <string name="on_boarding_sub_text_1">Discover the power of self-directed learning with our app. Take control of your education, set your own goals, and explore a world of knowledge at your fingertips.</string>
+    <string name="on_boarding_title_1">Write Your Requests</string>
+    <string name="on_boarding_sub_text_1">Write down all your needed requests, and then confirm them.</string>
 
-    <string name="on_boarding_title_2">Learn on Your Terms</string>
-    <string name="on_boarding_sub_text_2">Life is busy, and so is your schedule. With our app, you can study whenever and wherever it suits you. Customize your learning journey to fit your lifestyle.</string>
+    <string name="on_boarding_title_2">Payment Method</string>
+    <string name="on_boarding_sub_text_2">The payment method is easy and straightforward, with multiple available options.</string>
 
-    <string name="on_boarding_title_3">Endless Possibilities</string>
-    <string name="on_boarding_sub_text_3">Immerse yourself in a universe of learning opportunities. From courses on diverse subjects to expert instructors, our app is your gateway to boundless knowledge.</string>
+    <string name="on_boarding_title_3">Delivery Process</string>
+    <string name="on_boarding_sub_text_3">Your order will be delivered as quickly as possible and to the specified location.</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
     <string name="welocme">Welcome</string>
@@ -69,6 +69,58 @@
     <string name="all_done_sub_text">"All done, please click done to procced "</string>
     <string name="gcp_id">1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com</string>
     <string name="google_sign_in_faild">Faild to sign with google</string>
+    <string name="google_sign_in_client_id">1088814076574-pat2suurlgjppijiuq4okci640unjqj8.apps.googleusercontent.com</string>
+    <string name="home">Home</string>
+    <string name="home_sub_text">"Enjoy an enhanced experience of E-learing "</string>
+    <string name="exam">Exams</string>
+    <string name="books">Books</string>
+    <string name="test">Tests</string>
+    <string name="open_book">Open books</string>
+    <string name="resume">Resume</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="read">Read</string>
+    <string name="study">Study</string>
+    <string name="home_work">Home work</string>
+    <string name="propose">Propose</string>
+    <string name="language_arts">Language Arts</string>
+
+    <string name="exam_sub_text">Ace your exams.</string>
+    <string name="books_sub_text">Dive into knowledge.</string>
+    <string name="test_sub_text">Interactive learning challenges.</string>
+    <string name="open_book_sub_text">Access open resources.</string>
+    <string name="resume_sub_text">Create standout resumes.</string>
+    <string name="personal_information_sub_text">Secure your data.</string>
+    <string name="read_sub_text">Discover literary treasures.</string>
+    <string name="study_sub_text">Explore the world of learning.</string>
+    <string name="home_work_sub_text">Effortless homework management.</string>
+    <string name="propose_sub_text">Craft compelling proposals.</string>
+    <string name="language_arts_sub_text">Master language skills.</string>
+    <string name="welcome">Welcome 👋</string>
+    <string name="oawen">oawen</string>
+    <string name="to_deliver_order">To Deliver Orders</string>
+    <string name="facebook">Facebook</string>
+    <string name="fullName">Full name</string>
+    <string name="fullName_hint">Please enter your full name</string>
+    <string name="password_contain_special_char">Password must contain a special char</string>
+    <string name="password_contain_lower_and_upper_case">Password must contain lowercase and uppercase letters</string>
+    <string name="unknown_error">There was unknown error</string>
+    <string name="accept_terms">Accept terms and conditions</string>
+    <string name="welcome_back">"Welcome back "</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="today_assistant_is">Today\'s assistant is</string>
+    <string name="start_your_order_now">Start your request now</string>
+    <string name="contact_him">Contact him</string>
+    <string name="make_order">Make order</string>
+    <string name="or">Or</string>
+    <string name="send_attachments">Send attachments</string>
+    <string name="please_enter_order_description">Please enter any specifec order description</string>
+    <string name="attachments_to_send">Attachments to send</string>
+    <string name="select_location">Select delivery location</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="empty_search">Couldn\'t find what you are looking for</string>
+    <string name="destance">Destance</string>
+    <string name="km">km</string>
 
 
 </resources>

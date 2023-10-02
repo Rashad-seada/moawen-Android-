@@ -4,9 +4,12 @@ package com.example.marketapp.features.auth.view.viewmodels.reset_password
 data class ResetPasswordState (
     var email : String = "",
     var emailError : String? = null,
+
+    var countryCode : String = "",
+
     var phone : String = "",
-    var phoneNumberWithCountryCode : String = "",
     var phoneError : String? = null,
+
     var pinCode : String = "",
 
     var newPassword : String = "",

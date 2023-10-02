@@ -11,16 +11,18 @@ import com.example.marketapp.core.util.usecase.ValidatePasswordLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidatePasswordRepeatedLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidatePhoneLocalUseCase
 import com.example.marketapp.core.viewmodel.CoreViewModel
+import com.example.marketapp.core.views.components.PhoneNumber
 import com.example.marketapp.destinations.DoneMessageScreenDestination
 import com.example.marketapp.destinations.LoginScreenDestination
-import com.example.marketapp.destinations.ResetPasswordByEmailScreenDestination
 import com.example.marketapp.destinations.ResetPasswordByPhoneScreenDestination
 import com.example.marketapp.destinations.ResetPasswordNewPasswordScreenDestination
 import com.example.marketapp.destinations.ResetPasswordPinScreenDestination
-import com.example.marketapp.features.auth.domain.usecases.ResetPasswordByEmailUseCase
-import com.example.marketapp.features.auth.domain.usecases.ResetPasswordByPhoneUseCase
-import com.example.marketapp.features.auth.domain.usecases.SendSmsUseCase
-import com.example.marketapp.features.auth.domain.usecases.ValidateSmsUseCase
+import com.example.marketapp.features.auth.domain.usecases.ResetPasswordUseCase
+import com.example.marketapp.features.auth.domain.usecases.SendCodeToPhoneUseCase
+import com.example.marketapp.features.auth.domain.usecases.CheckCodeSentUseCase
+import com.example.marketapp.features.auth.infrastructure.api.request.CheckCodeSentRequest
+import com.example.marketapp.features.auth.infrastructure.api.request.ResetPasswordRequest
+import com.example.marketapp.features.auth.infrastructure.api.request.SendCodeToPhoneRequest
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,11 +31,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
-    private val resetPasswordByEmailUseCase: ResetPasswordByEmailUseCase,
-
-    private val sendSmsUseCase: SendSmsUseCase,
-    private val validateSmsUseCase: ValidateSmsUseCase,
-    private val resetPasswordByPhoneUseCase: ResetPasswordByPhoneUseCase,
+    private val sendCodeToPhoneUseCase: SendCodeToPhoneUseCase,
+    private val checkCodeSentUseCase: CheckCodeSentUseCase,
+    private val resetPasswordUseCase: ResetPasswordUseCase,
 
     private val validateEmailLocalUseCase: ValidateEmailLocalUseCase,
     private val validatePhoneLocalUseCase: ValidatePhoneLocalUseCase,
@@ -46,11 +46,6 @@ class ResetPasswordViewModel @Inject constructor(
 
     var state by mutableStateOf(ResetPasswordState())
 
-    val resetPasswordByEmailScreenId = 2
-    val resetPasswordByPhoneScreenId = 3
-    val resetPasswordPinScreenId = 4
-    val resetPasswordNewPasswordScreenId = 5
-
     private fun onDoneMessageScreenClick(navigator: DestinationsNavigator) {
         navigator.navigate(LoginScreenDestination())
     }
@@ -59,39 +54,20 @@ class ResetPasswordViewModel @Inject constructor(
         navigator.popBackStack()
     }
 
-    private fun onResetPasswordByEmailClick(navigator: DestinationsNavigator){
-        navigator.navigate(ResetPasswordByEmailScreenDestination)
-    }
 
     private fun onResetPasswordByPhoneClick(navigator: DestinationsNavigator){
         navigator.navigate(ResetPasswordByPhoneScreenDestination)
     }
 
-    private fun onSendCodeToEmailClick(navigator: DestinationsNavigator, context: Context){
-        viewModelScope.launch (Dispatchers.IO){
-            state = state.copy(isSendingEmail = true)
-            val response = resetPasswordByEmailUseCase(
-                email = state.email,
-                context = context,
-                screenId = resetPasswordByEmailScreenId
-            )
-            state = state.copy(isSendingEmail = false)
-
-            if(response.failure != null) {
-                CoreViewModel.showSnackbar(("Error:" + response.failure.message))
-            } else {
-                navigator.navigate(DoneMessageScreenDestination())
-            }
-        }
-    }
-
     private fun onSendCodeToPhoneClick(navigator: DestinationsNavigator, context: Context){
         viewModelScope.launch (Dispatchers.IO){
             state = state.copy(isSendingPinCode = true)
-            var response = sendSmsUseCase(
-                phone = state.phoneNumberWithCountryCode,
+            var response = sendCodeToPhoneUseCase(
+                sendCodeToPhoneRequest = SendCodeToPhoneRequest(
+                    countryCode = state.countryCode,
+                    phone = state.phone
+                ),
                 context = context,
-                screenId = resetPasswordByPhoneScreenId
             )
             state = state.copy(isSendingPinCode = false)
 
@@ -108,11 +84,13 @@ class ResetPasswordViewModel @Inject constructor(
     private fun onValidateClick(navigator: DestinationsNavigator, context: Context){
         viewModelScope.launch (Dispatchers.IO){
             state = state.copy(isValidatingPinCode = true)
-            val response = validateSmsUseCase(
-                smsCode = state.pinCode,
-                phone = state.phoneNumberWithCountryCode,
+            val response = checkCodeSentUseCase(
+                CheckCodeSentRequest(
+                    countryCode = state.countryCode,
+                    phone = state.phone,
+                    otp = state.pinCode
+                ),
                 context = context,
-                screenId = resetPasswordPinScreenId
             )
             state = state.copy(isValidatingPinCode = false)
 
@@ -129,12 +107,15 @@ class ResetPasswordViewModel @Inject constructor(
     private fun onSettingNewPassword(navigator: DestinationsNavigator, context: Context){
         viewModelScope.launch (Dispatchers.IO){
             state = state.copy(isResettingPassword = true)
-            val response = resetPasswordByPhoneUseCase(
-                smsCode = state.pinCode,
-                phone = state.phoneNumberWithCountryCode,
-                newPassword = state.newPassword,
+            val response = resetPasswordUseCase(
+                resetPasswordRequest = ResetPasswordRequest(
+                    phone = state.phone,
+                    countryCode = state.countryCode,
+                    otp = state.pinCode,
+                    password = state.newPassword,
+                    confirmPassword = state.newPasswordRepeated,
+                ),
                 context = context,
-                screenId = resetPasswordNewPasswordScreenId
             )
             state = state.copy(isResettingPassword = false)
 
@@ -151,17 +132,19 @@ class ResetPasswordViewModel @Inject constructor(
     private fun onResendClick(navigator: DestinationsNavigator, context: Context){
         viewModelScope.launch (Dispatchers.IO){
             state = state.copy(isSendingPinCode = true)
-            val response = sendSmsUseCase(
-                phone = state.phoneNumberWithCountryCode,
+            val response = sendCodeToPhoneUseCase(
+                sendCodeToPhoneRequest = SendCodeToPhoneRequest(
+                    countryCode = state.countryCode,
+                    phone = state.phone
+                ),
                 context = context,
-                screenId = resetPasswordByPhoneScreenId
             )
             state = state.copy(isSendingPinCode = false)
 
             if(response.failure != null) {
                 CoreViewModel.showSnackbar(("Error:" + response.failure.message))
             } else {
-                CoreViewModel.showSnackbar(("Message:" + (response.data?.msg ?: "")))
+                CoreViewModel.showSnackbar(("Message:" + (response.data?.message ?: "")))
             }
         }
     }
@@ -184,9 +167,9 @@ class ResetPasswordViewModel @Inject constructor(
         )
     }
 
-    fun updatePhoneNumberWithCountryCode(phoneNumberWithCountryCode: String) {
+    fun updatePhoneNumberWithCountryCode(phoneNumber: PhoneNumber) {
         state = state.copy(
-            phoneNumberWithCountryCode = phoneNumberWithCountryCode
+            countryCode = phoneNumber.countryCode
         )
     }
 
@@ -208,15 +191,10 @@ class ResetPasswordViewModel @Inject constructor(
             is ResetPasswordMethodsEvent.OnBackButtonClick -> {
                 event.navigator?.let { onResetPasswordMethodsScreenBackClick(it) }
             }
-            is ResetPasswordMethodsEvent.OnResetWithEmailClick -> {
-                event.navigator?.let { onResetPasswordByEmailClick(it) }
-            }
             is ResetPasswordMethodsEvent.OnResetWithPhoneClick -> {
                 event.navigator?.let { onResetPasswordByPhoneClick(it) }
             }
-            is ResetPasswordMethodsEvent.OnSendCodeToEmailClick -> {
-                validateEmail(event.context , callBackFunction = { event.navigator?.let { onSendCodeToEmailClick(it,event.context) }})
-            }
+
             is ResetPasswordMethodsEvent.OnSendCodeToPhoneClick -> {
                 validatePhone(event.context , callBackFunction = { event.navigator?.let { onSendCodeToPhoneClick(it,event.context) } })
             }
@@ -231,8 +209,6 @@ class ResetPasswordViewModel @Inject constructor(
             }
             is ResetPasswordMethodsEvent.OnSettingNewPasswordClick -> {
                 validateNewPassword(event.context , callBackFunction = { event.navigator?.let { onSettingNewPassword(it,event.context) }})
-
-
             }
         }
 

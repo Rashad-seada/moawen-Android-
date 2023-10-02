@@ -6,17 +6,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.marketapp.core.util.usecase.ValidateEmailLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidatePasswordLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidatePasswordRepeatedLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidatePhoneLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidateUsernameLocalUseCase
 import com.example.marketapp.core.viewmodel.CoreViewModel
+import com.example.marketapp.core.views.components.PhoneNumber
+import com.example.marketapp.destinations.ActivationPinScreenDestination
 import com.example.marketapp.destinations.LoginScreenDestination
+import com.example.marketapp.destinations.MainScreenDestination
+import com.example.marketapp.features.auth.domain.usecases.ConfirmCodeUseCase
 import com.example.marketapp.features.auth.domain.usecases.RegisterUseCase
-import com.example.marketapp.features.auth.domain.usecases.ValidateEmailUseCase
-import com.example.marketapp.features.auth.domain.usecases.ValidatePhoneUseCase
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.example.marketapp.features.auth.domain.usecases.ResendActivitionCodeUseCase
+import com.example.marketapp.features.auth.infrastructure.api.request.ConfirmCodeRequest
+import com.example.marketapp.features.auth.infrastructure.api.request.RegisterRequest
+import com.example.marketapp.features.auth.infrastructure.api.request.ResendActivitionCodeRequest
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,11 +31,9 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
-    private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validatePhoneUseCase: ValidatePhoneUseCase,
-
+    private val resendActivitionCodeUseCase: ResendActivitionCodeUseCase,
+    private val confirmCodeUseCase: ConfirmCodeUseCase,
     private val validateUsernameLocalUseCase: ValidateUsernameLocalUseCase,
-    private val validateEmailLocalUseCase: ValidateEmailLocalUseCase,
     private val validatePhoneLocalUseCase: ValidatePhoneLocalUseCase,
     private val validatePasswordLocalUseCase: ValidatePasswordLocalUseCase,
     private val validatePasswordRepeatedLocalUseCase: ValidatePasswordRepeatedLocalUseCase,
@@ -41,38 +43,23 @@ class RegisterViewModel @Inject constructor(
 
     var state by mutableStateOf(RegisterState())
     private var job : Job? = null
-    private val registerScreenId = 1
 
-    fun updateUsername(username: String) {
+    fun updateFullName(fullName: String) {
         state = state.copy(
-            username = username
+            fullName = fullName
         )
     }
 
-    fun updateEmail(email: String,context: Context) {
-        state = state.copy(
-            email = email
-        )
 
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(isValidatingEmail = true)
-            val response = validateEmailUseCase(email,context,registerScreenId)
-            state = state.copy(isValidatingEmail = false)
-
-            if(response.failure != null) {
-                state = state.copy(isEmailValid = true)
-            } else {
-                CoreViewModel.showSnackbar(("Message:" + (response.data?.msg?.trim() ?: "")))
-                state = state.copy(isEmailValid = false)
-            }
-        }
-
-
-    }
-
-    fun updatePhone(phone: String) {
+    fun updatePhone(phone: String, context: Context) {
         state = state.copy(
             phone = phone
+        )
+    }
+
+    fun updatePhoneWithCountryCode(phoneNumber: PhoneNumber) {
+        state = state.copy(
+            countryCode = phoneNumber.countryCode,
         )
     }
 
@@ -100,22 +87,16 @@ class RegisterViewModel @Inject constructor(
         )
     }
 
-    fun updatePhoneWithCountryCode(phoneWithCountryCode : String,context: Context) {
+    fun updateTerms() {
         state = state.copy(
-            phoneWithCountryCode = phoneWithCountryCode
+            terms = !state.terms
         )
-        viewModelScope.launch(Dispatchers.IO) {
-            state = state.copy(isValidatingPhone = true)
-            val response = validatePhoneUseCase(phoneWithCountryCode,context,registerScreenId)
-            state = state.copy(isValidatingPhone = false)
+    }
 
-            if(response.failure != null) {
-                state = state.copy(isPhoneValid = true)
-            } else {
-                CoreViewModel.showSnackbar(("Message:" + (response.data?.msg?.trim() ?: "")))
-                state = state.copy(isPhoneValid = false)
-            }
-        }
+    fun updatePin(pinCode: String) {
+        state = state.copy(
+            pinCode = pinCode
+        )
     }
 
 
@@ -125,19 +106,27 @@ class RegisterViewModel @Inject constructor(
 
             state = state.copy(isRegisterLoading = true)
             val response = registerUseCase(
-                username = state.username,
-                email = state.email,
-                phone = state.phoneWithCountryCode,
-                password = state.password,
+                RegisterRequest(
+                    fullName = state.fullName,
+                    countryCode = state.countryCode,
+                    phone = state.phone,
+                    password = state.password,
+                    confirmPassword = state.passwordRenter,
+                    provider = "",
+                    providerId = "",
+                    terms = if(state.terms) "1" else "0",
+                ),
                 context = context,
-                screenId = registerScreenId,
             )
             state = state.copy(isRegisterLoading = false)
 
             if(response.failure != null) {
                 CoreViewModel.showSnackbar(("Error:" + response.failure.message.trim()))
             } else {
-                CoreViewModel.showSnackbar(("Success:" + (response.data?.msg?.trim() ?: "")))
+                CoreViewModel.showSnackbar(("Success:" + (response.data?.message ?: "")))
+                viewModelScope.launch(Dispatchers.Main) {
+                    navigator.navigate(ActivationPinScreenDestination)
+                }
             }
 
         }
@@ -166,23 +155,81 @@ class RegisterViewModel @Inject constructor(
             is RegisterEvent.OnLoginClick -> {
                 onLoginClick(event.navigator)
             }
+
+            is RegisterEvent.OnValidateClick -> {
+                onValidateClick(event.navigator,event.context)
+            }
+
+            is RegisterEvent.OnResendClick -> {
+                onResendCodeClick(event.navigator,event.context)
+            }
+
         }
 
     }
 
+    private fun onResendCodeClick(navigator: DestinationsNavigator,context: Context) {
+        job?.cancel()
+        job = viewModelScope.launch(Dispatchers.IO) {
+
+            state = state.copy(isResendingPinCode = true)
+            val response = resendActivitionCodeUseCase(
+                ResendActivitionCodeRequest(
+                    phone = state.phone,
+                    countryCode = state.countryCode
+                ),
+                context = context
+            )
+            state = state.copy(isResendingPinCode = false)
+
+            if(response.failure != null) {
+                CoreViewModel.showSnackbar(("Error:" + response.failure.message.trim()))
+            } else {
+                CoreViewModel.showSnackbar(("Success:" + (response.data?.message ?: "")))
+            }
+
+        }
+    }
+
+    private fun onValidateClick(navigator: DestinationsNavigator,context: Context) {
+        job?.cancel()
+        job = viewModelScope.launch(Dispatchers.IO) {
+
+            state = state.copy(isValidatingPinCode = true)
+            val response = confirmCodeUseCase(
+                ConfirmCodeRequest(
+                    phone = state.phone,
+                    countryCode = state.countryCode,
+                    otp = state.pinCode,
+                    type = "android",
+                    deviceToken = "ssssssssssss"
+                ),
+                context = context
+            )
+            state = state.copy(isValidatingPinCode = false)
+
+            if(response.failure != null) {
+                CoreViewModel.showSnackbar(("Error:" + response.failure.message.trim()))
+            } else {
+                CoreViewModel.showSnackbar(("Success:" + (response.data?.message ?: "")))
+                viewModelScope.launch(Dispatchers.Main) {
+                    navigator.navigate(MainScreenDestination)
+                }
+            }
+
+        }
+    }
+
     private fun validateForm(context: Context, callBackFunction: () -> Unit) {
 
-        val usernameResult = validateUsernameLocalUseCase(state.username, context)
-        val emailResult = validateEmailLocalUseCase(state.email, context)
-        val phoneResult = validatePhoneLocalUseCase(state.phone, context)
+        val fullNameResult = validateUsernameLocalUseCase(state.fullName, context)
+        val phoneResult = validatePhoneLocalUseCase(state.countryCode + state.phone, context)
         val passwordResult = validatePasswordLocalUseCase(state.password, context)
-        val passwordRepeatedResult =
-            validatePasswordRepeatedLocalUseCase(state.passwordRenter, state.password, context)
+        val passwordRepeatedResult = validatePasswordRepeatedLocalUseCase(state.passwordRenter, state.password, context)
 
 
         val hasError = listOf(
-            usernameResult,
-            emailResult,
+            fullNameResult,
             phoneResult,
             passwordResult,
             passwordRepeatedResult
@@ -191,8 +238,7 @@ class RegisterViewModel @Inject constructor(
         }
 
         state = state.copy(
-            usernameError = usernameResult.failure?.message,
-            emailError = emailResult.failure?.message,
+            fullNameError = fullNameResult.failure?.message,
             phoneError = phoneResult.failure?.message,
             passwordError = passwordResult.failure?.message,
             passwordRenterError = passwordRepeatedResult.failure?.message

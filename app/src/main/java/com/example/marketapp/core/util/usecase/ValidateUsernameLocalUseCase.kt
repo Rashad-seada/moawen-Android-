@@ -33,17 +33,6 @@ class ValidateUsernameLocalUseCase @Inject constructor()  {
             )
         }
 
-        if (username.trim().contains(" ")) {
-            return Resource.FailureData(
-                Failure(
-                    message = context.getString(R.string.username_contain_white_space),
-                    screenIdInt = 0,
-                    exceptionCode = 0,
-                    customCode = 0
-                )
-            )
-        }
-
         return Resource.SuccessData(
             true
         )

@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Lato
 import com.example.marketapp.core.ui.theme.Error400Clr
 import com.example.marketapp.core.ui.theme.Error500Clr
 import com.example.marketapp.core.ui.theme.Neutral100
@@ -93,7 +93,7 @@ fun CustomTextField(
                 Text(
                     text = label,
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         fontSize = 14.sp
                     )
                 )
@@ -102,7 +102,7 @@ fun CustomTextField(
                 Text(
                     text = placeHolder,
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         fontSize = 14.sp
                     )
                 )
@@ -110,13 +110,13 @@ fun CustomTextField(
             isError = isError,
             colors = colors,
             textStyle = TextStyle(
-                fontFamily = Cairo,
+                fontFamily = Lato,
                 color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                 fontSize = 14.sp
             ),
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(100.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = if (isSecure) KeyboardType.Password else KeyboardType.Text // This disables suggestions
             )
@@ -129,7 +129,7 @@ fun CustomTextField(
         if (isError) {
             Text(
                 text = errorMessage,
-                fontFamily = Cairo,
+                fontFamily = Lato,
                 color = if (isSystemInDarkTheme()) Error400Clr else Error500Clr,
                 fontSize = 14.sp,
                 modifier = Modifier

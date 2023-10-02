@@ -3,28 +3,21 @@ package com.example.marketapp.features.auth.data.repo
 import android.content.Context
 import android.util.Log
 import com.example.marketapp.R
-import com.example.marketapp.core.errors.InternalFailure
-import com.example.marketapp.core.errors.LocalDataException
-import com.example.marketapp.core.errors.LocalDataFailure
-import com.example.marketapp.core.errors.RemoteDataException
-import com.example.marketapp.core.errors.RemoteDataFailure
-import com.example.marketapp.core.errors.ServiceException
-import com.example.marketapp.core.errors.ServiceFailure
+import com.example.marketapp.core.errors.*
 import com.example.marketapp.core.infrastructure.services.NetworkServiceImpl
 import com.example.marketapp.core.util.Resource
 import com.example.marketapp.features.auth.data.data_source.remote.AuthRemoteDataSourceImpl
-import com.example.marketapp.features.auth.data.entities.ActivateAccountEntity
-import com.example.marketapp.features.auth.data.entities.LoginEntity
-import com.example.marketapp.features.auth.data.entities.RegisterEntity
-import com.example.marketapp.features.auth.data.entities.ResetPasswordByEmailEntity
-import com.example.marketapp.features.auth.data.entities.ResetPasswordByPhoneEntity
-import com.example.marketapp.features.auth.data.entities.SendSmsCodeEntity
-import com.example.marketapp.features.auth.data.entities.ValidateEmailEntity
-import com.example.marketapp.features.auth.data.entities.ValidatePhoneEntity
-import com.example.marketapp.features.auth.data.entities.ValidateSmsCodeEntity
+import com.example.marketapp.features.auth.data.entities.check_code_sent.CheckCodeSentResponse
+import com.example.marketapp.features.auth.data.entities.login.LoginResponse
+import com.example.marketapp.features.auth.data.entities.login.User
+import com.example.marketapp.features.auth.data.entities.register.RegisterResponse
+import com.example.marketapp.features.auth.data.entities.resend_activition_code.ResendActivitionCodeResponse
+import com.example.marketapp.features.auth.data.entities.reset_password.ResetPasswordResponse
+import com.example.marketapp.features.auth.data.entities.send_code_to_phone.SendCodeToPhoneResponse
 import com.example.marketapp.features.auth.domain.repo.AuthRepo
-import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfo
+import com.example.marketapp.features.auth.infrastructure.api.request.*
 import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfoSharedPrefImpl
+import org.json.JSONObject
 import javax.inject.Inject
 
 class AuthRepoImpl @Inject constructor(
@@ -34,11 +27,9 @@ class AuthRepoImpl @Inject constructor(
 ) : AuthRepo {
 
     override suspend fun login(
-        email: String,
-        password: String,
+        loginRequest: LoginRequest,
         context: Context,
-        screenId: Int
-    ): Resource<LoginEntity> {
+    ): Resource<LoginResponse> {
         try {
 
 
@@ -46,43 +37,59 @@ class AuthRepoImpl @Inject constructor(
                 return Resource.FailureData(
                     failure = ServiceFailure(
                         message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
+                        screenId = 0,
+                        customCode = 0,
                     )
                 )
             }
 
-            val loginEntity = remoteDataSource.login(username = email, password = password)
+            val loginResponse = remoteDataSource.login(loginRequest)
 
 
             when {
 
-                !loginEntity.isSuccessful -> {
+                !loginResponse.isSuccessful -> {
+
+                    val errorBody = loginResponse.errorBody()
+                    var errorMessage = ""
+
+                    if (errorBody != null) {
+                        val errorJson = errorBody.string()
+
+
+                        val jsonObjectError = JSONObject(errorJson)
+
+                        if (jsonObjectError.has("message")) {
+                            val message = jsonObjectError.getString("message")
+                            errorMessage = message
+                        } else {
+                            errorMessage = context.getString(R.string.unknown_error)
+                        }
+                        return Resource.FailureData(
+                            failure = ServiceFailure(
+                                message = errorMessage,
+                                screenId = 0,
+                                customCode = 0,
+                            )
+                        )
+                    }
+
+
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
+                            message = loginResponse.body()?.message ?: "",
+                            screenId = 0,
                             customCode = 0,
                         )
                     )
                 }
 
-                loginEntity.body() == null -> {
+                loginResponse.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
                             message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
-                            customCode = 1,
-                        )
-                    )
-                }
-
-                loginEntity.body()!!.res.toInt() != 1 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
+                            screenId = 0,
+                            customCode = 0,
                         )
                     )
                 }
@@ -90,32 +97,33 @@ class AuthRepoImpl @Inject constructor(
 
 
             return Resource.SuccessData(
-                data = loginEntity.body()!!,
+                data = loginResponse.body()!!,
             )
 
         } catch (e: Exception) {
             val failure = when (e) {
                 is ServiceException -> ServiceFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is RemoteDataException -> RemoteDataFailure(
                     context.getString(R.string.internet_connection),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is LocalDataException -> LocalDataFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 else -> InternalFailure(
                     e.message.toString(),
-                    screenId, customCode = 0
+                    screenId = 0,
+                    customCode = 0
                 )
             }
 
@@ -127,13 +135,9 @@ class AuthRepoImpl @Inject constructor(
     }
 
     override suspend fun register(
-        username: String,
-        email: String,
-        password: String,
-        phone : String,
-        context: Context,
-        screenId: Int
-    ): Resource<RegisterEntity> {
+        registerRequest: RegisterRequest,
+        context: Context
+    ): Resource<RegisterResponse> {
         try {
 
 
@@ -141,79 +145,110 @@ class AuthRepoImpl @Inject constructor(
                 return Resource.FailureData(
                     failure = ServiceFailure(
                         message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
+                        screenId = 0,
+                        customCode = 0,
                     )
                 )
             }
 
-            val loginEntity = remoteDataSource.register(
-                username, email, password, phone
+            val registerResponse = remoteDataSource.register(
+                registerRequest
             )
 
+            Log.v("Register", "${registerResponse.raw().request.url}")
 
 
             when {
 
-                !loginEntity.isSuccessful -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
-                            customCode = 0,
-                        )
-                    )
+                !registerResponse.isSuccessful -> {
+
+
+                    val errorBody = registerResponse.errorBody()
+                    var errorMessage = ""
+
+                    if (errorBody != null) {
+                        val errorJson = errorBody.string()
+
+
+                        val jsonObjectError = JSONObject(errorJson)
+
+                        if (jsonObjectError.has("errors")) {
+                            val errorObj = jsonObjectError.getJSONObject("errors")
+
+                            if (errorObj.has("fullname")) {
+                                errorMessage = errorObj.getJSONArray("fullname").join(" and ")
+
+
+                            } else if (errorObj.has("phone")) {
+                                errorMessage = errorObj.getJSONArray("phone").join(" and ")
+
+                            } else if (errorObj.has("password")) {
+                                errorMessage = errorObj.getJSONArray("password").join(" and ")
+
+                            } else if (errorObj.has("confirm_password")) {
+                                errorMessage =
+                                    errorObj.getJSONArray("confirm_password").join(" and ")
+
+
+                            } else if (errorObj.has("terms")) {
+                                errorMessage = errorObj.getJSONArray("terms").join(" and ")
+
+                            } else {
+                                errorMessage = context.getString(R.string.unknown_error)
+                            }
+
+                            return Resource.FailureData(
+                                failure = ServiceFailure(
+                                    message = errorMessage,
+                                    screenId = 0,
+                                    customCode = 0,
+                                )
+                            )
+                        }
+                    }
                 }
 
-                loginEntity.body() == null -> {
+                registerResponse.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
                             message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
+                            screenId = 0,
                             customCode = 1,
                         )
                     )
                 }
 
-                loginEntity.body()!!.res.toInt() <= 0 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
-                        )
-                    )
-                }
             }
 
 
             return Resource.SuccessData(
-                data = loginEntity.body()!!,
+                data = registerResponse.body()!!,
             )
 
         } catch (e: Exception) {
             val failure = when (e) {
                 is ServiceException -> ServiceFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is RemoteDataException -> RemoteDataFailure(
-                    context.getString(R.string.internet_connection),
-                    screenId,
+                    e.message.toString(),
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is LocalDataException -> LocalDataFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 else -> InternalFailure(
                     e.message.toString(),
-                    screenId, customCode = 0
+                    screenId = 0,
+                    customCode = 0
                 )
             }
 
@@ -224,13 +259,10 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun activateAccount(
-        phone: String,
-        pin: String,
-        expectedPin: String,
+    override suspend fun confirmCode(
+        confirmCodeRequest: ConfirmCodeRequest,
         context: Context,
-        screenId: Int
-    ): Resource<ActivateAccountEntity> {
+    ): Resource<LoginResponse> {
         try {
 
 
@@ -238,76 +270,92 @@ class AuthRepoImpl @Inject constructor(
                 return Resource.FailureData(
                     failure = ServiceFailure(
                         message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
+                        screenId = 0,
+                        customCode = 0,
                     )
                 )
             }
 
-            val loginEntity = remoteDataSource.activateAccount(phone, pin, expectedPin)
+            val confirmResponse = remoteDataSource.confirmCode(confirmCodeRequest)
 
 
             when {
 
-                !loginEntity.isSuccessful -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
-                            customCode = 0,
-                        )
-                    )
+                !confirmResponse.isSuccessful -> {
+
+                    val errorBody = confirmResponse.errorBody()
+                    var errorMessage = ""
+
+                    if (errorBody != null) {
+
+                        val errorJson = errorBody.string()
+
+
+                        val jsonObjectError = JSONObject(errorJson)
+
+                        if (jsonObjectError.has("errors")) {
+                            val errorObj = jsonObjectError.getJSONObject("errors")
+
+                            if (errorObj.has("otp")) {
+                                errorMessage = errorObj.getJSONArray("otp").join(" and ")
+
+                            } else {
+                                errorMessage = context.getString(R.string.unknown_error)
+                            }
+
+                            return Resource.FailureData(
+                                failure = ServiceFailure(
+                                    message = errorMessage,
+                                    screenId = 0,
+                                    customCode = 0,
+                                )
+                            )
+                        }
+                    }
+
                 }
 
-                loginEntity.body() == null -> {
+                confirmResponse.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
                             message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
+                            screenId = 0,
                             customCode = 1,
                         )
                     )
                 }
 
-                loginEntity.body()!!.res.toInt() <= 0 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
-                        )
-                    )
-                }
             }
 
 
             return Resource.SuccessData(
-                data = loginEntity.body()!!,
+                data = confirmResponse.body()!!,
             )
 
         } catch (e: Exception) {
             val failure = when (e) {
                 is ServiceException -> ServiceFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is RemoteDataException -> RemoteDataFailure(
                     context.getString(R.string.internet_connection),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is LocalDataException -> LocalDataFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 else -> InternalFailure(
                     e.message.toString(),
-                    screenId, customCode = 0
+                    screenId = 0,
+                    customCode = 0
                 )
             }
 
@@ -318,11 +366,10 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun resetPasswordByEmail(
-        email: String,
-        context: Context,
-        screenId: Int
-    ): Resource<ResetPasswordByEmailEntity> {
+    override suspend fun resendActivitionCode(
+        resendActivitionCodeRequest: ResendActivitionCodeRequest,
+        context: Context
+    ): Resource<ResendActivitionCodeResponse> {
         try {
 
 
@@ -330,78 +377,94 @@ class AuthRepoImpl @Inject constructor(
                 return Resource.FailureData(
                     failure = ServiceFailure(
                         message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
+                        screenId = 0,
+                        customCode = 0,
                     )
                 )
             }
 
-            val loginEntity = remoteDataSource.resetPasswordByEmail(email)
-
-            Log.v("url","${loginEntity.raw().request.url}")
+            val confirmResponse = remoteDataSource.resendActivitionCode(resendActivitionCodeRequest)
 
 
             when {
 
-                !loginEntity.isSuccessful -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
-                            customCode = 0,
-                        )
-                    )
+                !confirmResponse.isSuccessful -> {
+
+                    val errorBody = confirmResponse.errorBody()
+                    var errorMessage = ""
+
+                    if (errorBody != null) {
+                        val errorJson = errorBody.string()
+
+
+                        val jsonObjectError = JSONObject(errorJson)
+
+                        if (jsonObjectError.has("errors")) {
+                            val errorObj = jsonObjectError.getJSONObject("errors")
+
+                            if (errorObj.has("phone")) {
+                                errorMessage = errorObj.getJSONArray("phone").join(" and ")
+
+                            } else if (errorObj.has("country_code")) {
+                                errorMessage = errorObj.getJSONArray("country_code").join(" and ")
+
+                            } else {
+                                errorMessage = context.getString(R.string.unknown_error)
+                            }
+
+                            return Resource.FailureData(
+                                failure = ServiceFailure(
+                                    message = errorMessage,
+                                    screenId = 0,
+                                    customCode = 0,
+                                )
+                            )
+                        }
+                    }
+
                 }
 
-                loginEntity.body() == null -> {
+                confirmResponse.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
                             message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
+                            screenId = 0,
                             customCode = 1,
                         )
                     )
                 }
 
-                loginEntity.body()!!.res.toInt() <= 0 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
-                        )
-                    )
-                }
             }
 
 
             return Resource.SuccessData(
-                data = loginEntity.body()!!,
+                data = confirmResponse.body()!!,
             )
 
         } catch (e: Exception) {
             val failure = when (e) {
                 is ServiceException -> ServiceFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is RemoteDataException -> RemoteDataFailure(
                     context.getString(R.string.internet_connection),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is LocalDataException -> LocalDataFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 else -> InternalFailure(
                     e.message.toString(),
-                    screenId, customCode = 0
+                    screenId = 0,
+                    customCode = 0
                 )
             }
 
@@ -412,11 +475,11 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun sendSmsCode(
-        phone: String,
+
+    override suspend fun sendCodeToPhone(
+        sendCodeToPhoneRequest: SendCodeToPhoneRequest,
         context: Context,
-        screenId: Int
-    ): Resource<SendSmsCodeEntity> {
+    ): Resource<SendCodeToPhoneResponse>{
         try {
 
 
@@ -424,79 +487,94 @@ class AuthRepoImpl @Inject constructor(
                 return Resource.FailureData(
                     failure = ServiceFailure(
                         message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
+                        screenId = 0,
+                        customCode = 0,
                     )
                 )
             }
 
-            val sendSmsEntity = remoteDataSource.sendSmsCode(phone)
-
-            Log.v("url","${sendSmsEntity.raw().request.url}")
-
+            val sendCodeToPhoneResponse = remoteDataSource.sendCodeToPhone(sendCodeToPhoneRequest)
 
 
             when {
 
-                !sendSmsEntity.isSuccessful -> {
+                !sendCodeToPhoneResponse.isSuccessful -> {
+
+                    val errorBody = sendCodeToPhoneResponse.errorBody()
+                    var errorMessage = ""
+
+                    if (errorBody != null) {
+                        val errorJson = errorBody.string()
+
+
+                        val jsonObjectError = JSONObject(errorJson)
+
+                        if (jsonObjectError.has("errors")) {
+                            val errorObj = jsonObjectError.getJSONObject("errors")
+
+                            if (errorObj.has("phone")) {
+                                errorMessage = errorObj.getJSONArray("phone").join(" and ")
+
+                            } else if (errorObj.has("country_code")) {
+                                errorMessage = errorObj.getJSONArray("country_code").join(" and ")
+
+                            } else {
+                                errorMessage = context.getString(R.string.unknown_error)
+                            }
+
+                            return Resource.FailureData(
+                                failure = ServiceFailure(
+                                    message = errorMessage,
+                                    screenId = 0,
+                                    customCode = 0,
+                                )
+                            )
+                        }
+                    }
+
+                }
+
+                sendCodeToPhoneResponse.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
+                            message = context.getString(R.string.the_server_returned_null),
+                            screenId = 0,
                             customCode = 0,
                         )
                     )
                 }
 
-                sendSmsEntity.body() == null -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
-                            customCode = 1,
-                        )
-                    )
-                }
-
-                sendSmsEntity.body()!!.res.toInt() <= 0 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = sendSmsEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
-                        )
-                    )
-                }
             }
 
 
             return Resource.SuccessData(
-                data = sendSmsEntity.body()!!,
+                data = sendCodeToPhoneResponse.body()!!,
             )
 
         } catch (e: Exception) {
             val failure = when (e) {
                 is ServiceException -> ServiceFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId  = 0,
                     customCode = 0
                 )
 
                 is RemoteDataException -> RemoteDataFailure(
                     context.getString(R.string.internet_connection),
-                    screenId,
+                    screenId  = 0,
                     customCode = 0
                 )
 
                 is LocalDataException -> LocalDataFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId  = 0,
                     customCode = 0
                 )
 
                 else -> InternalFailure(
                     e.message.toString(),
-                    screenId, customCode = 0
+                    screenId  = 0,
+                    customCode = 0
                 )
             }
 
@@ -507,12 +585,10 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun validateSmsCode(
-        phone: String,
-        smsCode: String,
+    override suspend fun checkCodeSent(
+        checkCodeSentRequest: CheckCodeSentRequest,
         context: Context,
-        screenId: Int
-    ): Resource<ValidateSmsCodeEntity> {
+    ): Resource<CheckCodeSentResponse> {
         try {
 
 
@@ -520,77 +596,96 @@ class AuthRepoImpl @Inject constructor(
                 return Resource.FailureData(
                     failure = ServiceFailure(
                         message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
+                        screenId = 0,
+                        customCode = 0,
                     )
                 )
             }
 
-            val validateSmsEntity = remoteDataSource.validateSmsCode(phone, smsCode)
+            val checkCodeSent = remoteDataSource.checkCodeSent(checkCodeSentRequest)
 
-            Log.v("url","${validateSmsEntity.raw().request.url}")
 
             when {
 
-                !validateSmsEntity.isSuccessful -> {
+                !checkCodeSent.isSuccessful -> {
+                    val errorBody = checkCodeSent.errorBody()
+                    var errorMessage = ""
+
+                    if (errorBody != null) {
+                        val errorJson = errorBody.string()
+
+
+                        val jsonObjectError = JSONObject(errorJson)
+
+                        if (jsonObjectError.has("errors")) {
+                            val errorObj = jsonObjectError.getJSONObject("errors")
+
+                            if (errorObj.has("phone")) {
+                                errorMessage = errorObj.getJSONArray("phone").join(" and ")
+
+                            } else if (errorObj.has("country_code")) {
+                                errorMessage = errorObj.getJSONArray("country_code").join(" and ")
+
+                            } else if (errorObj.has("otp")) {
+                                errorMessage = errorObj.getJSONArray("otp").join(" and ")
+
+                            } else {
+                                errorMessage = context.getString(R.string.unknown_error)
+                            }
+
+                            return Resource.FailureData(
+                                failure = ServiceFailure(
+                                    message = errorMessage,
+                                    screenId = 0,
+                                    customCode = 0,
+                                )
+                            )
+                        }
+                    }
+                }
+
+                checkCodeSent.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
+                            message = context.getString(R.string.the_server_returned_null),
+                            screenId = 0,
                             customCode = 0,
                         )
                     )
                 }
 
-                validateSmsEntity.body() == null -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
-                            customCode = 1,
-                        )
-                    )
-                }
 
-                validateSmsEntity.body()!!.res.toInt() <= 0 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = validateSmsEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
-                        )
-                    )
-                }
             }
 
 
             return Resource.SuccessData(
-                data = validateSmsEntity.body()!!,
+                data = checkCodeSent.body()!!,
             )
 
         } catch (e: Exception) {
             val failure = when (e) {
                 is ServiceException -> ServiceFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is RemoteDataException -> RemoteDataFailure(
                     context.getString(R.string.internet_connection),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is LocalDataException -> LocalDataFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 else -> InternalFailure(
                     e.message.toString(),
-                    screenId, customCode = 0
+                    screenId = 0,
+                    customCode = 0
                 )
             }
 
@@ -601,93 +696,93 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun resetPasswordByPhone(
-        phone: String,
-        smsCode: String,
-        newPassword: String,
+    override suspend fun resetPassword(
+        resetPasswordRequest: ResetPasswordRequest,
         context: Context,
-        screenId: Int
-    ): Resource<ResetPasswordByPhoneEntity> {
+    ): Resource<ResetPasswordResponse> {
         try {
-
 
             if (!networkService.isNetworkConnected(context)) {
                 return Resource.FailureData(
                     failure = ServiceFailure(
                         message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
+                        screenId = 0,
+                        customCode = 0,
                     )
                 )
             }
 
-            val loginEntity = remoteDataSource.resetPasswordByPhone(phone, smsCode, newPassword)
-
-            Log.v("url","${loginEntity.raw().request.url}")
-
+            val resetPasswordResponse = remoteDataSource.resetPassword(resetPasswordRequest)
 
 
             when {
 
-                !loginEntity.isSuccessful -> {
+                !resetPasswordResponse.isSuccessful -> {
+                    val errorBody = resetPasswordResponse.errorBody()
+                    var errorMessage = ""
+
+                    if (errorBody != null) {
+
+                        val errorJson = errorBody.string()
+                        val jsonObjectError = JSONObject(errorJson)
+
+                        if (jsonObjectError.has("message")) {
+                            errorMessage = jsonObjectError.getString("message")
+                        } else {
+                            errorMessage = context.getString(R.string.unknown_error)
+                        }
+
+                        return Resource.FailureData(
+                            failure = ServiceFailure(
+                                message = errorMessage,
+                                screenId = 0,
+                                customCode = 0,
+                            )
+                        )
+                    }
+                }
+
+                resetPasswordResponse.body() == null -> {
                     return Resource.FailureData(
                         failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
+                            message = context.getString(R.string.the_server_returned_null),
+                            screenId = 0,
                             customCode = 0,
                         )
                     )
                 }
 
-                loginEntity.body() == null -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
-                            customCode = 1,
-                        )
-                    )
-                }
-
-                loginEntity.body()!!.res.toInt() <= 0 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
-                        )
-                    )
-                }
             }
 
 
             return Resource.SuccessData(
-                data = loginEntity.body()!!,
+                data = resetPasswordResponse.body()!!,
             )
 
         } catch (e: Exception) {
             val failure = when (e) {
                 is ServiceException -> ServiceFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is RemoteDataException -> RemoteDataFailure(
                     context.getString(R.string.internet_connection),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 is LocalDataException -> LocalDataFailure(
                     e.message.toString(),
-                    screenId,
+                    screenId = 0,
                     customCode = 0
                 )
 
                 else -> InternalFailure(
                     e.message.toString(),
-                    screenId, customCode = 0
+                    screenId = 0,
+                    customCode = 0
                 )
             }
 
@@ -698,194 +793,13 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun validateEmail(
-        email: String,
+    override fun getUserInfo(
         context: Context,
         screenId: Int
-    ): Resource<ValidateEmailEntity> {
+    ): Resource<User> {
         try {
 
-
-            if (!networkService.isNetworkConnected(context)) {
-                return Resource.FailureData(
-                    failure = ServiceFailure(
-                        message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
-                    )
-                )
-            }
-
-            val loginEntity = remoteDataSource.validateEmail(email)
-
-
-            when {
-
-                !loginEntity.isSuccessful -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
-                            customCode = 0,
-                        )
-                    )
-                }
-
-                loginEntity.body() == null -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
-                            customCode = 1,
-                        )
-                    )
-                }
-
-                loginEntity.body()!!.res.toInt() <= 0 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
-                        )
-                    )
-                }
-            }
-
-
-            return Resource.SuccessData(
-                data = loginEntity.body()!!,
-            )
-
-        } catch (e: Exception) {
-            val failure = when (e) {
-                is ServiceException -> ServiceFailure(
-                    e.message.toString(),
-                    screenId,
-                    customCode = 0
-                )
-
-                is RemoteDataException -> RemoteDataFailure(
-                    context.getString(R.string.internet_connection),
-                    screenId,
-                    customCode = 0
-                )
-
-                is LocalDataException -> LocalDataFailure(
-                    e.message.toString(),
-                    screenId,
-                    customCode = 0
-                )
-
-                else -> InternalFailure(
-                    e.message.toString(),
-                    screenId, customCode = 0
-                )
-            }
-
-            return Resource.FailureData(
-                failure = failure
-            )
-
-        }
-    }
-
-    override suspend fun validatePhone(
-        phone: String,
-        context: Context,
-        screenId: Int
-    ): Resource<ValidatePhoneEntity> {
-        try {
-
-
-            if (!networkService.isNetworkConnected(context)) {
-                return Resource.FailureData(
-                    failure = ServiceFailure(
-                        message = context.getString(R.string.internet_connection),
-                        screenId = screenId,
-                        customCode = 1,
-                    )
-                )
-            }
-
-            val loginEntity = remoteDataSource.validatePhone(phone)
-
-
-            when {
-
-                !loginEntity.isSuccessful -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.server_is_down),
-                            screenId = screenId,
-                            customCode = 0,
-                        )
-                    )
-                }
-
-                loginEntity.body() == null -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = context.getString(R.string.the_server_returned_null),
-                            screenId = screenId,
-                            customCode = 1,
-                        )
-                    )
-                }
-
-                loginEntity.body()!!.res.toInt() <= 0 -> {
-                    return Resource.FailureData(
-                        failure = RemoteDataFailure(
-                            message = loginEntity.body()!!.msg,
-                            screenId = screenId,
-                            customCode = 2,
-                        )
-                    )
-                }
-            }
-
-
-            return Resource.SuccessData(
-                data = loginEntity.body()!!,
-            )
-
-        } catch (e: Exception) {
-            val failure = when (e) {
-                is ServiceException -> ServiceFailure(
-                    e.message.toString(),
-                    screenId,
-                    customCode = 0
-                )
-
-                is RemoteDataException -> RemoteDataFailure(
-                    context.getString(R.string.internet_connection),
-                    screenId,
-                    customCode = 0
-                )
-
-                is LocalDataException -> LocalDataFailure(
-                    e.message.toString(),
-                    screenId,
-                    customCode = 0
-                )
-
-                else -> InternalFailure(
-                    e.message.toString(),
-                    screenId, customCode = 0
-                )
-            }
-
-            return Resource.FailureData(
-                failure = failure
-            )
-
-        }
-    }
-
-    override fun getUserInfo(context: Context,screenId: Int): Resource<UserInfo> {
-        try {
-
-            val userInfo = sharedPref.getUserInfo(context)
+            val user = sharedPref.getUserInfo(context)
                 ?: return Resource.FailureData(
                     failure = RemoteDataFailure(
                         message = context.getString(R.string.the_server_returned_null),
@@ -895,7 +809,7 @@ class AuthRepoImpl @Inject constructor(
                 )
 
             return Resource.SuccessData(
-                data = userInfo,
+                data = user,
             )
 
         } catch (e: Exception) {
@@ -922,12 +836,12 @@ class AuthRepoImpl @Inject constructor(
 
     override fun saveUserInfo(
         context: Context,
-        userInfo: UserInfo,
+        user: User,
         screenId: Int
-    ): Resource.FailureData<UserInfo> {
+    ): Resource.FailureData<User> {
         try {
 
-            val userInfo = sharedPref.saveUserInfo(context, userInfo)
+            val userInfo = sharedPref.saveUserInfo(context, user)
 
             return Resource.FailureData(
                 failure = null
@@ -958,7 +872,7 @@ class AuthRepoImpl @Inject constructor(
     override fun deleteUserInfo(
         context: Context,
         screenId: Int
-    ): Resource.FailureData<UserInfo> {
+    ): Resource.FailureData<User> {
         try {
 
             val userInfo = sharedPref.deleteUserInfo(context)

@@ -2,97 +2,66 @@ package com.example.marketapp.features.auth.domain.repo
 
 import android.content.Context
 import com.example.marketapp.core.util.Resource
-import com.example.marketapp.features.auth.data.entities.ActivateAccountEntity
-import com.example.marketapp.features.auth.data.entities.LoginEntity
-import com.example.marketapp.features.auth.data.entities.RegisterEntity
-import com.example.marketapp.features.auth.data.entities.ResetPasswordByEmailEntity
-import com.example.marketapp.features.auth.data.entities.ResetPasswordByPhoneEntity
-import com.example.marketapp.features.auth.data.entities.SendSmsCodeEntity
-import com.example.marketapp.features.auth.data.entities.ValidateEmailEntity
-import com.example.marketapp.features.auth.data.entities.ValidatePhoneEntity
-import com.example.marketapp.features.auth.data.entities.ValidateSmsCodeEntity
-import com.example.marketapp.features.auth.infrastructure.database.user_info_shared_pref.UserInfo
+import com.example.marketapp.features.auth.data.entities.check_code_sent.CheckCodeSentResponse
+import com.example.marketapp.features.auth.data.entities.login.LoginResponse
+import com.example.marketapp.features.auth.data.entities.login.User
+import com.example.marketapp.features.auth.data.entities.register.RegisterResponse
+import com.example.marketapp.features.auth.data.entities.resend_activition_code.ResendActivitionCodeResponse
+import com.example.marketapp.features.auth.data.entities.reset_password.ResetPasswordResponse
+import com.example.marketapp.features.auth.data.entities.send_code_to_phone.SendCodeToPhoneResponse
+import com.example.marketapp.features.auth.infrastructure.api.request.*
 
 interface AuthRepo {
     suspend fun login(
-        email: String,
-        password: String,
+        loginRequest: LoginRequest,
         context: Context,
-        screenId: Int
-    ): Resource<LoginEntity>
+    ): Resource<LoginResponse>
 
     suspend fun register(
-        username: String,
-        email: String,
-        password: String,
-        phone: String,
-        context: Context,
-        screenId: Int
-    ): Resource<RegisterEntity>
+        registerRequest: RegisterRequest,
+        context: Context
+    ): Resource<RegisterResponse>
 
-    suspend fun activateAccount(
-        phone: String,
-        pin: String,
-        expectedPin: String,
-        context: Context,
-        screenId: Int
-    ): Resource<ActivateAccountEntity>
+    suspend fun confirmCode(
+        confirmCodeRequest: ConfirmCodeRequest,
+        context: Context
+    ): Resource<LoginResponse>
 
-    suspend fun resetPasswordByEmail(
-        email: String,
-        context: Context,
-        screenId: Int
-    ): Resource<ResetPasswordByEmailEntity>
+    suspend fun resendActivitionCode(
+        resendActivitionCodeRequest: ResendActivitionCodeRequest,
+        context: Context
+    ): Resource<ResendActivitionCodeResponse>
 
-    suspend fun sendSmsCode(
-        phone: String,
+    suspend fun sendCodeToPhone(
+        sendCodeToPhoneRequest: SendCodeToPhoneRequest,
         context: Context,
-        screenId: Int
-    ): Resource<SendSmsCodeEntity>
+    ): Resource<SendCodeToPhoneResponse>
 
-    suspend fun validateSmsCode(
-        phone: String,
-        smsCode: String,
+    suspend fun checkCodeSent(
+        checkCodeSentRequest: CheckCodeSentRequest,
         context: Context,
-        screenId: Int
-    ): Resource<ValidateSmsCodeEntity>
+    ): Resource<CheckCodeSentResponse>
 
-    suspend fun resetPasswordByPhone(
-        phone: String,
-        smsCode: String,
-        newPassword: String,
+    suspend fun resetPassword(
+        resetPasswordRequest: ResetPasswordRequest,
         context: Context,
-        screenId: Int
-    ): Resource<ResetPasswordByPhoneEntity>
-
-    suspend fun validateEmail(
-        email: String,
-        context: Context,
-        screenId: Int
-    ): Resource<ValidateEmailEntity>
-
-    suspend fun validatePhone(
-        phone: String,
-        context: Context,
-        screenId: Int
-    ): Resource<ValidatePhoneEntity>
-
+    ): Resource<ResetPasswordResponse>
 
     fun getUserInfo(
         context: Context,
         screenId: Int
 
-    ) : Resource<UserInfo>
+    ) : Resource<User>
 
     fun saveUserInfo(
         context: Context,
-        userInfo: UserInfo,
+        user: User,
         screenId: Int
-    ) : Resource.FailureData<UserInfo>?
+    ): Resource.FailureData<User>
 
     fun deleteUserInfo(
         context: Context,
         screenId: Int
-    ) : Resource.FailureData<UserInfo>?
+    ) : Resource.FailureData<User>?
 
 }

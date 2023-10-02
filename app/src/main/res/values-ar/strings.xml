@@ -20,14 +20,14 @@
     <string name="or_login_with">او قم بالتسجيل عبر</string>
     <string name="google">جوجل</string>
 
-    <string name="on_boarding_title_1">اكتشف إمكانياتك</string>
-    <string name="on_boarding_sub_text_1">اكتشف قوة التعلم الذاتي مع تطبيقنا. تحكم في تعليمك بنفسك، واضبط أهدافك الخاصة، واستكشف عالم المعرفة عن كثب على متن الجهاز الذي بين يديك.</string>
+    <string name="on_boarding_title_1">اكتب طلباتك</string>
+    <string name="on_boarding_sub_text_1">اكتب كل طلباتك التي تحتاج اليها ومن ثم قم بالتاكيد</string>
 
-    <string name="on_boarding_title_2">تعلم على طريقتك</string>
-    <string name="on_boarding_sub_text_2">الحياة مزدحمة، وجدولك أيضًا. مع تطبيقنا، يمكنك الدراسة في أي وقت وأي مكان يناسبك. قم بتخصيص رحلتك التعليمية لتناسب نمط حياتك.</string>
+    <string name="on_boarding_title_2">طريقة الدفع</string>
+    <string name="on_boarding_sub_text_2">طريقة الدفع سهلة وبسيطة وبها اكثر من خيار متاح</string>
 
-    <string name="on_boarding_title_3">إمكانيات لا حصر لها</string>
-    <string name="on_boarding_sub_text_3">انغمس في عالم مليء بفرص التعلم. من دورات تغطي مجموعة متنوعة من المواضيع إلى مدرسين محترفين، تطبيقنا هو بوابتك إلى عالم المعرفة اللامتناهية.</string>
+    <string name="on_boarding_title_3">عملية التوصيل</string>
+    <string name="on_boarding_sub_text_3">طلبك هيوصل في اسرع وقت ممكن وفي المكان المحدد</string>
     <string name="skip">تخطي</string>
     <string name="next">التالي</string>
     <string name="welocme">مرحبا</string>
@@ -69,6 +69,57 @@
     <string name="all_done_sub_text">"All done, please click done to procced "</string>
     <string name="gcp_id">1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com</string>
     <string name="google_sign_in_faild">Faild to sign with google</string>
+    <string name="google_sign_in_client_id">1088814076574-pat2suurlgjppijiuq4okci640unjqj8.apps.googleusercontent.com</string>
+    <string name="home">Welcome 👋</string>
+    <string name="home_sub_text">"Enjoy an enhanced experience of E-learing "</string>
+    <string name="exam">Exams</string>
+    <string name="books">Books</string>
+    <string name="test">Tests</string>
+    <string name="open_book">Open books</string>
+    <string name="resume">Resume</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="read">Read</string>
+    <string name="study">Study</string>
+    <string name="home_work">Home work</string>
+    <string name="propose">Propose</string>
+    <string name="language_arts">Language Arts</string>
+    <string name="exam_sub_text">Unlock the power of knowledge through immersive learning experiences.</string>
+    <string name="books_sub_text">Unlock the power of knowledge through immersive learning experiences.</string>
+    <string name="test_sub_text">Challenge your understanding and gauge your progress through interactive tests and quizzes.</string>
+    <string name="open_book_sub_text">Explore a library of open educational resources to expand your horizons.</string>
+    <string name="resume_sub_text">Craft a standout resume that highlights your achievements and career aspirations.</string>
+    <string name="personal_information_sub_text">Safeguard your personal information and privacy with our secure platform.</string>
+    <string name="read_sub_text">Immerse yourself in the joy of reading with a vast selection of literary treasures.</string>
+    <string name="study_sub_text">Embark on a journey of knowledge and discovery through dedicated study sessions.</string>
+    <string name="home_work_sub_text">Effortlessly manage and complete your homework assignments with ease.</string>
+    <string name="propose_sub_text">Craft compelling proposals and presentations that leave a lasting impression.</string>
+    <string name="language_arts_sub_text">Master the art of language, literature, and communication with our language arts materials.</string>
+    <string name="welcome">Welcome 👋</string>
+    <string name="oawen">oawen</string>
+    <string name="to_deliver_order">To Deliver Orders</string>
+    <string name="facebook">Facebook</string>
+    <string name="fullName">Full name</string>
+    <string name="fullName_hint">Please enter your full name</string>
+    <string name="password_contain_special_char">Password must contain a special char</string>
+    <string name="password_contain_lower_and_upper_case">Password must contain lowercase and uppercase letters</string>
+    <string name="unknown_error">There was unkown error</string>
+    <string name="accept_terms">Accept terms and conditions</string>
+    <string name="welcome_back">"Welcome back "</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="today_assistant_is">Today\'s assistant is</string>
+    <string name="start_your_order_now">Start your request now</string>
+    <string name="contact_him">Contact with him</string>
+    <string name="make_order">Make your order</string>
+    <string name="or">Or</string>
+    <string name="send_attachments">Send attachments</string>
+    <string name="please_enter_order_description">Please enter any specifec order description</string>
+    <string name="attachments_to_send">Attachments to send</string>
+    <string name="select_location">Select delivery location</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="empty_search">Couldn\'t find what you are looking for</string>
+    <string name="destance">Destance</string>
+    <string name="km">km</string>
 
 
 </resources>

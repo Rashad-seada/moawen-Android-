@@ -3,21 +3,11 @@ package com.example.marketapp.features.auth.view.screens.methods
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,14 +27,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketapp.R
-import com.example.marketapp.core.ui.theme.Cairo
+import com.example.marketapp.core.ui.theme.Lato
 import com.example.marketapp.core.ui.theme.MarketAppTheme
 import com.example.marketapp.core.ui.theme.Neutral100
 import com.example.marketapp.core.ui.theme.Neutral300
 import com.example.marketapp.core.ui.theme.Neutral400
 import com.example.marketapp.core.ui.theme.Neutral500
 import com.example.marketapp.core.ui.theme.Neutral900
-import com.example.marketapp.core.ui.theme.Primary900
+import com.example.marketapp.core.ui.theme.Primary
 import com.example.marketapp.core.viewmodel.CoreViewModel
 import com.example.marketapp.core.views.components.MainButton
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -62,7 +52,6 @@ fun LoginMethodsScreen(
     onLoginClick: (DestinationsNavigator) -> Unit = {},
     onRegisterClick: (DestinationsNavigator) -> Unit = {},
     onLoginWithGoogleClick: (DestinationsNavigator, Task<GoogleSignInAccount>) -> Unit = { _, _ -> },
-    signInIntent: Intent = Intent()
 
 ) {
     val context: Context = LocalContext.current
@@ -89,13 +78,11 @@ fun LoginMethodsScreen(
     val state = rememberOneTapSignInState()
     OneTapSignInWithGoogle(
         state = state,
-        clientId = "1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com",
+        clientId = context.getString(R.string.google_sign_in_client_id),
         onTokenIdReceived = { tokenId ->
-            Log.d("LOG12", tokenId)
             CoreViewModel.showSnackbar("Success:$tokenId")
         },
         onDialogDismissed = { message ->
-            Log.d("LOG12", message)
             CoreViewModel.showSnackbar("Error:$message")
         }
     )
@@ -108,23 +95,37 @@ fun LoginMethodsScreen(
 
 
         Column(
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
+            Spacer(modifier = Modifier.height(100.dp))
 
-            Image(
-                painter = painterResource(id = R.drawable.welcome4), // Provide the resource ID
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxWidth() // Adjust the size as needed
-                    .height(220.dp)
-                    .padding(horizontal = 20.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo), // Provide the resource ID
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(65.83.dp) // Adjust the size as needed
+                        .height(51.19.dp)
+                )
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = context.getString(R.string.oawen),
+                    style = TextStyle(
+                        fontFamily = Lato,
+                        color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                        fontSize = 50.sp
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(100.dp))
 
             Text(
                 modifier = Modifier
@@ -132,11 +133,12 @@ fun LoginMethodsScreen(
                     .padding(start = 10.dp),
                 text = context.getString(R.string.welocme),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                     fontSize = 32.sp
                 )
             )
+            Spacer(modifier = Modifier.height(15.dp))
 
             Text(
                 modifier = Modifier
@@ -144,14 +146,14 @@ fun LoginMethodsScreen(
                     .padding(end = 50.dp, start = 10.dp),
                 text = context.getString(R.string.welocme_sub_text),
                 style = TextStyle(
-                    fontFamily = Cairo,
+                    fontFamily = Lato,
                     color = Neutral500,
                     fontSize = 16.sp,
 
                     )
             )
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             MainButton(
                 modifier = Modifier
@@ -164,14 +166,14 @@ fun LoginMethodsScreen(
                             onLoginClick(navigator)
                         }
                     },
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 20.dp),
                     text = context.getString(R.string.login),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = Neutral100,
                         fontSize = 16.sp,
                     )
@@ -191,14 +193,14 @@ fun LoginMethodsScreen(
                             onRegisterClick(navigator)
                         }
                     },
-                cardColor = Primary900,
+                cardColor = Primary,
                 borderColor = Color.Transparent
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 20.dp),
                     text = context.getString(R.string.register),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = Neutral100,
                         fontSize = 16.sp,
                     )
@@ -228,7 +230,7 @@ fun LoginMethodsScreen(
                         .padding(horizontal = 10.dp),
                     text = context.getString(R.string.or_login_with),
                     style = TextStyle(
-                        fontFamily = Cairo,
+                        fontFamily = Lato,
                         color = Neutral400,
                         fontSize = 16.sp,
                     ),
@@ -274,7 +276,7 @@ fun LoginMethodsScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         text = context.getString(R.string.google),
                         style = TextStyle(
-                            fontFamily = Cairo,
+                            fontFamily = Lato,
                             color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
                             fontSize = 16.sp
                         )
@@ -282,7 +284,43 @@ fun LoginMethodsScreen(
                 }
             }
 
-            //Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            MainButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .height(55.dp)
+                    .clip(RoundedCornerShape(100.dp))
+                    .clickable {
+                        navigator?.let {
+                            state.open()
+                        }
+                    },
+                cardColor = Color.Transparent,
+                borderColor = Neutral500
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier.padding(end = 0.dp),
+                        painter = painterResource(id = R.drawable.facebook),
+                        contentDescription = ""
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        text = context.getString(R.string.facebook),
+                        style = TextStyle(
+                            fontFamily = Lato,
+                            color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
+                            fontSize = 16.sp
+                        )
+                    )
+                }
+            }
+
 
 
         }
