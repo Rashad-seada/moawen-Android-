@@ -3,7 +3,6 @@ package com.example.marketapp.features.auth.view.screens.methods
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -62,7 +61,6 @@ fun LoginMethodsScreen(
     onLoginClick: (DestinationsNavigator) -> Unit = {},
     onRegisterClick: (DestinationsNavigator) -> Unit = {},
     onLoginWithGoogleClick: (DestinationsNavigator, Task<GoogleSignInAccount>) -> Unit = { _, _ -> },
-    signInIntent: Intent = Intent()
 
 ) {
     val context: Context = LocalContext.current
@@ -89,7 +87,7 @@ fun LoginMethodsScreen(
     val state = rememberOneTapSignInState()
     OneTapSignInWithGoogle(
         state = state,
-        clientId = "1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com",
+        clientId = context.getString(R.string.google_sign_in_client_id),
         onTokenIdReceived = { tokenId ->
             Log.d("LOG12", tokenId)
             CoreViewModel.showSnackbar("Success:$tokenId")

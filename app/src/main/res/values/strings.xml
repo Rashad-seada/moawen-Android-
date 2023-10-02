@@ -69,6 +69,33 @@
     <string name="all_done_sub_text">"All done, please click done to procced "</string>
     <string name="gcp_id">1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com</string>
     <string name="google_sign_in_faild">Faild to sign with google</string>
+    <string name="google_sign_in_client_id">1088814076574-pat2suurlgjppijiuq4okci640unjqj8.apps.googleusercontent.com</string>
+    <string name="home">Home</string>
+    <string name="home_sub_text">"Enjoy an enhanced experience of E-learing "</string>
+    <string name="exam">Exams</string>
+    <string name="books">Books</string>
+    <string name="test">Tests</string>
+    <string name="open_book">Open books</string>
+    <string name="resume">Resume</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="read">Read</string>
+    <string name="study">Study</string>
+    <string name="home_work">Home work</string>
+    <string name="propose">Propose</string>
+    <string name="language_arts">Language Arts</string>
+
+    <string name="exam_sub_text">Ace your exams.</string>
+    <string name="books_sub_text">Dive into knowledge.</string>
+    <string name="test_sub_text">Interactive learning challenges.</string>
+    <string name="open_book_sub_text">Access open resources.</string>
+    <string name="resume_sub_text">Create standout resumes.</string>
+    <string name="personal_information_sub_text">Secure your data.</string>
+    <string name="read_sub_text">Discover literary treasures.</string>
+    <string name="study_sub_text">Explore the world of learning.</string>
+    <string name="home_work_sub_text">Effortless homework management.</string>
+    <string name="propose_sub_text">Craft compelling proposals.</string>
+    <string name="language_arts_sub_text">Master language skills.</string>
+    <string name="welcome">Welcome 👋</string>
 
 
 </resources>

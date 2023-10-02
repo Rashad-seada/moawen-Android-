@@ -43,6 +43,7 @@ import com.example.marketapp.core.views.screens.SplashScreen
 import com.example.marketapp.destinations.DoneMessageScreenDestination
 import com.example.marketapp.destinations.LoginMethodsScreenDestination
 import com.example.marketapp.destinations.LoginScreenDestination
+import com.example.marketapp.destinations.MainScreenDestination
 import com.example.marketapp.destinations.OnBoardingScreenDestination
 import com.example.marketapp.destinations.RegisterScreenDestination
 import com.example.marketapp.destinations.ResetPasswordByEmailScreenDestination
@@ -65,6 +66,9 @@ import com.example.marketapp.features.auth.view.viewmodels.register.RegisterEven
 import com.example.marketapp.features.auth.view.viewmodels.register.RegisterViewModel
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordMethodsEvent
 import com.example.marketapp.features.auth.view.viewmodels.reset_password.ResetPasswordViewModel
+import com.example.marketapp.features.e_learning.view.screens.main.MainScreen
+import com.example.marketapp.features.e_learning.view.viewmodels.home.HomeViewModel
+import com.example.marketapp.features.e_learning.view.viewmodels.main.MainViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import kotlinx.coroutines.launch
@@ -74,7 +78,10 @@ fun Navigation(
     coreViewModel: CoreViewModel = hiltViewModel(),
     loginViewModel: LoginViewModel = hiltViewModel(),
     resetPasswordViewModel: ResetPasswordViewModel = hiltViewModel(),
-    registerViewModel: RegisterViewModel = hiltViewModel()
+    registerViewModel: RegisterViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel()
+
 
 ) {
     val scope = rememberCoroutineScope()
@@ -100,8 +107,12 @@ fun Navigation(
                     navigator = destinationsNavigator,
                     onLoginClick = { coreViewModel.onMethodsScreenLoginClick(it) },
                     onRegisterClick = { coreViewModel.onMethodsScreenRegisterClick(it) },
-                    onLoginWithGoogleClick = { navigator,task-> coreViewModel.onMethodsScreenLoginWithGoogleClick(navigator,task) },
-                    signInIntent = coreViewModel.provideSignInIntent()
+                    onLoginWithGoogleClick = { navigator, task ->
+                        coreViewModel.onMethodsScreenLoginWithGoogleClick(
+                            navigator,
+                            task
+                        )
+                    },
                 )
             }
 
@@ -308,7 +319,20 @@ fun Navigation(
                 )
             }
 
+            composable(MainScreenDestination) {
+                MainScreen(
+                    state = mainViewModel.state,
+                    navigator = destinationsNavigator,
+                    onIndexChange = {
+                        mainViewModel.updateCurrentIndex(it)
+                    }
+                )
+
+            }
+
         }
+
+
 
 
         SnackbarHost(

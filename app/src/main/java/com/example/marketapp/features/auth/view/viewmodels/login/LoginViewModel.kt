@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.marketapp.core.util.usecase.ValidateEmailLocalUseCase
 import com.example.marketapp.core.util.usecase.ValidatePasswordLocalUseCase
 import com.example.marketapp.core.viewmodel.CoreViewModel
+import com.example.marketapp.destinations.MainScreenDestination
 import com.example.marketapp.destinations.RegisterScreenDestination
 import com.example.marketapp.destinations.ResetPasswordMethodsScreenDestination
 import com.example.marketapp.features.auth.domain.usecases.LoginUseCase
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +52,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun updateRememberMeState(){
-        state= state.copy(
+        state = state.copy(
             rememberMe = !state.rememberMe
         )
     }
@@ -69,7 +69,7 @@ class LoginViewModel @Inject constructor(
         navigator.popBackStack()
     }
 
-    private fun onLoginClick(context: Context){
+    private fun onLoginClick(navigator: DestinationsNavigator,context: Context){
         job?.cancel()
         job = viewModelScope.launch(Dispatchers.IO) {
 
@@ -81,6 +81,8 @@ class LoginViewModel @Inject constructor(
                 CoreViewModel.showSnackbar(("Error:" + response.failure.message))
             } else {
                 CoreViewModel.showSnackbar(("Success:" + response.data?.msg))
+                navigator.navigate(MainScreenDestination())
+
             }
 
         }
@@ -97,7 +99,7 @@ class LoginViewModel @Inject constructor(
 
         when(event){
             is LoginEvent.Login -> {
-                validateForm(event.context) { onLoginClick(event.context) }
+                validateForm(event.context) { onLoginClick(event.navigator,event.context) }
             }
             is LoginEvent.Register -> {
                 onRegisterClick(event.navigator)
