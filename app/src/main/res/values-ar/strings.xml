@@ -63,63 +63,61 @@
     <string name="password_must_match">يجب أن تتطابق كلمات المرور</string>
     <string name="done">تم</string>
     <string name="all_done">تم الانتهاء</string>
-    <string name="new_password">New password</string>
-    <string name="new_password_sub_text">"create a new password, the password must be 8 char. "</string>
-    <string name="new_password_hint">Please enter a new password</string>
-    <string name="all_done_sub_text">"All done, please click done to procced "</string>
+    <string name="new_password">كلمة السر الجديدة</string>
+    <string name="new_password_sub_text">"أنشئ كلمة مرور جديدة، يجب أن تتكون الكلمة من 8 أحرف."</string>
+    <string name="new_password_hint">الرجاء إدخال كلمة مرور جديدة</string>
+    <string name="all_done_sub_text">"كل شيء تمامًا، الرجاء النقر على تم للمتابعة."</string>
     <string name="gcp_id">1088814076574-jhr0evbjd2ord9o8eulqiatfek9lnbri.apps.googleusercontent.com</string>
-    <string name="google_sign_in_faild">Faild to sign with google</string>
+    <string name="google_sign_in_faild">فشل تسجيل الدخول باستخدام جوجل</string>
     <string name="google_sign_in_client_id">1088814076574-pat2suurlgjppijiuq4okci640unjqj8.apps.googleusercontent.com</string>
-    <string name="home">Welcome 👋</string>
-    <string name="home_sub_text">"Enjoy an enhanced experience of E-learing "</string>
-    <string name="exam">Exams</string>
-    <string name="books">Books</string>
-    <string name="test">Tests</string>
-    <string name="open_book">Open books</string>
-    <string name="resume">Resume</string>
-    <string name="personal_information">Personal Information</string>
-    <string name="read">Read</string>
-    <string name="study">Study</string>
-    <string name="home_work">Home work</string>
-    <string name="propose">Propose</string>
-    <string name="language_arts">Language Arts</string>
-    <string name="exam_sub_text">Unlock the power of knowledge through immersive learning experiences.</string>
-    <string name="books_sub_text">Unlock the power of knowledge through immersive learning experiences.</string>
-    <string name="test_sub_text">Challenge your understanding and gauge your progress through interactive tests and quizzes.</string>
-    <string name="open_book_sub_text">Explore a library of open educational resources to expand your horizons.</string>
-    <string name="resume_sub_text">Craft a standout resume that highlights your achievements and career aspirations.</string>
-    <string name="personal_information_sub_text">Safeguard your personal information and privacy with our secure platform.</string>
-    <string name="read_sub_text">Immerse yourself in the joy of reading with a vast selection of literary treasures.</string>
-    <string name="study_sub_text">Embark on a journey of knowledge and discovery through dedicated study sessions.</string>
-    <string name="home_work_sub_text">Effortlessly manage and complete your homework assignments with ease.</string>
-    <string name="propose_sub_text">Craft compelling proposals and presentations that leave a lasting impression.</string>
-    <string name="language_arts_sub_text">Master the art of language, literature, and communication with our language arts materials.</string>
-    <string name="welcome">Welcome 👋</string>
-    <string name="oawen">oawen</string>
-    <string name="to_deliver_order">To Deliver Orders</string>
-    <string name="facebook">Facebook</string>
-    <string name="fullName">Full name</string>
-    <string name="fullName_hint">Please enter your full name</string>
-    <string name="password_contain_special_char">Password must contain a special char</string>
-    <string name="password_contain_lower_and_upper_case">Password must contain lowercase and uppercase letters</string>
-    <string name="unknown_error">There was unkown error</string>
-    <string name="accept_terms">Accept terms and conditions</string>
-    <string name="welcome_back">"Welcome back "</string>
-    <string name="total_balance">Total Balance</string>
-    <string name="today_assistant_is">Today\'s assistant is</string>
-    <string name="start_your_order_now">Start your request now</string>
-    <string name="contact_him">Contact with him</string>
-    <string name="make_order">Make your order</string>
-    <string name="or">Or</string>
-    <string name="send_attachments">Send attachments</string>
-    <string name="please_enter_order_description">Please enter any specifec order description</string>
-    <string name="attachments_to_send">Attachments to send</string>
-    <string name="select_location">Select delivery location</string>
-    <string name="from">From</string>
-    <string name="to">To</string>
-    <string name="empty_search">Couldn\'t find what you are looking for</string>
-    <string name="destance">Destance</string>
-    <string name="km">km</string>
-
+    <string name="home">مرحبًا 👋</string>
+    <string name="home_sub_text">"استمتع بتجربة محسنة للتعلم الإلكتروني"</string>
+    <string name="exam">اختبارات</string>
+    <string name="books">الكتب</string>
+    <string name="test">اختبارات</string>
+    <string name="open_book">فتح الكتب</string>
+    <string name="resume">السيرة الذاتية</string>
+    <string name="personal_information">المعلومات الشخصية</string>
+    <string name="read">قراءة</string>
+    <string name="study">دراسة</string>
+    <string name="home_work">الواجب المنزلي</string>
+    <string name="propose">اقتراح</string>
+    <string name="language_arts">فنون اللغة</string>
+    <string name="exam_sub_text">اكتشف قوة المعرفة من خلال تجارب التعلم الشاملة.</string>
+    <string name="books_sub_text">اكتشف قوة المعرفة من خلال تجارب التعلم الشاملة.</string>
+    <string name="test_sub_text">تحدى فهمك وقيس تقدمك من خلال اختبارات تفاعلية واختبارات.</string>
+    <string name="open_book_sub_text">استكشف مكتبة من الموارد التعليمية المفتوحة لتوسيع آفاقك.</string>
+    <string name="resume_sub_text">قم بإعداد سيرة ذاتية متميزة تسلط الضوء على إنجازاتك وآمالك المهنية.</string>
+    <string name="personal_information_sub_text">حماية معلوماتك الشخصية وخصوصيتك عبر منصتنا الآمنة.</string>
+    <string name="read_sub_text">انغمس في فرحة القراءة مع مجموعة واسعة من الكنوز الأدبية.</string>
+    <string name="study_sub_text">ابدأ رحلة المعرفة والاكتشاف من خلال جلسات الدراسة المخصصة.</string>
+    <string name="home_work_sub_text">أدر وأكمل واجبات البيت بسهولة.</string>
+    <string name="propose_sub_text">إعداد اقتراحات وعروض تقديمية جذابة تترك انطباعًا دائمًا.</string>
+    <string name="language_arts_sub_text">استيقن فن اللغة والأدب والاتصال من خلال مواد فنون اللغة لدينا.</string>
+    <string name="welcome">مرحبًا </string>
+    <string name="oawen">أوين</string>
+    <string name="to_deliver_order">لتسليم الطلبات</string>
+    <string name="facebook">فيسبوك</string>
+    <string name="fullName">الاسم الكامل</string>
+    <string name="fullName_hint">الرجاء إدخال اسمك الكامل</string>
+    <string name="password_contain_special_char">يجب أن تحتوي كلمة المرور على حرف خاص</string>
+    <string name="password_contain_lower_and_upper_case">يجب أن تحتوي كلمة المرور على حروف صغيرة وكبيرة</string>
+    <string name="unknown_error">حدث خطأ غير معروف</string>
+    <string name="accept_terms">قبول الشروط والأحكام</string>
+    <string name="total_balance">الرصيد الإجمالي</string>
+    <string name="today_assistant_is">مساعد اليوم هو</string>
+    <string name="start_your_order_now">ابدأ طلبك الآن</string>
+    <string name="contact_him">التواصل معه</string>
+    <string name="make_order">أطلب طلبك</string>
+    <string name="or">أو</string>
+    <string name="send_attachments">إرسال المرفقات</string>
+    <string name="please_enter_order_description">الرجاء إدخال وصف طلب محدد</string>
+    <string name="attachments_to_send">المرفقات للإرسال</string>
+    <string name="select_location">حدد موقع التسليم</string>
+    <string name="from">من</string>
+    <string name="to">إلى</string>
+    <string name="empty_search">لم يمكن العثور على ما تبحث عنه</string>
+    <string name="destance">المسافة</string>
+    <string name="km">كم</string>
 
 </resources>

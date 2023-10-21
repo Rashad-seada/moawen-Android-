@@ -111,18 +111,10 @@ fun LoginMethodsScreen(
                     painter = painterResource(id = R.drawable.logo), // Provide the resource ID
                     contentDescription = "",
                     modifier = Modifier
-                        .width(65.83.dp) // Adjust the size as needed
-                        .height(51.19.dp)
+                        .width(200.dp) // Adjust the size as needed
+                        .height(80.dp)
                 )
 
-                Text(
-                    text = context.getString(R.string.oawen),
-                    style = TextStyle(
-                        fontFamily = Lato,
-                        color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
-                        fontSize = 50.sp
-                    )
-                )
             }
 
             Spacer(modifier = Modifier.height(100.dp))

@@ -73,7 +73,7 @@ fun HomePage(
             Surface(
                 Modifier
                     .fillMaxWidth()
-                    .height(213.dp),
+                    .height(180.dp),
                 shape = RoundedCornerShape(bottomStart = 74.dp, bottomEnd = 74.dp),
                 color = Primary
             ) {
@@ -81,10 +81,13 @@ fun HomePage(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp),
+                        .padding(horizontal = 30.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
                     if(state.isHomePageLoading){
                         Row(
                             modifier = Modifier
@@ -122,7 +125,7 @@ fun HomePage(
                             Spacer(modifier = Modifier.width(20.dp))
 
                             Text(
-                                text = context.getString(R.string.welcome_back),
+                                text = context.getString(R.string.welcome)+" ",
                                 style = TextStyle(
                                     fontFamily = Lato,
                                     color = Neutral100,
@@ -196,10 +199,11 @@ fun HomePage(
                         text = context.getString(R.string.total_balance),
                         style = TextStyle(
                             fontFamily = Lato,
-                            color = Neutral100,
+                            color = Neutral100.copy(alpha = 0.5f),
                             fontSize = 16.sp
                         )
                     )
+                    Spacer(modifier = Modifier.height(20.dp))
 
                 }
 
@@ -216,7 +220,7 @@ fun HomePage(
                 )
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             if(state.isHomePageLoading){
                 Row(
@@ -260,10 +264,13 @@ fun HomePage(
             }else {
                 Image(
                     modifier = Modifier
-                        .height(190.dp)
-                        .width(190.dp)
+                        .height(240.dp)
+                        .width(240.dp)
                         .clip(CircleShape)
-                        .border(1.dp, Neutral200),
+                        .border(
+                            BorderStroke(5.dp,Color(0xffCDCDCD)),
+                            CircleShape
+                        ),
                     painter = rememberImagePainter(data = state.assistantImage?: "", builder = {
                         transformations(CircleCropTransformation()) // Apply transformations if needed
                         placeholder(R.drawable.photo) // Placeholder resource while loading
@@ -275,7 +282,7 @@ fun HomePage(
             }
 
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
             Text(
                 text = context.getString(R.string.start_your_order_now),
@@ -286,7 +293,7 @@ fun HomePage(
                 )
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
             Row(
                 modifier = Modifier
@@ -317,7 +324,7 @@ fun HomePage(
                             style = TextStyle(
                                 fontFamily = Lato,
                                 color = Neutral100 ,
-                                fontSize = 12.sp
+                                fontSize = 16.sp
                             )
                         )
 

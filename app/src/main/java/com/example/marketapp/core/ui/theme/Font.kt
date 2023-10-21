@@ -7,7 +7,7 @@ import com.example.marketapp.R
 
 val Lato : FontFamily = FontFamily(
     Font(
-        R.font.tajawal,
+        R.font.tajawal_medium,
         weight = FontWeight.Medium
     ),
 )

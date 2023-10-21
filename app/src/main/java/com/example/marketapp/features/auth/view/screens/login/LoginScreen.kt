@@ -109,17 +109,8 @@ fun LoginScreen(
                     painter = painterResource(id = R.drawable.logo), // Provide the resource ID
                     contentDescription = "",
                     modifier = Modifier
-                        .width(65.83.dp) // Adjust the size as needed
-                        .height(51.19.dp)
-                )
-
-                Text(
-                    text = context.getString(R.string.oawen),
-                    style = TextStyle(
-                        fontFamily = Lato,
-                        color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
-                        fontSize = 50.sp
-                    )
+                        .width(200.dp) // Adjust the size as needed
+                        .height(80.dp)
                 )
             }
 
@@ -158,7 +149,6 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                label = context.getString(R.string.phone),
                 placeHolder = context.getString(R.string.phone_hint),
                 isError = state.phoneError != null,
                 errorMessage = state.phoneError ?: "",
@@ -178,7 +168,6 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                label = context.getString(R.string.password),
                 placeHolder = context.getString(R.string.password_hint),
                 leadingIcon = {
                     Image(

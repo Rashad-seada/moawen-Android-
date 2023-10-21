@@ -4,6 +4,7 @@
         <item>@font/cairo</item>
         <item>@font/lato</item>
         <item>@font/tajawal</item>
+        <item>@font/tajawal_medium</item>
 
     </array>
 </resources>
