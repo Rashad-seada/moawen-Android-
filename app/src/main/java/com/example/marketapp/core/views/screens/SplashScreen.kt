@@ -99,8 +99,8 @@ fun SplashScreen(
                             painter = painterResource(id = R.drawable.logo), // Provide the resource ID
                             contentDescription = "",
                             modifier = Modifier
-                                .width(40.83.dp) // Adjust the size as needed
-                                .height(26.19.dp)
+                                .width(80.dp) // Adjust the size as needed
+                                .height(80.dp)
                         )
 
 
