@@ -297,9 +297,9 @@ fun HomePage(
 
                 MainButton(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 20.dp)
-                        .width(135.dp)
-                        .height(48.dp)
+                        .height(55.dp)
                         .clip(RoundedCornerShape(100.dp))
                         .clickable {
                             navigator?.let {
@@ -323,43 +323,6 @@ fun HomePage(
 
                 }
 
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = context.getString(R.string.or),
-                    style = TextStyle(
-                        fontFamily = Lato,
-                        color = Secondary ,
-                        fontSize = 18.sp
-                    )
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-
-                MainButton(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .width(140.dp)
-                        .height(48.dp)
-                        .clip(RoundedCornerShape(100.dp))
-                        .clickable {
-                            navigator?.let {
-                                onContactAssistantClick(navigator, context)
-                            }
-                        },
-                    cardColor = Primary,
-                    borderColor = Color.Transparent
-                ) {
-
-                        Text(
-                            modifier = Modifier.padding(horizontal = 20.dp),
-                            text = context.getString(R.string.contact_him),
-                            style = TextStyle(
-                                fontFamily = Lato,
-                                color = Neutral100 ,
-                                fontSize = 12.sp
-                            )
-                        )
-
-                }
 
             }
 

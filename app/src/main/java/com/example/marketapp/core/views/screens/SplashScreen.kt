@@ -103,14 +103,7 @@ fun SplashScreen(
                                 .height(26.19.dp)
                         )
 
-                        Text(
-                            text = context.getString(R.string.oawen),
-                            style = TextStyle(
-                                fontFamily = Lato,
-                                color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
-                                fontSize = 40.sp
-                            )
-                        )
+
                     }
 
                     Text(
