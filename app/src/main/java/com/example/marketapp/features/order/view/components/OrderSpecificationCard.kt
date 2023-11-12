@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -49,7 +50,7 @@ fun OrderSpecificationCard (
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 30.dp),
         shape = RoundedCornerShape(
             topStart = 4.dp,
             topEnd = 4.dp,
@@ -102,24 +103,29 @@ fun OrderSpecificationCard (
                 },
             )
 
-            HorizontalDivider(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
-                thickness = .2.dp,
-                color = if (isSystemInDarkTheme()) Neutral500 else Neutral500
 
-            )
 
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                modifier = Modifier.padding(horizontal = 15.dp),
-                text = context.getString(R.string.attachments_to_send),
-                style = TextStyle(
-                    fontFamily = Lato,
-                    fontSize = 16.sp,
-                    color = Secondary
+            if(state.files.isNotEmpty() || state.images.isNotEmpty() || state.records.isNotEmpty()) {
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+                    thickness = .2.dp,
+                    color = if (isSystemInDarkTheme()) Neutral500 else Neutral500
+
                 )
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    modifier = Modifier.padding(horizontal = 15.dp),
+                    text = context.getString(R.string.attachments_to_send),
+                    style = TextStyle(
+                        fontFamily = Lato,
+                        fontSize = 16.sp,
+                        color = Secondary
+                    )
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
 
 
 
@@ -233,15 +239,15 @@ fun OrderSpecificationCard (
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(70.dp)
-                        .padding(horizontal = 15.dp, vertical = 15.dp),
+                        .height(60.dp)
+                        .padding(horizontal = 15.dp, vertical = 5.dp),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = CenterVertically
                 ) {
 
                     Surface(
                         modifier = Modifier
-                            .size(42.dp)
+                            .size(32.dp)
                             .align(CenterVertically)
                             .clickable {
                                 scope.launch {
@@ -258,7 +264,7 @@ fun OrderSpecificationCard (
                             contentAlignment = Center
                         ) {
                             Icon(
-                                modifier = Modifier.size(25.dp),
+                                modifier = Modifier.size(15.dp),
                                 painter = painterResource(
                                     id = R.drawable.pin
                                 ),

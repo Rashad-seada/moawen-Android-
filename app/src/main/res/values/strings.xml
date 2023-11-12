@@ -120,6 +120,32 @@
     <string name="empty_search">Couldn\'t find what you are looking for</string>
     <string name="destance">Destance</string>
     <string name="km">km</string>
+    <string name="profile">Profile</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="notification">Notification</string>
+    <string name="language">Language</string>
+    <string name="get_all_notifications">Get all notification</string>
+    <string name="do_not_disturb_mode">Do not disturb mode</string>
+    <string name="silent_mode">Silent mode</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
+    <string name="save">Save</string>
+    <string name="wallet">Wallet</string>
+    <string name="current_balance">Current balance</string>
+    <string name="charge_balance">Charge balance</string>
+    <string name="upload_receipt">Please upload the receipt to confirm your account balance recharge</string>
+    <string name="upload">Upload</string>
+    <string name="orders">Orders</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
+    <string name="view_order_details">View order details</string>
+    <string name="no_orders">There are no orders now</string>
+    <string name="try_again">Try again</string>
+    <string name="no_notification">There are no notifications now</string>
+    <string name="select_image">"Please select a receipt first "</string>
+    <string name="account_will_recharge">"Your account will be recharged soon "</string>
+    <string name="you_must_write_description">You must write description or at least select an image or a file</string>
+    <string name="select_from_to_distenations">Please select from and to distenations to place your order</string>
 
 
 </resources>

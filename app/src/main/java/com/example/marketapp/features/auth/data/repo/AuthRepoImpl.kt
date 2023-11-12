@@ -51,6 +51,7 @@ class AuthRepoImpl @Inject constructor(
                 !loginResponse.isSuccessful -> {
 
                     val errorBody = loginResponse.errorBody()
+
                     var errorMessage = ""
 
                     if (errorBody != null) {

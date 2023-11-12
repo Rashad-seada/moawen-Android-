@@ -3,18 +3,20 @@ package com.example.marketapp.features.home.view.screens.main
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.marketapp.core.ui.theme.*
+import com.example.marketapp.features.home.view.components.HomeNavigationBar
 import com.example.marketapp.features.home.view.viewmodels.main.MainState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -26,8 +28,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun MainScreen(
     navigator: DestinationsNavigator?,
     state: MainState = MainState(),
-    onIndexChange : (Int) -> Unit = {}
-    ) {
+    onIndexChange: (Int) -> Unit = {}
+) {
 
     val context: Context = LocalContext.current
 
@@ -35,30 +37,17 @@ fun MainScreen(
     Scaffold(
         containerColor = if (isSystemInDarkTheme()) Neutral900 else Neutral100,
         bottomBar = {
-            NavigationBar(
-                containerColor = Color.Transparent
-            ) {
+            HomeNavigationBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .background(if(isSystemInDarkTheme()) Neutral900 else Neutral100)
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                index = state.index,
+                pages = state.pages,
+                onChange = { onIndexChange(it) }
+            )
 
-                state.pages.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        modifier = Modifier.clip(CircleShape),
-                        icon = { Icon(painter = painterResource(id = item.icon), contentDescription = "") },
-//                        label = {
-//                            Text(context.getString(item.label))
-//                        },
-                        selected = state.index == index,
-                        onClick = {
-                            onIndexChange(index)
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Neutral100,
-                            unselectedIconColor = if(isSystemInDarkTheme()) Neutral600 else Neutral400,
-                            indicatorColor = Primary
-                        ),
-
-                    )
-                }
-            }
         },
 
         ) {
@@ -70,10 +59,9 @@ fun MainScreen(
             label = "",
         ) {
             if (navigator != null) {
-                state.pages[it].page(navigator)
+                state.pages[it].page(navigator,context)
             }
         }
-
 
 
     }

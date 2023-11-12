@@ -5,4 +5,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 sealed class OrderEvent {
     data class OnConfirmClick(val navigator: DestinationsNavigator, val context: Context) : OrderEvent()
+
+    data class OnGetOrders(val context: Context) : OrderEvent()
+
 }

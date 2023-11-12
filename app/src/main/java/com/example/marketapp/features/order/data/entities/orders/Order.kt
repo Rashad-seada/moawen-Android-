@@ -6,9 +6,9 @@ data class Order(
     val drivaer_name: String,
     val driver_image: String,
     val id: Int,
-    val lat: Double,
-    val lng: Double,
+    val lat: Double?,
+    val lng: Double?,
     val order_number: String,
-    val the_time_the_delivery_confirm_order: Any,
-    val total: Any
+    val the_time_the_delivery_confirm_order: String?,
+    val total: Double?
 )

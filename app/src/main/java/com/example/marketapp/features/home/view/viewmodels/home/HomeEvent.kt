@@ -7,7 +7,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 sealed class HomeEvent {
 
-    data class OnContactClick(val navigator: DestinationsNavigator, val context: Context) : HomeEvent()
 
     data class OnMakeOrderClick(val navigator: DestinationsNavigator, val context: Context) : HomeEvent()
 

@@ -30,7 +30,12 @@ class CoreViewModel @Inject constructor(
     companion object {
         private var job: Job? = null
         val scope = CoroutineScope(Dispatchers.Default)
+
+
         var user : User? = null
+
+
+
         val snackbarHostState = SnackbarHostState()
         fun showSnackbar(message : String) {
             job?.cancel()
@@ -48,6 +53,7 @@ class CoreViewModel @Inject constructor(
 
     private fun initApp() {
         getUserInfo()
+
     }
 
     fun getUserInfo(){
@@ -61,15 +67,14 @@ class CoreViewModel @Inject constructor(
         initApp()
         delay(1000)
 
-//        if(user != null) {
-//            navigator?.navigate(MainScreenDestination())
-//
-//        } else {
-//            navigator?.navigate(OnBoardingScreenDestination())
-//
-//        }
+        if(user != null) {
+            navigator?.navigate(SelectLocationScreenDestination())
 
-        navigator?.navigate(OnBoardingScreenDestination())
+        } else {
+            navigator?.navigate(OnBoardingScreenDestination())
+
+        }
+
 
 
     }

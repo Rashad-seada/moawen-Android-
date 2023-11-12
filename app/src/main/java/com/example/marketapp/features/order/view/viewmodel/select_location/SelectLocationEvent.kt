@@ -16,4 +16,6 @@ sealed class SelectLocationEvent {
     data class OnFromLocationSelect(val navigator: DestinationsNavigator,val placeInfo: PlaceInfo) : SelectLocationEvent()
     data class OnToLocationSelect(val navigator: DestinationsNavigator,val placeInfo: PlaceInfo) : SelectLocationEvent()
 
+    object GetDirections : SelectLocationEvent()
+
 }

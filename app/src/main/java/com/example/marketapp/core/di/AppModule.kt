@@ -19,20 +19,41 @@ import com.example.marketapp.features.home.data.data_source.remote.HomeRemoteDat
 import com.example.marketapp.features.home.data.repo.HomeRepoImpl
 import com.example.marketapp.features.home.domain.usecases.HomeUseCase
 import com.example.marketapp.features.home.infrastructure.api.HomeApi
+import com.example.marketapp.features.notification.data.data_source.remote.NotificationRemoteDataSource
+import com.example.marketapp.features.notification.data.data_source.remote.NotificationRemoteDataSourceImpl
+import com.example.marketapp.features.notification.data.repo.NotificationRepoImpl
+import com.example.marketapp.features.notification.domain.usecase.GetAllNotificationsUseCase
+import com.example.marketapp.features.notification.domain.usecase.GetNotificationUseCase
+import com.example.marketapp.features.notification.domain.usecase.GetNotificationsCountUseCase
+import com.example.marketapp.features.notification.infrastructure.api.NotificationApi
 import com.example.marketapp.features.order.data.data_source.remote.OrderRemoteDataSourceImpl
 import com.example.marketapp.features.order.data.repo.OrderRepoImpl
 import com.example.marketapp.features.order.domain.usecases.*
 import com.example.marketapp.features.order.domain.usecases.order.*
+import com.example.marketapp.features.order.domain.usecases.places.GetDirectionsUseCase
 import com.example.marketapp.features.order.domain.usecases.places.GetPlaceLatLongUseCase
 import com.example.marketapp.features.order.domain.usecases.places.SearchPlacesUseCase
 import com.example.marketapp.features.order.infrastructure.api.OrderApi
 import com.example.marketapp.features.order.infrastructure.services.PlacesService
+import com.example.marketapp.features.profile.data.data_source.remote.ProfileRemoteDataSourceImpl
+import com.example.marketapp.features.profile.data.repo.ProfileRepoImpl
+import com.example.marketapp.features.profile.domain.usecase.UpdatePhoneNumberStep2Usecase
+import com.example.marketapp.features.profile.domain.usecase.UpdatePhoneNumberUsecase
+import com.example.marketapp.features.profile.domain.usecase.UpdateProfileNameAndImageUsecase
+import com.example.marketapp.features.profile.infrastructure.api.ProfileApi
+import com.example.marketapp.features.wallet.data.data_source.remote.WalletRemoteDataSource
+import com.example.marketapp.features.wallet.data.data_source.remote.WalletRemoteDataSourceImpl
+import com.example.marketapp.features.wallet.data.repo.WalletRepoImpl
+import com.example.marketapp.features.wallet.domain.usecase.ChargeBalanceUseCase
+import com.example.marketapp.features.wallet.domain.usecase.GetBalanceUseCase
+import com.example.marketapp.features.wallet.infrastructure.api.WalletApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.gson.GsonBuilder
+import com.google.maps.GeoApiContext
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -120,6 +141,66 @@ object AppModule {
             .create(OrderApi::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideProfileApi() : ProfileApi {
+        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+            .readTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .build()
+
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
+            .build()
+            .create(ProfileApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationApi() : NotificationApi {
+        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+            .readTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .build()
+
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
+            .build()
+            .create(NotificationApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWalletApi() : WalletApi {
+        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+            .readTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .build()
+
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
+            .build()
+            .create(WalletApi::class.java)
+    }
+
 
     // Services
     @Provides
@@ -130,8 +211,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePlacesService(client : PlacesClient,@ApplicationContext context: Context) : PlacesService{
-        return PlacesService(client,context)
+    fun providePlacesService(
+        client : PlacesClient,
+        directionsClient : GeoApiContext,
+        @ApplicationContext context: Context
+    ) : PlacesService{
+        return PlacesService(
+            client,
+            directionsClient,
+            context,
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideDirectionsService() : GeoApiContext{
+        return GeoApiContext.Builder().apiKey("AIzaSyBlRyjrVDFE3Ry_wivw70bqbH6VYccL9n0").build()
     }
 
     @Singleton
@@ -160,6 +255,18 @@ object AppModule {
 
     fun provideOrderRemoteDataSource(api : OrderApi) : OrderRemoteDataSourceImpl {
         return OrderRemoteDataSourceImpl(api)
+    }
+
+    fun provideProfileRemoteDataSource(api : ProfileApi) : ProfileRemoteDataSourceImpl {
+        return ProfileRemoteDataSourceImpl(api)
+    }
+
+    fun provideNotificationRemoteDataSource(api : NotificationApi) : NotificationRemoteDataSourceImpl {
+        return NotificationRemoteDataSourceImpl(api)
+    }
+
+    fun provideWalletRemoteDataSource(api : WalletApi) : WalletRemoteDataSourceImpl {
+        return WalletRemoteDataSourceImpl(api)
     }
 
 
@@ -204,6 +311,36 @@ object AppModule {
         remoteDataSource : HomeRemoteDataSourceImpl
     ) : HomeRepoImpl {
         return HomeRepoImpl(
+            networkService = networkService,
+            remoteDataSource = remoteDataSource
+        )
+    }
+
+    fun provideProfileRepo(
+        networkService : NetworkServiceImpl,
+        remoteDataSource : ProfileRemoteDataSourceImpl
+    ) : ProfileRepoImpl {
+        return ProfileRepoImpl(
+            networkService = networkService,
+            remoteDataSource = remoteDataSource
+        )
+    }
+
+    fun provideNotificationRepo(
+        networkService : NetworkServiceImpl,
+        remoteDataSource : NotificationRemoteDataSourceImpl
+    ) : NotificationRepoImpl {
+        return NotificationRepoImpl(
+            networkService = networkService,
+            remoteDataSource = remoteDataSource
+        )
+    }
+
+    fun provideWalletRepo(
+        networkService : NetworkServiceImpl,
+        remoteDataSource : WalletRemoteDataSourceImpl
+    ) : WalletRepoImpl {
+        return WalletRepoImpl(
             networkService = networkService,
             remoteDataSource = remoteDataSource
         )
@@ -339,9 +476,66 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGetDirectionsUseCase(service: PlacesService) : GetDirectionsUseCase {
+        return GetDirectionsUseCase(service)
+    }
+
+
+    @Provides
+    @Singleton
     fun provideCancelOrderUseCase(repo: OrderRepoImpl) : CancelOrderUseCase {
         return CancelOrderUseCase(repo)
     }
+
+    @Provides
+    @Singleton
+    fun provideUpdatePhoneNumberUseCase(repo: ProfileRepoImpl) : UpdatePhoneNumberUsecase {
+        return UpdatePhoneNumberUsecase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdatePhoneNumberStep2UseCase(repo: ProfileRepoImpl) : UpdatePhoneNumberStep2Usecase {
+        return UpdatePhoneNumberStep2Usecase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateProfileNameAndImageUseCase(repo: ProfileRepoImpl) : UpdateProfileNameAndImageUsecase {
+        return UpdateProfileNameAndImageUsecase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAllNotificationsUseCase(repo: NotificationRepoImpl) : GetAllNotificationsUseCase {
+        return GetAllNotificationsUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetNotificationUseCase(repo: NotificationRepoImpl) : GetNotificationUseCase {
+        return GetNotificationUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetNotificationCountUseCase(repo: NotificationRepoImpl) : GetNotificationsCountUseCase {
+        return GetNotificationsCountUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetWalletUseCase(repo: WalletRepoImpl) : GetBalanceUseCase {
+        return GetBalanceUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChargeBalanceUseCase(repo: WalletRepoImpl) : ChargeBalanceUseCase {
+        return ChargeBalanceUseCase(repo)
+    }
+
+
 
     // Utils
     @Provides

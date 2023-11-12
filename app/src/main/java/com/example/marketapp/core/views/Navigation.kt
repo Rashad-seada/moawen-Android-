@@ -44,6 +44,13 @@ import com.example.marketapp.features.order.view.viewmodel.order.OrderEvent
 import com.example.marketapp.features.order.view.viewmodel.order.OrderViewModel
 import com.example.marketapp.features.order.view.viewmodel.select_location.SelectLocationEvent
 import com.example.marketapp.features.order.view.viewmodel.select_location.SelectLocationViewModel
+import com.example.marketapp.features.profile.view.screens.EditProfileScreen
+import com.example.marketapp.features.profile.view.viewmodels.edit_profile.EditProfileEvent
+import com.example.marketapp.features.profile.view.viewmodels.edit_profile.EditProfileViewModel
+import com.example.marketapp.features.wallet.view.pages.ChargeBalanceScreen
+import com.example.marketapp.features.wallet.view.screens.WalletMessageScreen
+import com.example.marketapp.features.wallet.view.viewmodel.wallet.WalletEvent
+import com.example.marketapp.features.wallet.view.viewmodel.wallet.WalletViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import kotlinx.coroutines.launch
@@ -56,7 +63,9 @@ fun Navigation(
     registerViewModel: RegisterViewModel = hiltViewModel(),
     mainViewModel: MainViewModel = hiltViewModel(),
     orderViewModel : OrderViewModel = hiltViewModel(),
-    locationViewModel : SelectLocationViewModel = hiltViewModel()
+    locationViewModel : SelectLocationViewModel = hiltViewModel(),
+    walletViewModel : WalletViewModel = hiltViewModel(),
+    profileViewModel :EditProfileViewModel = hiltViewModel(),
 ) {
     val scope = rememberCoroutineScope()
 
@@ -311,7 +320,8 @@ fun Navigation(
                     navigator = destinationsNavigator,
                     onFromLocationClick = { locationViewModel.onEvent(SelectLocationEvent.OnFromLocationClick(it)) },
                     onToLocationClick = { locationViewModel.onEvent(SelectLocationEvent.OnToLocationClick(it)) },
-                    onNextClick = {navigator,context ->  locationViewModel.onEvent(SelectLocationEvent.OnLocationSelected(navigator, context)) }
+                    onNextClick = {navigator,context ->  locationViewModel.onEvent(SelectLocationEvent.OnLocationSelected(navigator, context)) },
+                    getDirections = { locationViewModel.onEvent(SelectLocationEvent.GetDirections) }
                 )
 
             }
@@ -344,6 +354,36 @@ fun Navigation(
                     navigator = destinationsNavigator,
                     onButtonTap = {  it.navigate(MainScreenDestination) }
 
+                )
+
+            }
+
+            composable(ChargeBalanceScreenDestination) {
+                ChargeBalanceScreen(
+                    navigator = destinationsNavigator,
+                    walletState = walletViewModel.state,
+                    onImageSelection = { walletViewModel.updateImageState(it) },
+                    onUploadImage = { navigator,context->  walletViewModel.onEvent(WalletEvent.OnBalanceRecharge(navigator,context)) },
+                )
+
+            }
+
+            composable(WalletMessageScreenDestination) {
+                WalletMessageScreen(
+                    navigator = destinationsNavigator,
+                    onButtonTap = { it.navigate(MainScreenDestination) }
+                )
+
+            }
+
+            composable(EditProfileScreenDestination) {
+                EditProfileScreen(
+                    navigator = destinationsNavigator,
+                    profileState = profileViewModel.state,
+                    updatePhone = { profileViewModel.updatePhone(it) },
+                    updateUsername = { profileViewModel.updateUsername(it) },
+                    updateProfileImage = { profileViewModel.updateProfileImage(it) },
+                    onSave = {navigator,context -> profileViewModel.onEvent(EditProfileEvent.OnSave(navigator, context))}
                 )
 
             }

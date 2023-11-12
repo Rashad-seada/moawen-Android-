@@ -60,14 +60,12 @@ class AuthRemoteDataSourceImpl @Inject constructor(val api: AuthApi) : AuthRemot
     ): Response<LoginResponse> {
 
         try {
-
             return api.login(
                 loginRequest
             )
 
         } catch (e: Exception) {
             throw RemoteDataException(R.string.internet_connection.toString())
-
         }
 
     }

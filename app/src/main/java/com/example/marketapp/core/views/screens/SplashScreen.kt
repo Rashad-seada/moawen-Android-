@@ -90,21 +90,17 @@ fun SplashScreen(
                             .height(45.41.dp)
                     )
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.logo), // Provide the resource ID
-                            contentDescription = "",
-                            modifier = Modifier
-                                .width(40.83.dp) // Adjust the size as needed
-                                .height(26.19.dp)
-                        )
+                    Spacer(modifier = Modifier.height(10.dp))
 
+                    Image(
+                        painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.logo_dark else R.drawable.logo), // Provide the resource ID
+                        contentDescription = "",
+                        modifier = Modifier
+                            .width(167.dp) // Adjust the size as needed
+                            .height(30.dp)
+                    )
 
-                    }
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     Text(
                         text = context.getString(R.string.to_deliver_order),

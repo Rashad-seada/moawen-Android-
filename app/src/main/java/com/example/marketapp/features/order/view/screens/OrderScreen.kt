@@ -32,6 +32,7 @@ import com.example.marketapp.core.views.components.CustomProgressIndicator
 import com.example.marketapp.core.views.components.MainButton
 import com.example.marketapp.features.order.view.components.OrderSpecificationCard
 import com.example.marketapp.features.order.view.viewmodel.order.OrderState
+import com.example.marketapp.features.profile.view.components.Header
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -85,62 +86,26 @@ fun OrderScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
 
-                Surface(
-                    modifier = Modifier
-                        .padding(start = 20.dp)
-                        .size(50.dp)
-                        .clickable {
-
-                        },
-                    shape = CircleShape,
-                    color = if (isSystemInDarkTheme()) Neutral800.copy(alpha = 0.3f) else Neutral200.copy(
-                        alpha = 0.3f
-                    )
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .padding(13.dp)
-                            .clickable {
-                                navigator?.let {
-                                    navigator.popBackStack()
-                                }
-                            }
-                            .align(Alignment.CenterStart),
-                        painter = painterResource(
-                            id = R.drawable.arrow_left
-                        ),
-                        contentDescription = null,
-                        tint = if (isSystemInDarkTheme()) Neutral100 else Neutral900
-                    )
-
+            Header(
+                label = context.getString(R.string.make_order),
+                onClick = {
+                    navigator?.let {
+                        navigator.popBackStack()
+                    }
                 }
+            )
 
-
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .padding(start = 0.dp)
-                        .align(Alignment.Center),
-                    text = context.getString(R.string.make_order),
-                    style = TextStyle(
-                        fontFamily = Lato,
-                        color = if (isSystemInDarkTheme()) Neutral100 else Neutral900,
-                        fontSize = 18.sp
-                    )
-                )
-            }
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(45.dp))
 
             OrderSpecificationCard(
                 state = state,
                 onFileSelection = {
-                    singleFilePicker.launch(allowedMimeTypes)
+                    singleFilePicker.launch(
+                        allowedMimeTypes
+                    )
                 },
                 onImageSelection = {
                     singlePhotoPicker.launch(
@@ -155,13 +120,28 @@ fun OrderScreen(
                 }
             )
 
-            Spacer(modifier = Modifier.height(30.dp))
+            if(state.makeOrdersError != null) {
+                Spacer(modifier = Modifier.height(25.dp))
+
+                Text(
+                    modifier = Modifier.padding(horizontal = 30.dp),
+                    text = state.makeOrdersError!!,
+                    style = TextStyle(
+                        fontFamily = Lato,
+                        color = Error400Clr,
+                        fontSize = 16.sp,
+                    )
+                )
+            }
+
+
+            Spacer(modifier = Modifier.height(35.dp))
 
 
             MainButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 30.dp)
                     .height(55.dp)
                     .clip(RoundedCornerShape(100.dp))
                     .clickable {

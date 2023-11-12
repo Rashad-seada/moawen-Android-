@@ -28,15 +28,20 @@ import com.example.marketapp.R
 import com.example.marketapp.core.ui.theme.*
 import com.example.marketapp.core.views.components.CustomProgressIndicator
 import com.example.marketapp.core.views.components.MainButton
+import com.example.marketapp.features.order.domain.usecases.places.GetDirectionsUseCase
 import com.example.marketapp.features.order.view.utils.calculateDistanceInKilometers
 import com.example.marketapp.features.order.view.viewmodel.select_location.SelectLocationState
+import com.example.marketapp.features.profile.view.components.Header
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import java.io.File
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +54,7 @@ fun SelectLocationScreen(
 
     onFromLocationClick: (DestinationsNavigator,) -> Unit = {  },
     onToLocationClick: (DestinationsNavigator,) -> Unit = {  },
+    getDirections : () -> Unit = {  },
 
     onNextClick: (DestinationsNavigator,Context) -> Unit = { _ , _ -> },
 
@@ -60,7 +66,14 @@ fun SelectLocationScreen(
     }
 
     val context: Context = LocalContext.current
-    val sheetState = rememberModalBottomSheetState()
+
+    LaunchedEffect(state.fromPlaceInfo, state.toPlaceInfo){
+
+        if(state.fromPlaceInfo != null && state.toPlaceInfo != null){
+            getDirections()
+        }
+    }
+
 
 
     LaunchedEffect(state.fromPlaceInfo){
@@ -100,7 +113,11 @@ fun SelectLocationScreen(
 
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState
+                cameraPositionState = cameraPositionState,
+                properties = MapProperties(
+
+                    //mapStyleOptions = MapStyleOptions(R.raw.map_styling.toString())
+                )
             ) {
 
                 if(state.fromPlaceInfo != null && state.fromPlaceInfo!!.latLng != null){
@@ -123,16 +140,15 @@ fun SelectLocationScreen(
                     )
                 }
 
-                if(state.toPlaceInfo != null &&
-                    state.toPlaceInfo!!.latLng != null &&
-                    state.fromPlaceInfo != null &&
-                    state.fromPlaceInfo!!.latLng != null
-                ){
-                    Polygon(points = listOf(
-                        state.fromPlaceInfo!!.latLng!!,
-                        state.toPlaceInfo!!.latLng!!
-                    ),
-                    fillColor = Error500Clr)
+                if(state.route.isNotEmpty()){
+                    Polygon(
+                        points = state.route,
+                        fillColor = Error500Clr,
+                        strokeJointType= JointType.ROUND,
+                        geodesic = false
+                    )
+
+
                 }
 
             }
@@ -153,7 +169,9 @@ fun SelectLocationScreen(
             ) {
 
                 Column(
-                    modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
@@ -166,7 +184,10 @@ fun SelectLocationScreen(
                     ){
 
                         Row(
-                            modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(horizontal = 20.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(horizontal = 20.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ){
@@ -227,7 +248,7 @@ fun SelectLocationScreen(
 
                     Surface(
                         modifier = Modifier
-                            .height(50.dp)
+                            .height(48.dp)
                             .width(330.dp)
                             .clickable {
                                 navigator?.let {
@@ -272,7 +293,7 @@ fun SelectLocationScreen(
 
                     Surface(
                         modifier = Modifier
-                            .height(50.dp)
+                            .height(48.dp)
                             .width(330.dp)
                             .clickable {
                                 navigator?.let {
@@ -318,7 +339,7 @@ fun SelectLocationScreen(
                     MainButton(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 20.dp)
+                            .padding(horizontal = 30.dp)
                             .height(55.dp)
                             .clip(RoundedCornerShape(100.dp))
                             .clickable {
@@ -357,28 +378,20 @@ fun SelectLocationScreen(
 
             }
 
-            Surface(
+
+            Box(
                 modifier = Modifier
-                    .padding(20.dp)
-                    .size(50.dp)
-                    .clickable {
+                    .padding(vertical = 30.dp)
+                    .wrapContentSize(),
+            ){
+                Header(
+                    onClick = {
                         navigator?.let {
                             navigator.popBackStack()
                         }
-                    },
-                shape = CircleShape,
-                color = if (isSystemInDarkTheme()) Neutral900 else Neutral100
-            ){
-                Icon(
-                    modifier = Modifier
-                        .padding(13.dp)
-                        .align(Alignment.Center),
-                    painter = painterResource(
-                        id = R.drawable.arrow_left
-                    ),
-                    contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) Neutral100 else Neutral900
+                    }
                 )
+
             }
 
 

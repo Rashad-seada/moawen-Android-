@@ -17,7 +17,6 @@ import retrofit2.http.*
 
 interface OrderApi {
 
-    @Headers("Content-Type: application/json")
     @Multipart
     @POST("api/make-order")
     suspend fun makeOrderStep1(

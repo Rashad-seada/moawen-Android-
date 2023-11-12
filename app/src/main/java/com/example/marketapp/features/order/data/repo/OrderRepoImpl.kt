@@ -597,7 +597,8 @@ class OrderRepoImpl @Inject constructor(
             }
 
             val orderDetailsResponse = remoteDataSource.orders(
-                token)
+                "Bearer $token"
+            )
 
 
 

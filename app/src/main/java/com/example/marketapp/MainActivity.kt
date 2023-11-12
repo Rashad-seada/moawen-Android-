@@ -1,5 +1,6 @@
 package com.example.marketapp
 
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,11 +21,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-
-
-
-
 
 
         setContent {

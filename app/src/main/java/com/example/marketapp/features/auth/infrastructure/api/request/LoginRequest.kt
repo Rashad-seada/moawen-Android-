@@ -8,5 +8,4 @@ data class LoginRequest(
     @SerializedName("password") val password: String,
     @SerializedName("device_token") val deviceToken: String,
     @SerializedName("type") val deviceType: String,
-
-    )
+)
